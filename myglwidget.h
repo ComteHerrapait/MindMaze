@@ -35,6 +35,7 @@ protected:
 private :
     Player player = Player(Point(1,1,1), Point(0,0,10));
     bool Zbuf = true;
+    float FOV = 80.0f;
 };
 
 #endif // MYGLWIDGET_H

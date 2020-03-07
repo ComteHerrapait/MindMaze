@@ -1,6 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "point.h"
+#include <math.h>
+#define PI 3.14159265
+
 
 
 class Player
