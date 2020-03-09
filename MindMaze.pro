@@ -19,10 +19,12 @@ TARGET 	  = MindMaze
 # fichiers sources/headers
 SOURCES	+= main.cpp myglwidget.cpp \
     player.cpp \
+    sphere.cpp \
     wall.cpp
 
 HEADERS += \
     myglwidget.h \
     player.h \
     point.h \
+    sphere.h \
     wall.h

@@ -24,6 +24,23 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 // Fonction d'initialisation
 void MyGLWidget::initializeGL()
 {
+    //creation des murs
+    Wall * mur = new Wall( Point(-2,0,-2), Point(2,0,-2) );
+    V_walls.push_back(mur);
+
+//    Wall * mur2 = new Wall( Point(2,0,-2), Point(2,0,2) );
+//    V_walls.push_back(mur2);
+
+//    Wall * mur3 = new Wall( Point(2,0,2), Point(-2,0,2) );
+//    V_walls.push_back(mur3);
+
+//    Wall * mur4 = new Wall( Point(-2,0,2), Point(-2,0,-2) );
+//    V_walls.push_back(mur4);
+
+    //creation de la sphere
+    Sphere * boule = new Sphere(Point(3,1,3), 0.5);
+    V_spheres.push_back(boule);
+
     // Reglage de la couleur de fond
 
     // Activation du zbuffer
@@ -49,29 +66,46 @@ void MyGLWidget::paintGL()
     glLoadIdentity();
     gluPerspective(FOV, 16.0/9.0, 0.1f, 500.0f);
 
-
-
     // Definition de la matrice modelview
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(player.getPos().x, player.getPos().y, player.getPos().z, //position camera
               player.getTarget().x, player.getTarget().y, player.getTarget().z,  //position cible
               0.0f, 1.0f, 0.0f); //vecteur vertical
-    cout << "(" <<player.getPos().x <<", "<< player.getPos().y <<", "<< player.getPos().z << ")" << endl;
-    cout << "(" <<player.getTarget().x <<", "<< player.getTarget().y <<", "<< player.getTarget().z << ")" << endl;
+
 
     // ---------Affichage du Sol-------
     glBegin(GL_QUADS);
     glColor3ub(255, 255, 255);
-    glVertex3f(-5.0f, 0, -5.0f);
+    glVertex3f(0, 0, 0);
     glColor3ub(255, 0, 255);
-    glVertex3f(5.0f, 0, -5.0f);
+    glVertex3f(20, 0, 0);
     glColor3ub(255, 255, 0);
-    glVertex3f(5.0f, 0, 5.0f);
+    glVertex3f(20, 0, 12);
     glColor3ub(0, 255, 255);
-    glVertex3f(-5.0f, 0, 5.0f);
+    glVertex3f(0, 0, 12);
     glEnd();
 
+    // ---------Affichage du Plafond-------
+    glBegin(GL_QUADS);
+    glColor3ub(255, 255, 255);
+    glVertex3f(0, 2, 0);
+    glColor3ub(255, 0, 255);
+    glVertex3f(20, 2, 0);
+    glColor3ub(255, 255, 0);
+    glVertex3f(20, 2, 12);
+    glColor3ub(0, 255, 255);
+    glVertex3f(0, 2, 12);
+    glEnd();
+
+    // ------ Affichage des Murs ----
+    for(Wall * w: V_walls){
+        w->draw();
+    }
+    // ------ Affichage des Boules ----
+    for(Sphere * s: V_spheres){
+        s->draw();
+    }
     //      _-_HUD 2D_-_
 
     glMatrixMode(GL_PROJECTION);
@@ -99,7 +133,6 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
 {
    switch(event->key())
     {
-        // Cas par defaut
         case Qt::Key::Key_Q://gauche
             player.move(0,-0.1);
             break;
@@ -125,15 +158,15 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             FOV -=5;
             break;
         case Qt::Key::Key_Tab:
-        if (Zbuf){
-            Zbuf = false;
-            glDisable(GL_DEPTH_TEST);
-            glDisable(GL_TEXTURE_2D);
-        } else {
-            Zbuf = true;
-            glEnable(GL_DEPTH_TEST);
-            glEnable(GL_TEXTURE_2D);
-        }
+            if (Zbuf){
+                Zbuf = false;
+                glDisable(GL_DEPTH_TEST);
+                glDisable(GL_TEXTURE_2D);
+            } else {
+                Zbuf = true;
+                glEnable(GL_DEPTH_TEST);
+                glEnable(GL_TEXTURE_2D);
+            }
         break;
         case Qt::Key::Key_Escape:
             exit(0);

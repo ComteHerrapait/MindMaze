@@ -7,7 +7,11 @@
 #include <QKeyEvent>
 #include "player.h"
 #include <math.h>
+#include "wall.h"
+#include "sphere.h"
 #define PI 3.14159265
+
+using namespace std;
 
 // Classe dediee a l'affichage d'une scene OpenGL
 class MyGLWidget : public QGLWidget
@@ -33,9 +37,11 @@ protected:
     // Fonction de gestion d'interactions clavier
     void keyPressEvent(QKeyEvent * event);
 private :
-    Player player = Player(Point(1,1,1), Point(0,0,10));
+    Player player = Player(Point(0,1,0), Point(1,1,0));
     bool Zbuf = true;
     float FOV = 80.0f;
+    std::vector<Wall *> V_walls;
+    std::vector<Sphere *> V_spheres;
 };
 
 #endif // MYGLWIDGET_H
