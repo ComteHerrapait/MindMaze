@@ -7,6 +7,7 @@ Sphere::Sphere(Point p, float r){
      color[0] = 1.0f; //red
      color[1] = 0.1f; //blue
      color[2] = 0.1f; //green
+     quadric = gluNewQuadric();
 }
 void Sphere::draw(){
     // paramètres d'affichages //
@@ -23,12 +24,13 @@ void Sphere::draw(){
     // Couleur de l'objet
     glColor3f(color[0], color[1], color[2]);
 
-    glEnable(GL_LIGHTING);
 
     // Affichage de la quadrique
+    glEnable(GL_LIGHTING);
     gluQuadricDrawStyle(quadric, drawMode);
     glTranslatef(pos.x, pos.y, pos.z);
     gluSphere(quadric, radius, stacks, stacks);//tracé de la sphere
+    glDisable(GL_LIGHTING);
 
     glPopMatrix();
 }
