@@ -9,6 +9,7 @@
 #include <math.h>
 #include "wall.h"
 #include "sphere.h"
+#include "surface.h"
 #define PI 3.14159265
 
 using namespace std;
@@ -44,6 +45,7 @@ private :
     float FOV = 80.0f;
     std::vector<Wall *> V_walls;
     std::vector<Sphere *> V_spheres;
+    std::vector<Surface *> V_surfaces;
 };
 
 #endif // MYGLWIDGET_H

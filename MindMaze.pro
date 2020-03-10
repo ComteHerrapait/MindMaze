@@ -20,6 +20,7 @@ TARGET 	  = MindMaze
 SOURCES	+= main.cpp myglwidget.cpp \
     player.cpp \
     sphere.cpp \
+    surface.cpp \
     wall.cpp
 
 HEADERS += \
@@ -27,10 +28,12 @@ HEADERS += \
     player.h \
     point.h \
     sphere.h \
+    surface.h \
     wall.h
 
 DISTFILES += \
     textures/floor1.jpg \
+    textures/floor2.jpg \
     textures/tse1.png \
     textures/tse1.jpg \
     textures/tse2.jpg

@@ -36,18 +36,15 @@ void MyGLWidget::initializeGL()
     Wall * mur = new Wall( Point(-2,0,-2), Point(2,0,-2) );
     V_walls.push_back(mur);
 
-//    Wall * mur2 = new Wall( Point(2,0,-2), Point(2,0,2) );
-//    V_walls.push_back(mur2);
-
-//    Wall * mur3 = new Wall( Point(2,0,2), Point(-2,0,2) );
-//    V_walls.push_back(mur3);
-
-//    Wall * mur4 = new Wall( Point(-2,0,2), Point(-2,0,-2) );
-//    V_walls.push_back(mur4);
-
     //creation de la sphere
     Sphere * boule = new Sphere(Point(3,1,3), 0.5);
     V_spheres.push_back(boule);
+
+    // creation du plafond et du sol
+    Surface * ceiling = new Surface(false);//plafond
+    V_surfaces.push_back(ceiling);
+    Surface * floor = new Surface(true);//sol
+    V_surfaces.push_back(floor);
 
     // Reglage de la couleur de fond
 
@@ -82,30 +79,10 @@ void MyGLWidget::paintGL()
               player.getTarget().x, player.getTarget().y, player.getTarget().z,  //position cible
               0.0f, 1.0f, 0.0f); //vecteur vertical
 
-
-    // ---------Affichage du Sol-------
-    glBegin(GL_QUADS);
-    glColor3ub(255, 255, 255);
-    glVertex3f(0, 0, 0);
-    glColor3ub(255, 0, 255);
-    glVertex3f(20, 0, 0);
-    glColor3ub(255, 255, 0);
-    glVertex3f(20, 0, 12);
-    glColor3ub(0, 255, 255);
-    glVertex3f(0, 0, 12);
-    glEnd();
-
-    // ---------Affichage du Plafond-------
-    glBegin(GL_QUADS);
-    glColor3ub(255, 255, 255);
-    glVertex3f(0, 2, 0);
-    glColor3ub(255, 0, 255);
-    glVertex3f(20, 2, 0);
-    glColor3ub(255, 255, 0);
-    glVertex3f(20, 2, 12);
-    glColor3ub(0, 255, 255);
-    glVertex3f(0, 2, 12);
-    glEnd();
+    // ------ Affichage du sol et du plafond ----
+    for(Surface * s: V_surfaces){
+        s->draw();
+    }
 
     // ------ Affichage des Murs ----
     for(Wall * w: V_walls){

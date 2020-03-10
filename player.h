@@ -21,7 +21,7 @@ public:
 private :
     Point pos ; //position of the player
     Point target ; //position the player is looking at
-    bool achievement; //store if the player has succeded at the mission (TBD)
+    bool achievement = false; //store if the player has succeded at the mission (TBD)
 
 };
 
