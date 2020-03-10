@@ -46,9 +46,9 @@ private :
     Player player = Player(Point(0,1,0), Point(1,1,0));
     bool Zbuf = true;
     float FOV = 80.0f;
-    std::vector<Wall *> V_walls;
-    std::vector<Sphere *> V_spheres;
-    std::vector<Surface *> V_surfaces;
+    vector<Wall *> V_walls;
+    vector<Sphere *> V_spheres;
+    vector<Surface *> V_surfaces;
 };
 
 #endif // MYGLWIDGET_H

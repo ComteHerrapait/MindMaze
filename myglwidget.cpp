@@ -10,6 +10,7 @@ using namespace std;
 // Declarations des constantes
 const unsigned int WIN_WIDTH  = 1600;
 const unsigned int WIN_HEIGHT = 900;
+const float MAX_DIMENSION     = 50.0f;
 
 
 // Constructeur
@@ -21,10 +22,10 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 
     // Connexion du timer
     connect(&timer,  &QTimer::timeout, [&] {
-        timeElapsed += 1;
+        timeElapsed += 20;
         updateGL();
     });
-    timer.setInterval(1);
+    timer.setInterval(20); //tick-rate en ms
     timer.start();
 }
 
@@ -33,7 +34,7 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 void MyGLWidget::initializeGL()
 {
     //creation des murs
-    Wall * mur = new Wall( Point(-2,0,-2), Point(2,0,-2) );
+    Wall * mur = new Wall( Point(8,0,8), Point(12,0,8) );
     V_walls.push_back(mur);
 
     //creation de la sphere
@@ -50,6 +51,7 @@ void MyGLWidget::initializeGL()
 
     // Activation du zbuffer
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
 }
 
 
@@ -57,6 +59,17 @@ void MyGLWidget::initializeGL()
 void MyGLWidget::resizeGL(int width, int height)
 {
     // Definition du viewport (zone d'affichage)
+    glViewport(0, 0, width, height);
+
+    // Definition de la matrice de projection
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    if(width != 0)
+        glOrtho(-MAX_DIMENSION, MAX_DIMENSION, -MAX_DIMENSION * height / static_cast<float>(width), MAX_DIMENSION * height / static_cast<float>(width), -MAX_DIMENSION * 2.0f, MAX_DIMENSION * 2.0f);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 }
 
 
@@ -66,7 +79,6 @@ void MyGLWidget::paintGL()
     // Reinitialisation des tampons
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //glEnable(GL_LIGHTING);
-
     // Definition de la matrice projection
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -105,7 +117,7 @@ void MyGLWidget::paintGL()
     */
 
     // ---- HUD 2D ----
-
+        //paramétrage
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
@@ -114,7 +126,7 @@ void MyGLWidget::paintGL()
     glLoadIdentity();
     glDisable(GL_CULL_FACE);
     glClear(GL_DEPTH_BUFFER_BIT);
-
+        //carré
     glBegin(GL_QUADS);
         if (player.getAchievement()) {
             glColor3f(0.0f, 1.0f, 0.0);
@@ -126,6 +138,12 @@ void MyGLWidget::paintGL()
         glVertex2f(100.0, 100.0);
         glVertex2f(0.0, 100.0);
     glEnd();
+        //texte
+    qglColor(Qt::red);
+    renderText(110, 20, QString("Vous jouez depuis %1 secondes").arg(timeElapsed/1000));
+    if (player.getAchievement()){
+        renderText(110, 35, QString("Vous avez trouve toutes les spheres, trouvez la sortie !"));
+    }
 
 }
 
@@ -136,15 +154,39 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
     {
         case Qt::Key::Key_Q://gauche
             player.move(0,-0.1);
+            for(Wall * w: V_walls){
+                if (w->CheckCollision(player)){
+                    player.move(0,0.1);
+                    break;
+                }
+            }
             break;
         case Qt::Key::Key_D://droite
             player.move(0,0.1);
+            for(Wall * w: V_walls){
+                if (w->CheckCollision(player)){
+                    player.move(0,-0.1);
+                    break;
+                }
+            }
             break;
         case Qt::Key::Key_Z://avant
             player.move(0.1,0);
+            for(Wall * w: V_walls){
+                if (w->CheckCollision(player)){
+                    player.move(-0.1,0);
+                    break;
+                }
+            }
             break;
         case Qt::Key::Key_S://arriere
             player.move(-0.1,0);
+            for(Wall * w: V_walls){
+                if (w->CheckCollision(player)){
+                    player.move(0.1,0);
+                    break;
+                }
+            }
             break;
         case Qt::Key::Key_E:
             player.look(3,0);

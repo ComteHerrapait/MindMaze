@@ -17,7 +17,9 @@ public:
 private :
     bool isFloor;
     float height;
-
+    GLuint texMap;
+    int LENGTH = 10;
+    int WIDTH = 6;
 };
 
 #endif // SURFACE_H

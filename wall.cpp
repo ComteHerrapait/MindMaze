@@ -5,38 +5,42 @@ Wall::Wall(Point p1, Point p2)
     end_1 = p1;
     end_2 = p2;
 }
-
-void Wall::draw(){
-    Point p1,p2,p3,p4;
+vector<Point> createBase(Point p1, Point p2, float width){
+    vector<Point> result;
     float wX, wZ;
 
-
-    if (end_1.z == end_2.z){ //mur selon l'axe X
-        if (end_1.x > end_2.x){
+    if (p1.z == p2.z){ //mur selon l'axe X
+        if (p1.x > p2.x){
             wX = - width;
         } else {
             wX = + width;
         }
         wZ = width;
-        p1 = Point(end_2.x+wX,0,end_2.z+wZ);
-        p2 = Point(end_1.x-wX,0,end_1.z+wZ);
-        p3 = Point(end_1.x-wX,0,end_1.z-wZ);
-        p4 = Point(end_2.x+wX,0,end_2.z-wZ);
-
-    } else if (end_1.x == end_2.x){// mur selon l'axe Z
-        if (end_1.z > end_2.z){
+        result.push_back(Point(p2.x+wX,0,p2.z+wZ));
+        result.push_back(Point(p1.x-wX,0,p1.z+wZ));
+        result.push_back(Point(p1.x-wX,0,p1.z-wZ));
+        result.push_back(Point(p2.x+wX,0,p2.z-wZ));
+    } else if (p1.x == p2.x){// mur selon l'axe Z
+        if (p1.z > p2.z){
             wZ = - width;
         } else {
             wZ = + width;
         }
         wX = width;
-        p1 = Point(end_2.x-wX,0,end_2.z+wZ);
-        p2 = Point(end_1.x-wX,0,end_1.z-wZ);
-        p3 = Point(end_1.x+wX,0,end_1.z-wZ);
-        p4 = Point(end_2.x+wX,0,end_2.z+wZ);
-    } else { //mur diagonal
-        return ;
+        result.push_back(Point(p2.x-wX,0,p2.z+wZ));
+        result.push_back(Point(p1.x-wX,0,p1.z-wZ));
+        result.push_back(Point(p1.x+wX,0,p1.z-wZ));
+        result.push_back(Point(p2.x+wX,0,p2.z+wZ));
     }
+    return result;
+}
+void Wall::draw(){
+    vector<Point> base = createBase(end_1, end_2, width);
+    Point p1,p2,p3,p4;
+    p1 = base[0];
+    p2 = base[1];
+    p3 = base[2];
+    p4 = base[3];
 
     glPushMatrix();
     glBegin(GL_QUADS);
@@ -55,6 +59,7 @@ void Wall::draw(){
 
     On ne voit pas le dessus et le dessous des murs
     */
+
         //Walls
     glVertex3f(p1.x, 0, p1.z);
     glVertex3f(p2.x, 0, p2.z);
@@ -79,4 +84,26 @@ void Wall::draw(){
     glEnd();
 
     glPopMatrix();
+}
+
+bool Wall::CheckCollision(Player p){
+    Point P = p.getPos();
+    Point milieu = Point(   (end_1.x + end_2.x)/2,
+                            (end_1.y + end_2.y)/2,
+                            (end_1.z + end_2.z)/2   );
+    float length;
+    if (end_1.z == end_2.z){ //mur selon l'axe X
+        length = abs(end_1.x - end_2.x);
+        if (abs(P.z - milieu.z ) < HitBoxWidth
+                && abs(P.x - milieu.x) < ( length/2.0 + HitBoxWidth)    ){
+            return true;
+        }
+    } else if (end_1.x == end_2.x){ // mur selon l'axe Z
+        length = abs(end_1.z - end_2.z);
+        if (abs(P.x - milieu.x ) < HitBoxWidth
+                && abs(P.z - milieu.z) < ( length/2.0 + HitBoxWidth)    ){
+            return true;
+        }
+    }
+    return false;
 }

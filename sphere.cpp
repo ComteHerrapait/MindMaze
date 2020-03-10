@@ -10,9 +10,7 @@ Sphere::Sphere(Point p, float r){
 
      // Texture
 
-     QImage texture = QGLWidget::convertToGLFormat(
-                 QImage(QString(":/tse3.jpg")));
-     // /!\ attention le chemin d'accès est pour le moment absolu, donc pas portable !
+     QImage texture = QGLWidget::convertToGLFormat(QImage(QString(":/tse3.jpg")));
 
      glGenTextures(1, &texMap);
      glBindTexture(GL_TEXTURE_2D, texMap );
@@ -35,7 +33,7 @@ void Sphere::draw(float time){
 
     // paramètres d'affichages //
     GLenum drawMode = GLU_FILL; //mode de dessin des spheres
-    int stacks = 25;            //nombre de stacks des spheres
+    int stacks = 50;            //nombre de stacks des spheres
 
     glPushMatrix();
 
