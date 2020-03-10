@@ -60,6 +60,7 @@ void MyGLWidget::paintGL()
 {
     // Reinitialisation des tampons
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glEnable(GL_LIGHTING);
 
     // Definition de la matrice projection
     glMatrixMode(GL_PROJECTION);
@@ -105,7 +106,15 @@ void MyGLWidget::paintGL()
     // ------ Affichage des Boules ----
     for(Sphere * s: V_spheres){
         s->draw();
+        s->detect(player);
     }
+
+    // ---- eclairage ambient ----
+    /*
+    GLfloat tab_ambient[] = {1.0,1.0,1.0,1.0};
+    glLightfv(GL_LIGHT0,GL_AMBIENT, tab_ambient);
+    */
+
     //      _-_HUD 2D_-_
 
     glMatrixMode(GL_PROJECTION);
