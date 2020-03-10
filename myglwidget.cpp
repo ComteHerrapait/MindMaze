@@ -34,8 +34,14 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 void MyGLWidget::initializeGL()
 {
     //creation des murs
-    Wall * mur = new Wall( Point(8,0,8), Point(12,0,8) );
+    Wall * mur = new Wall( Point(2,0,2), Point(4,0,2) );
     V_walls.push_back(mur);
+
+    Wall * mur2 = new Wall( Point(4,0,2), Point(4,0,4) );
+    V_walls.push_back(mur2);
+
+    Wall * mur3 = new Wall( Point(4,0,4), Point(2,0,4) );
+    V_walls.push_back(mur3);
 
     //creation de la sphere
     Sphere * boule = new Sphere(Point(3,1,3), 0.5);

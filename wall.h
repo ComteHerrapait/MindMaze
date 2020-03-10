@@ -6,6 +6,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <vector>
+#include <QImage>
+#include <QtOpenGL>
 
 using namespace std;
 
@@ -21,6 +23,7 @@ private:
     float width = 0.05;
     float HitBoxWidth = 0.3;
     float height = 2.0;
+    GLuint texMap;
 };
 
 #endif // WALL_H

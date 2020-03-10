@@ -4,7 +4,27 @@ Wall::Wall(Point p1, Point p2)
 {
     end_1 = p1;
     end_2 = p2;
+
+    // ---- Texture ----
+    glEnable(GL_TEXTURE_2D);
+    QImage texture;
+    texture = QGLWidget::convertToGLFormat(QImage(QString(":/wall1.jpg")));
+
+    glGenTextures(1, &texMap);
+    glBindTexture(GL_TEXTURE_2D, texMap );
+    glTexImage2D( GL_TEXTURE_2D, // GL_TEXTURE_1D,GL_TEXTURE_2D,GL_TEXTURE_3D
+                  0, // niveau de détail de l’image, avec 0 on a l’image de base
+                  4, // nombre de composantes de couleurs par pixel (3 si RGB, 4 si RGBA, ...)
+                  texture.width(),texture.height(), // largeur de la texture et hauteur de la texture
+                  0, // toujours 0 d’après les spécif
+                  GL_RGBA, // format de stockage (GL_RGB, GL_RGBA, ...)
+                  GL_UNSIGNED_BYTE, // type dans lequel sont stockées les composantes(GL_UNSIGNED_BYTE, GL_BYTE, GL_INT, ...)
+                  texture.bits() );  // adresse de la texture
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glDisable(GL_TEXTURE_2D);
 }
+
 vector<Point> createBase(Point p1, Point p2, float width){
     vector<Point> result;
     float wX, wZ;
@@ -34,7 +54,10 @@ vector<Point> createBase(Point p1, Point p2, float width){
     }
     return result;
 }
-void Wall::draw(){
+void Wall::draw(){ 
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D,texMap);
+
     vector<Point> base = createBase(end_1, end_2, width);
     Point p1,p2,p3,p4;
     p1 = base[0];
@@ -61,29 +84,30 @@ void Wall::draw(){
     */
 
         //Walls
-    glVertex3f(p1.x, 0, p1.z);
-    glVertex3f(p2.x, 0, p2.z);
-    glVertex3f(p2.x, height, p2.z);
-    glVertex3f(p1.x, height, p1.z);
+    glTexCoord2f(0,0);  glVertex3f(p1.x, 0, p1.z);
+    glTexCoord2f(1,0);  glVertex3f(p2.x, 0, p2.z);
+    glTexCoord2f(1,1);  glVertex3f(p2.x, height, p2.z);
+    glTexCoord2f(0,1);  glVertex3f(p1.x, height, p1.z);
 
-    glVertex3f(p2.x, 0, p2.z);
-    glVertex3f(p3.x, 0, p3.z);
-    glVertex3f(p3.x, height, p3.z);
-    glVertex3f(p2.x, height, p2.z);
+    glTexCoord2f(0,0);  glVertex3f(p2.x, 0, p2.z);
+    glTexCoord2f(1,0);  glVertex3f(p3.x, 0, p3.z);
+    glTexCoord2f(1,1);  glVertex3f(p3.x, height, p3.z);
+    glTexCoord2f(0,1);  glVertex3f(p2.x, height, p2.z);
 
-    glVertex3f(p3.x, 0, p3.z);
-    glVertex3f(p4.x, 0, p4.z);
-    glVertex3f(p4.x, height, p4.z);
-    glVertex3f(p3.x, height, p3.z);
+    glTexCoord2f(0,0);  glVertex3f(p3.x, 0, p3.z);
+    glTexCoord2f(1,0);  glVertex3f(p4.x, 0, p4.z);
+    glTexCoord2f(1,1);  glVertex3f(p4.x, height, p4.z);
+    glTexCoord2f(0,1);  glVertex3f(p3.x, height, p3.z);
 
-    glVertex3f(p4.x, 0, p4.z);
-    glVertex3f(p1.x, 0, p1.z);
-    glVertex3f(p1.x, height, p1.z);
-    glVertex3f(p4.x, height, p4.z);
+    glTexCoord2f(0,0);  glVertex3f(p4.x, 0, p4.z);
+    glTexCoord2f(1,0);  glVertex3f(p1.x, 0, p1.z);
+    glTexCoord2f(1,1);  glVertex3f(p1.x, height, p1.z);
+    glTexCoord2f(0,1);  glVertex3f(p4.x, height, p4.z);
 
     glEnd();
 
     glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
 }
 
 bool Wall::CheckCollision(Player p){
