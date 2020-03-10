@@ -13,9 +13,10 @@ public:
     Player(Point position, Point lookingAt);
     void move(float forward, float rightward); //movement of the Player
     void look(float vertical, float horizontal); //change head orientation
-
+    void foundSpheres();
     Point getPos() {return pos;}
     Point getTarget() {return target;}
+    bool getAchievement() {return achievement;}
 
 private :
     Point pos ; //position of the player

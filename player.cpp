@@ -43,6 +43,9 @@ void Player::look(float horizontal, float vertical = 0.0f){
 
     target.x = newX + pos.x;
     target.z = newZ + pos.z;
+}
 
-
+void Player::foundSpheres(){
+    achievement = true;
+    cout << "Bravo vous avez trouvé la sphere, trouvez maintenant la sortie !" << endl;
 }

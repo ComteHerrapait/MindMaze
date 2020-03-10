@@ -18,6 +18,14 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
     // Reglage de la taille/position
     setFixedSize(WIN_WIDTH, WIN_HEIGHT);
     move(QApplication::desktop()->screen()->rect().center() - rect().center());
+
+    // Connexion du timer
+    connect(&timer,  &QTimer::timeout, [&] {
+        timeElapsed += 1;
+        updateGL();
+    });
+    timer.setInterval(1);
+    timer.start();
 }
 
 
@@ -104,10 +112,14 @@ void MyGLWidget::paintGL()
         w->draw();
     }
     // ------ Affichage des Boules ----
+    bool AllSpheresFound = true;
     for(Sphere * s: V_spheres){
-        s->draw();
-        s->detect(player);
+        s->draw(timeElapsed);
+        s->detect(player); // detecte si un joueur ramasse la sphere
+        AllSpheresFound = AllSpheresFound & s->isFound(); // vérifie que toutes les spheres sont trouvées
     }
+    if (AllSpheresFound && !player.getAchievement()) //evite de répeter la commande si le joueur a déjàtout trouvé
+        player.foundSpheres(); // indique au joueur qu'il a trouvé toutes les spheres
 
     // ---- eclairage ambient ----
     /*
@@ -127,9 +139,13 @@ void MyGLWidget::paintGL()
     glClear(GL_DEPTH_BUFFER_BIT);
 
     glBegin(GL_QUADS);
-        glColor3f(1.0f, 0.0f, 0.0);
+        if (player.getAchievement()) {
+            glColor3f(0.0f, 1.0f, 0.0);
+        } else {
+            glColor3f(1.0f, 0.0f, 0.0);
+        }
         glVertex2f(0.0, 0.0);
-        glVertex2f(10.0, 0.0);
+        glVertex2f(100.0, 0.0);
         glVertex2f(100.0, 100.0);
         glVertex2f(0.0, 100.0);
     glEnd();

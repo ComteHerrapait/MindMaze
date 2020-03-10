@@ -37,6 +37,8 @@ protected:
     // Fonction de gestion d'interactions clavier
     void keyPressEvent(QKeyEvent * event);
 private :
+    QTimer timer;
+    float timeElapsed = 0.0f;
     Player player = Player(Point(0,1,0), Point(1,1,0));
     bool Zbuf = true;
     float FOV = 80.0f;

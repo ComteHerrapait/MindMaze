@@ -11,7 +11,7 @@ Sphere::Sphere(Point p, float r){
      // Texture
 
      QImage texture = QGLWidget::convertToGLFormat(
-                 QImage(QString("D:/Travail/openGL/projetOpenGL/MindMaze/MindMaze/textures/tse2.jpg")));
+                 QImage(QString("D:/Travail/openGL/projetOpenGL/MindMaze/MindMaze/textures/tse3.jpg")));
      // /!\ attention le chemin d'accès est pour le moment absolu, donc pas portable !
 
      glGenTextures(1, &texMap);
@@ -30,7 +30,7 @@ Sphere::Sphere(Point p, float r){
      quadric = gluNewQuadric();
      gluQuadricTexture( quadric, GL_TRUE );//activation de la texture sur la quadrique
 }
-void Sphere::draw(){
+void Sphere::draw(float time){
     if (found) return; //ne trace pas la boule si elle est trouvée
 
     // paramètres d'affichages //
@@ -52,8 +52,9 @@ void Sphere::draw(){
 
     // Affichage de la quadrique
     gluQuadricDrawStyle(quadric, drawMode);
-    glTranslatef(pos.x, pos.y, pos.z);
-    glRotatef(270, 1.0, 0.0, 0.0);
+    glTranslatef(pos.x, pos.y + 0.2 * sin(time/100), pos.z);
+    glRotatef(270, 1.0, 0.0, 0.0); // on rend le logo visible
+    glRotatef(time/5,0.0,0.0,1.0); //on tourne avec le temps
     gluSphere(quadric, radius, stacks, stacks);//tracé de la sphere
 
     glDisable(GL_TEXTURE_2D);
@@ -63,4 +64,5 @@ void Sphere::draw(){
 void Sphere::detect(Player p){
     if ( found == false && pos.distanceTo(p.getPos()) < radius * 1.5 )
         found = true;
+
 }

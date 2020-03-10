@@ -13,8 +13,9 @@ class Sphere
 {
 public:
     Sphere(Point p, float r);
-    void draw();
+    void draw(float time);
     void detect(Player p);
+    bool isFound() {return found;}
 private:
     float color[3];//couleur de la sphere
     Point pos;//Point du centre de la sphere
