@@ -11,7 +11,7 @@ Sphere::Sphere(Point p, float r){
      // Texture
 
      QImage texture = QGLWidget::convertToGLFormat(
-                 QImage(QString("D:/Travail/openGL/projetOpenGL/MindMaze/MindMaze/textures/tse3.jpg")));
+                 QImage(QString(":/tse3.jpg")));
      // /!\ attention le chemin d'accès est pour le moment absolu, donc pas portable !
 
      glGenTextures(1, &texMap);

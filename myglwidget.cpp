@@ -79,16 +79,16 @@ void MyGLWidget::paintGL()
               player.getTarget().x, player.getTarget().y, player.getTarget().z,  //position cible
               0.0f, 1.0f, 0.0f); //vecteur vertical
 
-    // ------ Affichage du sol et du plafond ----
+    // ---- Affichage sol et plafond ----
     for(Surface * s: V_surfaces){
         s->draw();
     }
 
-    // ------ Affichage des Murs ----
+    // ---- Affichage des Murs ----
     for(Wall * w: V_walls){
         w->draw();
     }
-    // ------ Affichage des Boules ----
+    // ---- Affichage des Boules ----
     bool AllSpheresFound = true;
     for(Sphere * s: V_spheres){
         s->draw(timeElapsed);
@@ -104,7 +104,7 @@ void MyGLWidget::paintGL()
     glLightfv(GL_LIGHT0,GL_AMBIENT, tab_ambient);
     */
 
-    //      _-_HUD 2D_-_
+    // ---- HUD 2D ----
 
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
@@ -128,7 +128,6 @@ void MyGLWidget::paintGL()
     glEnd();
 
 }
-
 
 // Fonction de gestion d'interactions clavier
 void MyGLWidget::keyPressEvent(QKeyEvent * event)
@@ -182,6 +181,20 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
     }
 
     // Acceptation de l'evenement et mise a jour de la scene
+    event->accept();
+    updateGL();
+}
+
+void MyGLWidget::wheelEvent(QWheelEvent *event)
+{
+    float deg = event->angleDelta().y();
+
+    if (deg < 0){
+        FOV --;
+    } else if ( deg > 0) {
+        FOV ++;
+    }
+
     event->accept();
     updateGL();
 }

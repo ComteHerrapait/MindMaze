@@ -31,9 +31,7 @@ HEADERS += \
     surface.h \
     wall.h
 
-DISTFILES += \
-    textures/floor1.jpg \
-    textures/floor2.jpg \
-    textures/tse1.png \
-    textures/tse1.jpg \
-    textures/tse2.jpg
+DISTFILES +=
+
+RESOURCES += \
+    textures/textures.qrc
