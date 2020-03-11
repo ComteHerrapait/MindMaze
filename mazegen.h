@@ -11,7 +11,7 @@ class MazeGen
 {
 public:
     MazeGen();
-    vector<Wall *> generateStatic();
+    vector<Wall *> generateBorder();
 };
 
 #endif // MAZEGEN_H

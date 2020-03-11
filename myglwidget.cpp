@@ -16,6 +16,7 @@ const float MAX_DIMENSION     = 50.0f;
 // Constructeur
 MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 {
+    //antialiasing
     setFormat(QGLFormat(QGL::SampleBuffers));
 
     //active le suivi de la souris
@@ -41,7 +42,7 @@ void MyGLWidget::initializeGL()
 {
     //creation des murs
     MazeGen mazegen ;
-    V_walls = mazegen.generateStatic();
+    V_walls = mazegen.generateBorder();
 
     Wall * mur = new Wall( Point(2,0,2), Point(4,0,2) );
     V_walls.push_back(mur);

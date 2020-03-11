@@ -5,7 +5,7 @@ MazeGen::MazeGen()
 
 }
 
-vector<Wall *> MazeGen::generateStatic(){
+vector<Wall *> MazeGen::generateBorder(){
     vector<Wall *> result;
     vector<Point> points {
                     Point(0,0,0),
