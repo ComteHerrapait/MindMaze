@@ -16,10 +16,11 @@ const float MAX_DIMENSION     = 50.0f;
 // Constructeur
 MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 {
+    //active le suivi de la souris
+    setMouseTracking(true);
+
     // Reglage de la taille/position
     setFixedSize(WIN_WIDTH, WIN_HEIGHT);
-    //showFullScreen();
-    //showMaximized();
     QRect  screenGeometry = QGuiApplication::primaryScreen()->geometry();
     move(screenGeometry.width()/2 - WIN_WIDTH/2, screenGeometry.height()/2 - WIN_HEIGHT/2);
 
@@ -180,6 +181,10 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
         case Qt::Key::Key_A:
             player.look(-3,0);
             break;
+        case Qt::Key::Key_R:
+            mouse ^= true;
+            setMouseTracking(mouse);
+            break;
         case Qt::Key::Key_F:
             if (fullScreen){
                 showNormal();
@@ -226,4 +231,12 @@ void MyGLWidget::wheelEvent(QWheelEvent *event)
 
     event->accept();
     updateGL();
+}
+
+void MyGLWidget::mouseMoveEvent(QMouseEvent *event){
+    if (mouse){
+        float dx = event->x() - lastPosMouse.x();
+        player.look(dx/2.0f,0);
+        lastPosMouse = event->pos();
+    }
 }

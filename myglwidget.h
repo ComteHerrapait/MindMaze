@@ -25,32 +25,25 @@ public:
     // Constructeur
     MyGLWidget(QWidget * parent = nullptr);
 
-protected:
-
-    // Fonction d'initialisation
-    void initializeGL();
-
-    // Fonction de redimensionnement
-    void resizeGL(int width, int height);
-
-    // Fonction d'affichage
-    void paintGL();
-
-    // Fonction de gestion d'interactions clavier
-    void keyPressEvent(QKeyEvent * event);
-
-    //Fonction de gestion d'interaction molette
-    void wheelEvent(QWheelEvent *event);
+protected: 
+    void initializeGL();// Fonction d'initialisation
+    void resizeGL(int width, int height);// Fonction de redimensionnement
+    void paintGL();// Fonction d'affichage
+    void keyPressEvent(QKeyEvent * event);// Fonction de gestion d'interactions clavier
+    void wheelEvent(QWheelEvent *event);//Fonction de gestion d'interaction molette
+    void mouseMoveEvent(QMouseEvent *event);//Fonction de gestion d'interaction souris
 private :
     QTimer timer;
     float timeElapsed = 0.0f;
     Player player = Player(Point(0,1,0), Point(1,1,0));
     bool fullScreen = false;
     bool Zbuf = true;
+    bool mouse = false;
     float FOV = 80.0f;
     vector<Wall *> V_walls;
     vector<Sphere *> V_spheres;
     vector<Surface *> V_surfaces;
+    QPoint lastPosMouse;
 };
 
 #endif // MYGLWIDGET_H
