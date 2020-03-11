@@ -11,6 +11,7 @@
 #include "wall.h"
 #include "sphere.h"
 #include "surface.h"
+#include "mazegen.h"
 #define PI 3.14159265
 
 using namespace std;
@@ -35,7 +36,7 @@ protected:
 private :
     QTimer timer;
     float timeElapsed = 0.0f;
-    Player player = Player(Point(0,1,0), Point(1,1,0));
+    Player player = Player(Point(1,1,1), Point(2,1,1));
     bool fullScreen = false;
     bool Zbuf = true;
     bool mouse = false;

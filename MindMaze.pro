@@ -18,12 +18,14 @@ else {
 TARGET 	  = MindMaze
 # fichiers sources/headers
 SOURCES	+= main.cpp myglwidget.cpp \
+    mazegen.cpp \
     player.cpp \
     sphere.cpp \
     surface.cpp \
     wall.cpp
 
 HEADERS += \
+    mazegen.h \
     myglwidget.h \
     player.h \
     point.h \
