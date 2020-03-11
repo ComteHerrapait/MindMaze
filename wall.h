@@ -1,11 +1,9 @@
 #ifndef WALL_H
 #define WALL_H
 #include "point.h"
-#include "player.h"
 #include <qopengl.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <vector>
 #include <QImage>
 #include <QtOpenGL>
 
@@ -16,12 +14,12 @@ class Wall
 public:
     Wall(Point p1, Point p2);
     void draw();
-    bool CheckCollision(Player p);
+    Point getEnd1() {return end_1;}
+    Point getEnd2() {return end_2;}
 private:
     Point end_1 ;
     Point end_2 ;
     float width = 0.05;
-    float HitBoxWidth = 0.3;
     float height = 2.0;
     GLuint texMap;
 };

@@ -109,25 +109,3 @@ void Wall::draw(){
     glPopMatrix();
     glDisable(GL_TEXTURE_2D);
 }
-
-bool Wall::CheckCollision(Player p){
-    Point P = p.getPos();
-    Point milieu = Point(   (end_1.x + end_2.x)/2,
-                            (end_1.y + end_2.y)/2,
-                            (end_1.z + end_2.z)/2   );
-    float length;
-    if (end_1.z == end_2.z){ //mur selon l'axe X
-        length = abs(end_1.x - end_2.x);
-        if (abs(P.z - milieu.z ) < HitBoxWidth
-                && abs(P.x - milieu.x) < ( length/2.0 + HitBoxWidth)    ){
-            return true;
-        }
-    } else if (end_1.x == end_2.x){ // mur selon l'axe Z
-        length = abs(end_1.z - end_2.z);
-        if (abs(P.x - milieu.x ) < HitBoxWidth
-                && abs(P.z - milieu.z) < ( length/2.0 + HitBoxWidth)    ){
-            return true;
-        }
-    }
-    return false;
-}

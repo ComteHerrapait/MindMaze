@@ -50,9 +50,9 @@ void Sphere::draw(float time){
 
     // Affichage de la quadrique
     gluQuadricDrawStyle(quadric, drawMode);
-    glTranslatef(pos.x, pos.y + 0.2 * sin(time/100), pos.z);
+    glTranslatef(pos.x, pos.y + 0.2 * sin(time/200), pos.z);
     glRotatef(270, 1.0, 0.0, 0.0); // on rend le logo visible
-    glRotatef(time/5,0.0,0.0,1.0); //on tourne avec le temps
+    glRotatef(time/10,0.0,0.0,1.0); //on tourne avec le temps
     gluSphere(quadric, radius, stacks, stacks);//tracé de la sphere
 
     glDisable(GL_TEXTURE_2D);

@@ -18,7 +18,10 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 {
     // Reglage de la taille/position
     setFixedSize(WIN_WIDTH, WIN_HEIGHT);
-    move(QApplication::desktop()->screen()->rect().center() - rect().center());
+    //showFullScreen();
+    //showMaximized();
+    QRect  screenGeometry = QGuiApplication::primaryScreen()->geometry();
+    move(screenGeometry.width()/2 - WIN_WIDTH/2, screenGeometry.height()/2 - WIN_HEIGHT/2);
 
     // Connexion du timer
     connect(&timer,  &QTimer::timeout, [&] {
@@ -88,7 +91,7 @@ void MyGLWidget::paintGL()
     // Definition de la matrice projection
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(FOV, 16.0/9.0, 0.1f, 500.0f);
+    gluPerspective(FOV, 16.0/9.0, 0.1f, 100.0f);
 
     // Definition de la matrice modelview
     glMatrixMode(GL_MODELVIEW);
@@ -147,8 +150,9 @@ void MyGLWidget::paintGL()
         //texte
     qglColor(Qt::red);
     renderText(110, 20, QString("Vous jouez depuis %1 secondes").arg(timeElapsed/1000));
+    renderText(110, 35, QString("FOV : %1 deg").arg(FOV));
     if (player.getAchievement()){
-        renderText(110, 35, QString("Vous avez trouve toutes les spheres, trouvez la sortie !"));
+        renderText(110, 50, QString("Vous avez trouve toutes les spheres, trouvez la sortie !"));
     }
 
 }
@@ -159,40 +163,16 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
    switch(event->key())
     {
         case Qt::Key::Key_Q://gauche
-            player.move(0,-0.1);
-            for(Wall * w: V_walls){
-                if (w->CheckCollision(player)){
-                    player.move(0,0.1);
-                    break;
-                }
-            }
+            player.moveWithCollisions(0,-0.1,V_walls);
             break;
         case Qt::Key::Key_D://droite
-            player.move(0,0.1);
-            for(Wall * w: V_walls){
-                if (w->CheckCollision(player)){
-                    player.move(0,-0.1);
-                    break;
-                }
-            }
+            player.moveWithCollisions(0,0.1,V_walls);
             break;
         case Qt::Key::Key_Z://avant
-            player.move(0.1,0);
-            for(Wall * w: V_walls){
-                if (w->CheckCollision(player)){
-                    player.move(-0.1,0);
-                    break;
-                }
-            }
+            player.moveWithCollisions(0.1,0,V_walls);
             break;
         case Qt::Key::Key_S://arriere
-            player.move(-0.1,0);
-            for(Wall * w: V_walls){
-                if (w->CheckCollision(player)){
-                    player.move(0.1,0);
-                    break;
-                }
-            }
+            player.moveWithCollisions(-0.1,0,V_walls);
             break;
         case Qt::Key::Key_E:
             player.look(3,0);
@@ -200,22 +180,23 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
         case Qt::Key::Key_A:
             player.look(-3,0);
             break;
-        case Qt::Key::Key_R:
-            FOV +=5;
-            break;
         case Qt::Key::Key_F:
-            FOV -=5;
+            if (fullScreen){
+                showNormal();
+            } else {
+                showFullScreen();
+            }
+            fullScreen ^= true;
             break;
         case Qt::Key::Key_Tab:
             if (Zbuf){
-                Zbuf = false;
                 glDisable(GL_DEPTH_TEST);
                 glDisable(GL_TEXTURE_2D);
-            } else {
-                Zbuf = true;
+            } else { 
                 glEnable(GL_DEPTH_TEST);
                 glEnable(GL_TEXTURE_2D);
             }
+            Zbuf ^= true;
         break;
         case Qt::Key::Key_Escape:
             exit(0);

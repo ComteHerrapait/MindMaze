@@ -2,6 +2,7 @@
 #define MYGLWIDGET_H
 
 #include <iostream>
+#include <vector>
 #include <QGLWidget>
 #include <QtOpenGL>
 #include <QKeyEvent>
@@ -44,6 +45,7 @@ private :
     QTimer timer;
     float timeElapsed = 0.0f;
     Player player = Player(Point(0,1,0), Point(1,1,0));
+    bool fullScreen = false;
     bool Zbuf = true;
     float FOV = 80.0f;
     vector<Wall *> V_walls;
