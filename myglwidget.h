@@ -6,6 +6,7 @@
 #include <QGLWidget>
 #include <QtOpenGL>
 #include <QKeyEvent>
+#include <random>
 #include "player.h"
 #include <math.h>
 #include "wall.h"

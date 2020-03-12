@@ -1,9 +1,8 @@
 #include "surface.h"
 
-Surface::Surface(bool _isFloor)
+Surface::Surface(bool isFloor)
 {
-    isFloor = _isFloor;
-    if (_isFloor){
+    if (isFloor){
         height = 0.0f;
     } else {
         height = 2.0f;
@@ -12,7 +11,7 @@ Surface::Surface(bool _isFloor)
     // ---- Texture ----
     glEnable(GL_TEXTURE_2D);
     QImage texture;
-    if (isFloor){
+    if (height == 0){
         texture = QGLWidget::convertToGLFormat(QImage(QString(":/floor2.jpg")));
     }else {
         texture = QGLWidget::convertToGLFormat(QImage(QString(":/ceiling1.jpg")));

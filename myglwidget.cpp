@@ -16,6 +16,9 @@ const float MAX_DIMENSION     = 50.0f;
 // Constructeur
 MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 {
+    //random seed
+    srand(time(0));
+
     //antialiasing
     setFormat(QGLFormat(QGL::SampleBuffers));
 
@@ -123,9 +126,18 @@ void MyGLWidget::paintGL()
         s->detect(player); // detecte si un joueur ramasse la sphere
         AllSpheresFound = AllSpheresFound & s->isFound(); // vérifie que toutes les spheres sont trouvées
     }
-    if (AllSpheresFound && !player.getAchievement()) //evite de répeter la commande si le joueur a déjàtout trouvé
+    if (AllSpheresFound && !player.getAchievement()){ //evite de répeter la commande si le joueur a déjàtout trouvé
         player.foundSpheres(); // indique au joueur qu'il a trouvé toutes les spheres
-
+        unsigned int size = V_walls.size();
+        while (size == V_walls.size()){
+            vector<Wall *>::iterator  it = V_walls.begin();
+            int r = rand() % size;
+            if (V_walls[r]->isOnTheEdge()){
+                advance(it, r);
+                V_walls.erase(it);
+            }
+        }
+    }
     // ---- eclairage ambient ----
     /*
     GLfloat tab_ambient[] = {1.0,1.0,1.0,1.0};

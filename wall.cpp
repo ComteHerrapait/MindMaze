@@ -1,9 +1,10 @@
 #include "wall.h"
 
-Wall::Wall(Point p1, Point p2)
+Wall::Wall(Point p1, Point p2, bool edge)
 {
     end_1 = p1;
     end_2 = p2;
+    onTheEdge =edge;
 
     // ---- Texture ----
     glEnable(GL_TEXTURE_2D);

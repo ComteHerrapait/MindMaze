@@ -15,7 +15,6 @@ public:
     Surface(bool isFloor);
     void draw();
 private :
-    bool isFloor;
     float height;
     GLuint texMap;
     int LENGTH = 10;

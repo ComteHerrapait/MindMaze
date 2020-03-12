@@ -47,7 +47,7 @@ vector<Wall *> MazeGen::generateBorder(){
     for (Point p : points){
         if (p.x == last.x && p.y == last.y && p.z == last.z)
             continue;
-        result.push_back(new Wall(last, p));
+        result.push_back(new Wall(last, p, true));
         last = p;
     }
 
