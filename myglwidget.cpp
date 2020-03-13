@@ -155,23 +155,33 @@ void MyGLWidget::paintGL()
     glDisable(GL_CULL_FACE);
     glClear(GL_DEPTH_BUFFER_BIT);
         //carré
+
     glBegin(GL_QUADS);
         if (player.getAchievement()) {
-            glColor3f(0.0f, 1.0f, 0.0);
+            glColor3f(0.0f, 1.0f, 0.0f);
         } else {
-            glColor3f(1.0f, 0.0f, 0.0);
+            glColor3f(1.0f, 0.0f, 0.0f);
         }
+        float squareSize = 75.0f; //taille du carré de couleur
         glVertex2f(0.0, 0.0);
-        glVertex2f(100.0, 0.0);
-        glVertex2f(100.0, 100.0);
-        glVertex2f(0.0, 100.0);
+        glVertex2f(squareSize, 0.0);
+        glVertex2f(squareSize, squareSize);
+        glVertex2f(0.0, squareSize);
+
+        float squareSize2 = 250.0f; //taille du fond du texte
+        glColor3f(0.7,0.7,0.7);
+        glVertex2f(squareSize, 0.0);
+        glVertex2f(squareSize + squareSize2,0);
+        glVertex2f(squareSize + squareSize2, squareSize);
+        glVertex2f(squareSize, squareSize);
     glEnd();
         //texte
-    qglColor(Qt::red);
-    renderText(110, 20, QString("Vous jouez depuis %1 secondes").arg(timeElapsed/1000));
-    renderText(110, 35, QString("FOV : %1 deg").arg(FOV));
+    qglColor(Qt::black);
+    renderText(squareSize + 20 , 20, QString("Vous jouez depuis %1 secondes").arg(timeElapsed/1000));
+    renderText(squareSize + 20 , 35, QString("FOV : %1 deg").arg(FOV));
     if (player.getAchievement()){
-        renderText(110, 50, QString("Vous avez trouve toutes les spheres, trouvez la sortie !"));
+        renderText(squareSize + 20 , 50, QString("Vous avez trouvé toutes les sphères,"));
+        renderText(squareSize + 20 , 65, QString("trouvez la sortie !"));
     }
 
 }
