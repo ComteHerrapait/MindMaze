@@ -20,7 +20,7 @@ public:
 private:
     Point end_1 ;
     Point end_2 ;
-    float width = 0.05;
+    float width = 0.05;//moitié de l'épaisseur totale
     float height = 2.0;
     GLuint texMap;
     bool onTheEdge = false;

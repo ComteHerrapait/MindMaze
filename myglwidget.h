@@ -12,7 +12,7 @@
 #include "wall.h"
 #include "sphere.h"
 #include "surface.h"
-#include "mazegen.h"
+#include "maze.h"
 #define PI 3.14159265
 
 using namespace std;
@@ -46,6 +46,8 @@ private :
     vector<Sphere *> V_spheres;
     vector<Surface *> V_surfaces;
     QPoint lastPosMouse;
+    int LENGTH = 10;
+    int WIDTH = 6;
 };
 
 #endif // MYGLWIDGET_H

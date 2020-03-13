@@ -12,13 +12,12 @@
 class Surface
 {
 public:
-    Surface(bool isFloor);
+    Surface(bool isFloor,int length = 10, int width = 6);
     void draw();
 private :
     float height;
     GLuint texMap;
-    int LENGTH = 10;
-    int WIDTH = 6;
+    int LENGTH, WIDTH;
 };
 
 #endif // SURFACE_H

@@ -44,17 +44,20 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 void MyGLWidget::initializeGL()
 {
     //creation des murs
-    MazeGen mazegen ;
-    V_walls = mazegen.generateBorder();
+    Maze mazegen = Maze(LENGTH,WIDTH);
+    mazegen.generate();
+    vector<Wall *> InsideWalls = mazegen.get();
+    vector<Wall *> OutsideWalls = mazegen.generateBorder();
+    V_walls.insert(V_walls.begin(),InsideWalls.begin(),InsideWalls.end());
+    //V_walls.insert(V_walls.end(),OutsideWalls.begin(),OutsideWalls.end());
 
-    Wall * mur = new Wall( Point(2,0,2), Point(4,0,2) );
-    V_walls.push_back(mur);
 
-    Wall * mur2 = new Wall( Point(4,0,2), Point(4,0,4) );
-    V_walls.push_back(mur2);
-
-    Wall * mur3 = new Wall( Point(4,0,4), Point(2,0,4) );
-    V_walls.push_back(mur3);
+//    Wall * mur = new Wall( Point(2,0,2), Point(4,0,2) );
+//    V_walls.push_back(mur);
+//    Wall * mur2 = new Wall( Point(4,0,2), Point(4,0,4) );
+//    V_walls.push_back(mur2);
+//    Wall * mur3 = new Wall( Point(4,0,4), Point(2,0,4) );
+//    V_walls.push_back(mur3);
 
     //creation de la sphere
     Sphere * boule = new Sphere(Point(3,1,3), 0.5);
@@ -198,7 +201,8 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             player.moveWithCollisions(0,0.1,V_walls);
             break;
         case Qt::Key::Key_Z://avant
-            player.moveWithCollisions(0.1,0,V_walls);
+            player.move(0.1,0);
+            //player.moveWithCollisions(0.1,0,V_walls);
             break;
         case Qt::Key::Key_S://arriere
             player.moveWithCollisions(-0.1,0,V_walls);

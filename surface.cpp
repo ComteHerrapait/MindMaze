@@ -1,7 +1,9 @@
 #include "surface.h"
 
-Surface::Surface(bool isFloor)
+Surface::Surface(bool isFloor,int length, int width)
 {
+    LENGTH = length;
+    WIDTH = width;
     if (isFloor){
         height = 0.0f;
     } else {
