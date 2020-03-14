@@ -37,6 +37,11 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
     });
     timer.setInterval(20); //tick-rate en ms
     timer.start();
+
+    //création du joueur
+    int x = 2*rand() % LENGTH +1;
+    int z = 2*rand() % WIDTH +1;
+    player = Player(Point(x,1,z), Point(x+1,1,z));
 }
 
 
@@ -49,18 +54,11 @@ void MyGLWidget::initializeGL()
     vector<Wall *> InsideWalls = mazegen.get();
     vector<Wall *> OutsideWalls = mazegen.generateBorder();
     V_walls.insert(V_walls.begin(),InsideWalls.begin(),InsideWalls.end());
-    //V_walls.insert(V_walls.end(),OutsideWalls.begin(),OutsideWalls.end());
+    V_walls.insert(V_walls.end(),OutsideWalls.begin(),OutsideWalls.end());
 
-
-//    Wall * mur = new Wall( Point(2,0,2), Point(4,0,2) );
-//    V_walls.push_back(mur);
-//    Wall * mur2 = new Wall( Point(4,0,2), Point(4,0,4) );
-//    V_walls.push_back(mur2);
-//    Wall * mur3 = new Wall( Point(4,0,4), Point(2,0,4) );
-//    V_walls.push_back(mur3);
 
     //creation de la sphere
-    Sphere * boule = new Sphere(Point(3,1,3), 0.5);
+    Sphere * boule = new Sphere(Point(2*rand() % LENGTH +1,1,2*rand() % WIDTH +1), 0.5);
     V_spheres.push_back(boule);
 
     // creation du plafond et du sol
@@ -186,7 +184,7 @@ void MyGLWidget::paintGL()
         renderText(squareSize + 20 , 50, QString("Vous avez trouvé toutes les sphères,"));
         renderText(squareSize + 20 , 65, QString("trouvez la sortie !"));
     }
-
+    renderText(squareSize + 20 , 80, QString("coord : %1 %2 %3").arg(player.getPos().x).arg(player.getPos().y).arg(player.getPos().z));
 }
 
 // Fonction de gestion d'interactions clavier
@@ -201,8 +199,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             player.moveWithCollisions(0,0.1,V_walls);
             break;
         case Qt::Key::Key_Z://avant
-            player.move(0.1,0);
-            //player.moveWithCollisions(0.1,0,V_walls);
+            player.moveWithCollisions(0.1,0,V_walls);
             break;
         case Qt::Key::Key_S://arriere
             player.moveWithCollisions(-0.1,0,V_walls);

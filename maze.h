@@ -37,7 +37,7 @@ public:
     Maze(int width,int height);
     void reinit();
     void display(bool pause=false);
-    void generate(bool show=true);
+    void generate(bool show=false);
     vector<Wall *> get();
 };
 

@@ -152,23 +152,22 @@ void Maze::generate(bool show)
 vector<Wall *> Maze::get()
 {
     vector<Wall *> result;
-
     for (int x = 0; x < height_ ; x++)
     {
-        for (int y = 0; y < width_; y++)
-        {
-            cout << "( " << x << "," << y << " )"<<endl;
-            if(grid_[x][y].isFrontier(Cell::W))
+        for (int y = 0; y < width_ ; y++)
+        {  
+            if(grid_[x][y].isFrontier(Cell::S) && x<height_-1)
             {
-                Wall * w =new Wall(Point((x-1)*2,0,(y-1)*2), Point((x)*2,0,(y-1)*2));
+                Wall * w =new Wall(Point(2*y    ,0  ,2*(x+1)),
+                                   Point(2*(y+1),0  ,2*(x+1)));
                 result.push_back(w);
             }
-            if(grid_[x][y].isFrontier(Cell::S))
+            if(grid_[x][y].isFrontier(Cell::E) && y<width_-1)
             {
-                Wall * w =new Wall(Point((x+1)*2,0,(y)*2), Point((x+1)*2,0,(y-1)*2));
+                Wall * w =new Wall(Point(2*(y+1),0  ,2*x),
+                                   Point(2*(y+1),0  ,2*(x+1)));
                 result.push_back(w);
             }
-
         }
     }
     return result;

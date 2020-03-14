@@ -7,8 +7,6 @@ Player::Player(Point position, Point lookingAt)
 {
     pos = position;
     target = lookingAt;
-    cout<<"player initialized at ("<<pos.x<<", "<<pos.y<<", "<<pos.z<< ") \n"
-        <<"looking at ("<< target.x << ", " << target.y << ", " << target.z<< ") done."<<endl;
 }
 
 void Player::move(float forward, float rightward)
@@ -28,11 +26,11 @@ void Player::move(float forward, float rightward)
     target.z += rightward * vectX /norm;
 }
 void Player::look(float horizontal, float vertical = 0.0f){
-    float cv=cos(vertical* PI / 180.0), sv=sin(vertical* PI / 180.0);
+    //float cv=cos(vertical* PI / 180.0), sv=sin(vertical* PI / 180.0);
     float ch=cos(horizontal* PI / 180.0), sh=sin(horizontal* PI / 180.0);
 
     float dx = target.x - pos.x;
-    float dy = target.y - pos.y;
+    //float dy = target.y - pos.y;
     float dz = target.z - pos.z;
 
     target.x -= pos.x;
@@ -51,7 +49,7 @@ void Player::foundSpheres(){
 }
 
 bool Player::CheckCollision(Wall w){
-    float HitBoxWidth = 0.3;
+    float HitBoxWidth = 0.2;
     Point end_1 = w.getEnd1();
     Point end_2 = w.getEnd2();
     Point milieu = Point(   (end_1.x + end_2.x)/2,
