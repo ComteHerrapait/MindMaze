@@ -16,6 +16,7 @@ public:
     void draw(float time);
     void detect(Player p);
     bool isFound() {return found;}
+    Point getPos() {return pos;}
 private:
     float color[3];//couleur de la sphere
     Point pos;//Point du centre de la sphere

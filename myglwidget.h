@@ -13,6 +13,8 @@
 #include "sphere.h"
 #include "surface.h"
 #include "maze.h"
+#include "dj.h"
+#include <QtMultimedia/QMediaPlayer>
 #define PI 3.14159265
 
 using namespace std;
@@ -46,6 +48,7 @@ private :
     vector<Sphere *> V_spheres;
     vector<Surface *> V_surfaces;
     QPoint lastPosMouse;
+    DJ dj;
     int LENGTH = 10;
     int WIDTH = 6;
 };

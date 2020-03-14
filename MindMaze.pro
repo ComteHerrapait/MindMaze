@@ -1,5 +1,5 @@
 # configuration Qt
-QT       += core gui opengl widgets
+QT       += core gui opengl widgets multimedia
 TEMPLATE  = app
 
 # ajout des libs au linker
@@ -18,6 +18,7 @@ else {
 TARGET 	  = MindMaze
 # fichiers sources/headers
 SOURCES	+= main.cpp myglwidget.cpp \
+    dj.cpp \
     maze.cpp \
     player.cpp \
     sphere.cpp \
@@ -26,6 +27,7 @@ SOURCES	+= main.cpp myglwidget.cpp \
 
 HEADERS += \
     cell.h \
+    dj.h \
     maze.h \
     myglwidget.h \
     player.h \
@@ -37,4 +39,5 @@ HEADERS += \
 DISTFILES +=
 
 RESOURCES += \
+    sounds/sounds.qrc \
     textures/textures.qrc

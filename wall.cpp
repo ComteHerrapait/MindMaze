@@ -26,7 +26,7 @@ Wall::Wall(Point p1, Point p2, bool edge)
     glDisable(GL_TEXTURE_2D);
 }
 
-vector<Point> createBase(Point p1, Point p2, float width){
+vector<Point> Wall::createBase(Point p1, Point p2, float width){
     vector<Point> result;
     float wX, wZ;
 

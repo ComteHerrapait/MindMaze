@@ -18,6 +18,7 @@ public:
     Point getEnd2() {return end_2;}
     bool isOnTheEdge() {return onTheEdge;}
 private:
+    vector<Point> createBase(Point p1, Point p2, float width);
     Point end_1 ;
     Point end_2 ;
     float width = 0.05;//moitié de l'épaisseur totale

@@ -67,11 +67,14 @@ void MyGLWidget::initializeGL()
     Surface * floor = new Surface(true);//sol
     V_surfaces.push_back(floor);
 
-    // Reglage de la couleur de fond
+    // démarre la musique
+    dj.play("BACKGROUND");
+    dj.volume("BACKGROUND",10);
 
     // Activation du zbuffer
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
+
 }
 
 
@@ -127,8 +130,10 @@ void MyGLWidget::paintGL()
         s->detect(player); // detecte si un joueur ramasse la sphere
         AllSpheresFound = AllSpheresFound & s->isFound(); // vérifie que toutes les spheres sont trouvées
     }
-    if (AllSpheresFound && !player.getAchievement()){ //evite de répeter la commande si le joueur a déjàtout trouvé
+    if (AllSpheresFound && !player.getAchievement()){ //evite de répeter la commande si le joueur a déjà tout trouvé
         player.foundSpheres(); // indique au joueur qu'il a trouvé toutes les spheres
+        dj.stop("SPHERESOUND");
+        dj.play("SPHEREFOUND");
         unsigned int size = V_walls.size();
         while (size == V_walls.size()){
             vector<Wall *>::iterator  it = V_walls.begin();
@@ -246,6 +251,18 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
     // Acceptation de l'evenement et mise a jour de la scene
     event->accept();
     updateGL();
+    for(Sphere * s: V_spheres){
+        if (!s->isFound()){
+            int d = player.getPos().distanceTo(s->getPos());
+            if (100 - 15*d > 10) {
+                dj.volume("SPHERESOUND", 100 - 15*d);
+                dj.play("SPHERESOUND");
+            } else {
+                dj.volume("SPHERESOUND",0);
+
+            }
+        }
+    }
 }
 
 void MyGLWidget::wheelEvent(QWheelEvent *event)
