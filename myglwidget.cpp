@@ -5,6 +5,8 @@
 #include <QApplication>
 #include <QDesktopWidget>
 
+#define DEBUG true //flag
+
 using namespace std;
 
 // Declarations des constantes
@@ -27,7 +29,7 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 
     // Reglage de la taille/position
     setFixedSize(WIN_WIDTH, WIN_HEIGHT);
-    QRect  screenGeometry = QGuiApplication::primaryScreen()->geometry();
+    QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
     move(screenGeometry.width()/2 - WIN_WIDTH/2, screenGeometry.height()/2 - WIN_HEIGHT/2);
 
     // Connexion du timer
@@ -189,7 +191,7 @@ void MyGLWidget::paintGL()
         renderText(squareSize + 20 , 50, QString("Vous avez trouvé toutes les sphères,"));
         renderText(squareSize + 20 , 65, QString("trouvez la sortie !"));
     }
-    renderText(squareSize + 20 , 80, QString("coord : %1 %2 %3").arg(player.getPos().x).arg(player.getPos().y).arg(player.getPos().z));
+    if (DEBUG) renderText(squareSize + 20 , 80, QString("coord : %1 %2 %3").arg(player.getPos().x).arg(player.getPos().y).arg(player.getPos().z));
 }
 
 // Fonction de gestion d'interactions clavier
@@ -218,6 +220,13 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
         case Qt::Key::Key_R:
             mouse ^= true;
             setMouseTracking(mouse);
+            if (mouse) {
+                setCursor(Qt::CrossCursor);
+                //setCursor(Qt::BlankCursor);
+            } else {
+                setCursor(Qt::ArrowCursor);
+            }
+
             break;
         case Qt::Key::Key_F:
             if (fullScreen){
@@ -274,15 +283,23 @@ void MyGLWidget::wheelEvent(QWheelEvent *event)
     } else if ( deg > 0) {
         FOV ++;
     }
-
     event->accept();
     updateGL();
 }
 
 void MyGLWidget::mouseMoveEvent(QMouseEvent *event){
     if (mouse){
+        //tourne la caméra en fonction du mouvement de la souris
         float dx = event->x() - lastPosMouse.x();
         player.look(dx/2.0f,0);
-        lastPosMouse = event->pos();
+        //garde la souris au centre
+        QPoint glob = mapToGlobal(QPoint(width()/2,height()/2));
+        QCursor::setPos(glob);
+        lastPosMouse = QPoint(width()/2,height()/2);
     }
+}
+
+void MyGLWidget::leaveEvent(QEvent * event)
+{
+
 }

@@ -36,6 +36,7 @@ protected:
     void keyPressEvent(QKeyEvent * event);// Fonction de gestion d'interactions clavier
     void wheelEvent(QWheelEvent *event);//Fonction de gestion d'interaction molette
     void mouseMoveEvent(QMouseEvent *event);//Fonction de gestion d'interaction souris
+    void leaveEvent(QEvent *event);
 private :
     QTimer timer;
     float timeElapsed = 0.0f;
