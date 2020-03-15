@@ -21,6 +21,7 @@ SOURCES	+= main.cpp myglwidget.cpp \
     dj.cpp \
     maze.cpp \
     player.cpp \
+    skybox.cpp \
     sphere.cpp \
     surface.cpp \
     wall.cpp
@@ -32,6 +33,7 @@ HEADERS += \
     myglwidget.h \
     player.h \
     point.h \
+    skybox.h \
     sphere.h \
     surface.h \
     wall.h

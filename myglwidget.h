@@ -14,6 +14,7 @@
 #include "surface.h"
 #include "maze.h"
 #include "dj.h"
+#include "skybox.h"
 #include <QtMultimedia/QMediaPlayer>
 #define PI 3.14159265
 
@@ -36,11 +37,11 @@ protected:
     void keyPressEvent(QKeyEvent * event);// Fonction de gestion d'interactions clavier
     void wheelEvent(QWheelEvent *event);//Fonction de gestion d'interaction molette
     void mouseMoveEvent(QMouseEvent *event);//Fonction de gestion d'interaction souris
-    void leaveEvent(QEvent *event);
 private :
     QTimer timer;
     float timeElapsed = 0.0f;
     Player player = Player(Point(1,1,1), Point(2,1,1));
+    Skybox * skybox;
     bool fullScreen = false;
     bool Zbuf = true;
     bool mouse = false;

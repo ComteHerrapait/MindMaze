@@ -58,6 +58,8 @@ void MyGLWidget::initializeGL()
     V_walls.insert(V_walls.begin(),InsideWalls.begin(),InsideWalls.end());
     V_walls.insert(V_walls.end(),OutsideWalls.begin(),OutsideWalls.end());
 
+    // création de la skybox
+    skybox = new Skybox(50);
 
     //creation de la sphere
     Sphere * boule = new Sphere(Point(2*rand() % LENGTH +1,1,2*rand() % WIDTH +1), 0.5);
@@ -107,7 +109,7 @@ void MyGLWidget::paintGL()
     // Definition de la matrice projection
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(FOV, 16.0/9.0, 0.1f, 100.0f);
+    gluPerspective(FOV, 16.0/9.0, 0.1f, 250.0f);
 
     // Definition de la matrice modelview
     glMatrixMode(GL_MODELVIEW);
@@ -115,7 +117,8 @@ void MyGLWidget::paintGL()
     gluLookAt(player.getPos().x, player.getPos().y, player.getPos().z, //position camera
               player.getTarget().x, player.getTarget().y, player.getTarget().z,  //position cible
               0.0f, 1.0f, 0.0f); //vecteur vertical
-
+    // ---- Affichage de la skybox ----
+    skybox->draw();
     // ---- Affichage sol et plafond ----
     for(Surface * s: V_surfaces){
         s->draw();
@@ -206,6 +209,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             player.moveWithCollisions(0,0.1,V_walls);
             break;
         case Qt::Key::Key_Z://avant
+            //player.move(0.1,0);
             player.moveWithCollisions(0.1,0,V_walls);
             break;
         case Qt::Key::Key_S://arriere
@@ -299,7 +303,3 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event){
     }
 }
 
-void MyGLWidget::leaveEvent(QEvent * event)
-{
-
-}

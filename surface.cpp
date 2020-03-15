@@ -45,7 +45,7 @@ void Surface::draw(){
     glTexCoord2f(0, 0);                 glVertex3f(0, height, 0);
     glTexCoord2f(LENGTH*2, 0);          glVertex3f(LENGTH*2, height, 0);
     glTexCoord2f(LENGTH*2, WIDTH*2);    glVertex3f(LENGTH*2, height, WIDTH*2);
-    glTexCoord2f(0, 12);                glVertex3f(0, height, WIDTH*2);
+    glTexCoord2f(0, WIDTH*2);                glVertex3f(0, height, WIDTH*2);
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
