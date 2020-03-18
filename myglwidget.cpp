@@ -117,6 +117,7 @@ void MyGLWidget::paintGL()
     gluLookAt(player.getPos().x, player.getPos().y, player.getPos().z, //position camera
               player.getTarget().x, player.getTarget().y, player.getTarget().z,  //position cible
               0.0f, 1.0f, 0.0f); //vecteur vertical
+    
     // ---- Affichage de la skybox ----
     skybox->draw();
     // ---- Affichage sol et plafond ----
@@ -295,7 +296,7 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event){
     if (mouse){
         //tourne la caméra en fonction du mouvement de la souris
         float dx = event->x() - lastPosMouse.x();
-        player.look(dx/2.0f,0);
+        player.look(dx/4.0f,0);
         //garde la souris au centre
         QPoint glob = mapToGlobal(QPoint(width()/2,height()/2));
         QCursor::setPos(glob);
