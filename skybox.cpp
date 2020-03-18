@@ -6,7 +6,7 @@ Skybox::Skybox(int distance)
     // ---- Texture ----
     glEnable(GL_TEXTURE_2D);
     QImage texture;
-    texture = QGLWidget::convertToGLFormat(QImage(QString(":/skybox.jpg")));
+    texture = QGLWidget::convertToGLFormat(QImage(QString(":/skybox2.png")));
 
     glGenTextures(1, &texMap);
     glBindTexture(GL_TEXTURE_2D, texMap );
@@ -18,8 +18,10 @@ Skybox::Skybox(int distance)
                   GL_RGBA, // format de stockage (GL_RGB, GL_RGBA, ...)
                   GL_UNSIGNED_BYTE, // type dans lequel sont stockées les composantes(GL_UNSIGNED_BYTE, GL_BYTE, GL_INT, ...)
                   texture.bits() );  // adresse de la texture
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glDisable(GL_TEXTURE_2D);
 }
 
@@ -30,35 +32,35 @@ void Skybox::draw(){
     glBegin(GL_QUADS);
     glColor3ub(255, 255, 255);
     //X+
-    glTexCoord2f(0.25, (float)1/3);     glVertex3f(t, -t, -t);
-    glTexCoord2f(0.5 , (float)1/3);     glVertex3f(t, -t,  t);
-    glTexCoord2f(0.5 , (float)2/3);     glVertex3f(t,  t,  t);
-    glTexCoord2f(0.25, (float)2/3);     glVertex3f(t,  t, -t);
+    glTexCoord2d(0.25, (double)1/3);     glVertex3f(t, -t, -t);
+    glTexCoord2d(0.5 , (double)1/3);     glVertex3f(t, -t,  t);
+    glTexCoord2d(0.5 , (double)2/3);     glVertex3f(t,  t,  t);
+    glTexCoord2d(0.25, (double)2/3);     glVertex3f(t,  t, -t);
     //X-
-    glTexCoord2f(1   , (float)1/3);     glVertex3f(-t, -t, -t);
-    glTexCoord2f(0.75, (float)1/3);     glVertex3f(-t, -t,  t);
-    glTexCoord2f(0.75, (float)2/3);     glVertex3f(-t,  t,  t);
-    glTexCoord2f(1   , (float)2/3);     glVertex3f(-t,  t, -t);
+    glTexCoord2d(1   , (double)1/3);     glVertex3f(-t, -t, -t);
+    glTexCoord2d(0.75, (double)1/3);     glVertex3f(-t, -t,  t);
+    glTexCoord2d(0.75, (double)2/3);     glVertex3f(-t,  t,  t);
+    glTexCoord2d(1   , (double)2/3);     glVertex3f(-t,  t, -t);
     //Y+
-    glTexCoord2f(0.75, (float)1/3);     glVertex3f(-t, -t,  t);
-    glTexCoord2f(0.75, (float)2/3);     glVertex3f(-t,  t,  t);
-    glTexCoord2f(0.5 , (float)2/3);     glVertex3f( t,  t,  t);
-    glTexCoord2f(0.5 , (float)1/3);     glVertex3f( t, -t,  t);
+    glTexCoord2d(0.75, (double)1/3);     glVertex3f(-t, -t,  t);
+    glTexCoord2d(0.75, (double)2/3);     glVertex3f(-t,  t,  t);
+    glTexCoord2d(0.5 , (double)2/3);     glVertex3f( t,  t,  t);
+    glTexCoord2d(0.5 , (double)1/3);     glVertex3f( t, -t,  t);
     //Y-
-    glTexCoord2f(0   , (float)1/3);     glVertex3f(-t, -t, -t);
-    glTexCoord2f(0   , (float)2/3);     glVertex3f(-t,  t, -t);
-    glTexCoord2f(0.25, (float)2/3);     glVertex3f( t,  t, -t);
-    glTexCoord2f(0.25, (float)1/3);     glVertex3f( t, -t, -t);
+    glTexCoord2d(0   , (double)1/3);     glVertex3f(-t, -t, -t);
+    glTexCoord2d(0   , (double)2/3);     glVertex3f(-t,  t, -t);
+    glTexCoord2d(0.25, (double)2/3);     glVertex3f( t,  t, -t);
+    glTexCoord2d(0.25, (double)1/3);     glVertex3f( t, -t, -t);
     //TOP
-    glTexCoord2f(0.25, 1);              glVertex3f(-t,  t, -t);
-    glTexCoord2f(0.25, (float)2/3);     glVertex3f( t,  t, -t);
-    glTexCoord2f(0.5 , (float)2/3);     glVertex3f( t,  t,  t);
-    glTexCoord2f(0.5 , 1);              glVertex3f(-t,  t,  t);
+    glTexCoord2d(0.25, 1);               glVertex3f(-t,  t, -t);
+    glTexCoord2d(0.25, (double)2/3);     glVertex3f( t,  t, -t);
+    glTexCoord2d(0.5 , (double)2/3);     glVertex3f( t,  t,  t);
+    glTexCoord2d(0.5 , 1);               glVertex3f(-t,  t,  t);
     //BOTTOM
-    glTexCoord2f(0.25, 0);              glVertex3f(-t, -t, -t);
-    glTexCoord2f(0.25, (float)1/3);     glVertex3f( t, -t, -t);
-    glTexCoord2f(0.5 , (float)1/3);     glVertex3f( t, -t,  t);
-    glTexCoord2f(0.5 , 0);              glVertex3f(-t, -t,  t);
+    glTexCoord2d(0.25, 0);               glVertex3f(-t, -t, -t);
+    glTexCoord2d(0.25, (double)1/3);     glVertex3f( t, -t, -t);
+    glTexCoord2d(0.5 , (double)1/3);     glVertex3f( t, -t,  t);
+    glTexCoord2d(0.5 , 0);               glVertex3f(-t, -t,  t);
     glEnd();
 
     glDisable(GL_TEXTURE_2D);

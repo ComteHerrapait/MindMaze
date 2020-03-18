@@ -34,10 +34,10 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 
     // Connexion du timer
     connect(&timer,  &QTimer::timeout, [&] {
-        timeElapsed += 20;
+        timeElapsed += 1;
         updateGL();
     });
-    timer.setInterval(20); //tick-rate en ms
+    timer.setInterval(1); //tick-rate en ms
     timer.start();
 
     //création du joueur

@@ -6,5 +6,7 @@
         <file>wall1.jpg</file>
         <file>skybox.jpg</file>
         <file>skyboxDEBUG.jpg</file>
+        <file>skybox2.png</file>
+        <file>skybox3.jpg</file>
     </qresource>
 </RCC>
