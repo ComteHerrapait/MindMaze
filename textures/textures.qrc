@@ -8,5 +8,6 @@
         <file>skyboxDEBUG.jpg</file>
         <file>skybox2.png</file>
         <file>skybox3.jpg</file>
+        <file>maze.ico</file>
     </qresource>
 </RCC>

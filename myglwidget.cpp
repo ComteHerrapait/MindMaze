@@ -18,6 +18,10 @@ const float MAX_DIMENSION     = 50.0f;
 // Constructeur
 MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 {
+    //icone de l'application
+    QIcon icon = QIcon(":/maze.ico");
+    setWindowIcon(icon);
+
     //random seed
     srand(time(0));
 
@@ -150,11 +154,6 @@ void MyGLWidget::paintGL()
             }
         }
     }
-    // ---- eclairage ambient ----
-    /*
-    GLfloat tab_ambient[] = {1.0,1.0,1.0,1.0};
-    glLightfv(GL_LIGHT0,GL_AMBIENT, tab_ambient);
-    */
 
     // ---- HUD 2D ----
         //paramétrage
