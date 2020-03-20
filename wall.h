@@ -6,6 +6,7 @@
 #include <GL/glu.h>
 #include <QImage>
 #include <QtOpenGL>
+#include <iostream>
 
 using namespace std;
 
@@ -14,6 +15,7 @@ class Wall
 public:
     Wall(Point p1, Point p2, bool edge = false);
     void draw();
+    void draw2D(float offX, float offY, float scale);
     Point getEnd1() {return end_1;}
     Point getEnd2() {return end_2;}
     bool isOnTheEdge() {return onTheEdge;}

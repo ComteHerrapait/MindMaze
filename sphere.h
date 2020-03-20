@@ -14,6 +14,7 @@ class Sphere
 public:
     Sphere(Point p, float r);
     void draw(float time);
+    void draw2D(float offX, float offY, float scale);
     void detect(Player p);
     bool isFound() {return found;}
     Point getPos() {return pos;}

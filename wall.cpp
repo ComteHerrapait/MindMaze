@@ -110,3 +110,41 @@ void Wall::draw(){
     glPopMatrix();
     glDisable(GL_TEXTURE_2D);
 }
+
+void Wall::draw2D(float offX, float offY, float scale)
+{
+
+    float wX = 0;
+    float wY = 0;
+    float width2D = 3 * scale * width;
+
+    glBegin(GL_QUADS);
+    glColor3f(0.0, 0.0, 1.0);
+    if (end_1.z == end_2.z){ //mur selon l'axe X
+        if (end_1.x > end_2.x){
+            wX = - width2D;
+        } else {
+            wX = + width2D;
+        }
+        wY = width2D;
+        glVertex2f(offX + end_1.x*scale - wX , offY + end_1.z*scale - wY);
+        glVertex2f(offX + end_2.x*scale + wX , offY + end_2.z*scale - wY);
+        glVertex2f(offX + end_2.x*scale + wX , offY + end_2.z*scale + wY);
+        glVertex2f(offX + end_1.x*scale - wX , offY + end_1.z*scale + wY);
+
+
+    } else if (end_1.x == end_2.x){// mur selon l'axe Z
+        if (end_1.z > end_2.z){
+            wY = - width2D;
+        } else {
+            wY = + width2D;
+        }
+        wX = width2D;
+        glVertex2f(offX + end_1.x*scale + wX , offY + end_1.z*scale - wY);
+        glVertex2f(offX + end_2.x*scale + wX , offY + end_2.z*scale + wY);
+        glVertex2f(offX + end_2.x*scale - wX , offY + end_2.z*scale + wY);
+        glVertex2f(offX + end_1.x*scale - wX , offY + end_1.z*scale - wY);
+
+    }
+    glEnd();
+}

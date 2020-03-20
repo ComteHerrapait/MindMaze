@@ -20,7 +20,7 @@ public:
     Point getTarget() {return target;}
     bool getAchievement() {return achievement;}
     bool CheckCollision(Wall w);
-
+    void draw2D(float offX, float offY, float scale);
 private :
     Point pos ; //position of the player
     Point target ; //position the player is looking at
