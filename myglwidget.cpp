@@ -196,7 +196,15 @@ void MyGLWidget::paintGL()
         renderText(squareSize + 20 , 65, QString("trouvez la sortie !"));
     }
     if (DEBUG) renderText(squareSize + 20 , 80, QString("coord : %1 %2 %3").arg(player.getPos().x).arg(player.getPos().y).arg(player.getPos().z));
+
+    glPopMatrix();
+    // Mur 2D
+
+    for(Wall * w: V_walls){
+        w->draw2D();
+    }
 }
+
 
 // Fonction de gestion d'interactions clavier
 void MyGLWidget::keyPressEvent(QKeyEvent * event)

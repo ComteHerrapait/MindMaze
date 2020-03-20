@@ -110,3 +110,45 @@ void Wall::draw(){
     glPopMatrix();
     glDisable(GL_TEXTURE_2D);
 }
+
+void Wall::draw2D()
+{
+    float offX = 200;
+    float offY = 200;
+    float wX = 0;
+    float wY = 0;
+    glBegin(GL_QUADS);
+    glColor3f(1.0, 1.0, 1.0);
+    if (end_1.z == end_2.z){ //mur selon l'axe X
+        if (end_1.x > end_2.x){
+            wX = - width2D;
+        } else {
+            wX = + width2D;
+        }
+        wY = width2D;
+        glVertex2f(offX + end_1.x - wX , offY + end_1.z - wY);
+        glVertex2f(offX + end_2.x + wX , offY + end_2.z - wY);
+        glVertex2f(offX + end_2.x + wX , offY + end_2.z + wY);
+        glVertex2f(offX + end_1.x - wX , offY + end_1.z + wY);
+
+
+    } else if (end_1.x == end_2.x){// mur selon l'axe Z
+        if (end_1.z > end_2.z){
+            wY = - width2D;
+        } else {
+            wY = + width2D;
+        }
+        wX = width2D;
+        glVertex2f(offX + end_1.x + wX , offY + end_1.z - wY);
+        glVertex2f(offX + end_2.x + wX , offY + end_2.z + wY);
+        glVertex2f(offX + end_2.x - wX , offY + end_2.z + wY);
+        glVertex2f(offX + end_1.x - wX , offY + end_1.z - wY);
+
+    }
+    glVertex2f(200 , 200);
+    glVertex2f(250, 200);
+    glVertex2f(250, 250);
+    glVertex2f(200, 250);
+    glEnd();
+    cout << end_1.z << endl;
+}
