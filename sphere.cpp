@@ -64,3 +64,21 @@ void Sphere::detect(Player p){
         found = true;
 
 }
+
+void Sphere::draw2D(float offX, float offY, float scale){
+    if (found) return; //ne trace pas la boule si elle est trouvée
+
+    float r = 0.6 * scale;
+    float x = offX + pos.x*scale;
+    float y = offY + pos.z*scale; //on prend pos.z car en 3D le y est la verticale
+    glColor3f(0.0, 1.0, 0.0);
+    // disque
+    glBegin( GL_TRIANGLE_FAN );
+    glVertex2f( x, y );
+    for( float i = 0; i <= 2 * PI + 0.1; i += 0.1 )
+    {
+        glVertex2f( x + sin( i ) * r, y + cos( i ) * r );
+    }
+    glEnd();
+
+}

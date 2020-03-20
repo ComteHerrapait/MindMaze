@@ -166,8 +166,8 @@ void MyGLWidget::paintGL()
     glLoadIdentity();
     glDisable(GL_CULL_FACE);
     glClear(GL_DEPTH_BUFFER_BIT);
-        //carré
 
+        //carré
     glBegin(GL_QUADS);
         if (player.getAchievement()) {
             glColor3f(0.0f, 1.0f, 0.0f);
@@ -187,6 +187,19 @@ void MyGLWidget::paintGL()
         glVertex2f(squareSize + squareSize2, squareSize);
         glVertex2f(squareSize, squareSize);
     glEnd();
+
+    float scale = 10.0;
+        //Mur 2D
+    for(Wall * w: V_walls){
+        w->draw2D(WIN_WIDTH - LENGTH * 2 * scale - 20, 20, scale);
+    }
+        //Position des spheres
+    for(Sphere * s: V_spheres){
+        s->draw2D(WIN_WIDTH - LENGTH * 2 * scale - 20 , 20, scale);
+    }
+        //Position du joueur
+    player.draw2D(WIN_WIDTH - LENGTH * 2 * scale - 20 , 20, scale);
+
         //texte
     qglColor(Qt::black);
     renderText(squareSize + 20 , 20, QString("Vous jouez depuis %1 secondes").arg(timeElapsed/1000));
@@ -198,11 +211,7 @@ void MyGLWidget::paintGL()
     if (DEBUG) renderText(squareSize + 20 , 80, QString("coord : %1 %2 %3").arg(player.getPos().x).arg(player.getPos().y).arg(player.getPos().z));
 
     glPopMatrix();
-    // Mur 2D
 
-    for(Wall * w: V_walls){
-        w->draw2D();
-    }
 }
 
 

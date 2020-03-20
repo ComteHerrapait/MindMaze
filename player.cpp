@@ -45,7 +45,6 @@ void Player::look(float horizontal, float vertical = 0.0f){
 
 void Player::foundSpheres(){
     achievement = true;
-    //cout << "Bravo vous avez trouvé la sphere, trouvez maintenant la sortie !" << endl;
 }
 
 bool Player::CheckCollision(Wall w){
@@ -80,4 +79,26 @@ void Player::moveWithCollisions(float forward, float rightward, vector<Wall *> w
             break;
         }
     }
+}
+void Player::draw2D(float offX, float offY, float scale){
+    float r = 0.6 * scale;
+    float x = offX + pos.x*scale;
+    float y = offY + pos.z*scale; //on prend pos.z car en 3D le y est la verticale
+    glColor3f(1.0, 0.0, 0.0);
+    // disque
+    glBegin( GL_TRIANGLE_FAN );
+    glVertex2f( x, y );
+    for( float i = 0; i <= 2 * PI + 0.1; i += 0.1 )
+    {
+        glVertex2f( x + sin( i ) * r, y + cos( i ) * r );
+    }
+    glEnd();
+
+    // ligne
+    glEnable(GL_LINE_SMOOTH);
+    glLineWidth(4.0);
+    glBegin(GL_LINES);
+    glVertex2i(x,y);
+    glVertex2i(offX + target.x*scale,offY + target.z*scale);
+    glEnd();
 }
