@@ -70,7 +70,7 @@ void MyGLWidget::initializeGL()
     skybox = new Skybox(50);
 
     //creation de la sphere
-    Sphere * boule = new Sphere(Point(2*rand() % (LENGTH *2) +1,1,2*rand() % (WIDTH *2) +1), 0.5);
+    Sphere * boule = new Sphere(Point(2*rand() % (LENGTH*2) +1,1,2*rand() % (WIDTH*2) +1), 0.5);
     V_spheres.push_back(boule);
 
     //creation du plafond et du sol
@@ -93,10 +93,10 @@ void MyGLWidget::initializeGL()
 // Fonction de redimensionnement
 void MyGLWidget::resizeGL(int width, int height)
 {
-    // Definition du viewport (zone d'affichage)
+    //Definition du viewport (zone d'affichage)
     glViewport(0, 0, width, height);
 
-    // Definition de la matrice de projection
+    //Definition de la matrice de projection
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
@@ -112,7 +112,7 @@ void MyGLWidget::resizeGL(int width, int height)
 void MyGLWidget::paintGL()
 {
 
-    // verification victoire
+    //Verification victoire
     if (player.getPos().x < 0
             || player.getPos().x > LENGTH * 2
             || player.getPos().z < 0
@@ -123,15 +123,16 @@ void MyGLWidget::paintGL()
         setCursor(Qt::ArrowCursor);
     }
 
-    // Reinitialisation des tampons
+    //Reinitialisation des tampons
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //glEnable(GL_LIGHTING);
-    // Definition de la matrice projection
+
+    //Definition de la matrice projection
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(FOV, 16.0/9.0, 0.1f, 250.0f);
 
-    // Definition de la matrice modelview
+    //Definition de la matrice modelview
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(player.getPos().x, player.getPos().y, player.getPos().z, //position camera
@@ -364,7 +365,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
            return;
        }
     }
-    // Acceptation de l'evenement et mise a jour de la scene
+    //Acceptation de l'evenement et mise a jour de la scene
     event->accept();
     updateGL();
 
