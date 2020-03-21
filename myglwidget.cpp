@@ -31,23 +31,27 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
     //active le suivi de la souris
     setMouseTracking(true);
 
-    // Reglage de la taille/position
+    //Reglage de la taille/position
     setFixedSize(WIN_WIDTH, WIN_HEIGHT);
     QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
     move(screenGeometry.width()/2 - WIN_WIDTH/2, screenGeometry.height()/2 - WIN_HEIGHT/2);
 
-    // Connexion du timer
+    //Connexion du timer
     connect(&timer,  &QTimer::timeout, [&] {
-        timeElapsed += 1;
         updateGL();
+        animTime ++;
     });
     timer.setInterval(1); //tick-rate en ms
     timer.start();
 
     //création du joueur
-    int x = 2*rand() % LENGTH +1;
-    int z = 2*rand() % WIDTH +1;
+    int x = 2*rand() % (LENGTH *2)+1;
+    int z = 2*rand() % (WIDTH *2) +1;
     player = Player(Point(x,1,z), Point(x+1,1,z));
+
+    //horaire de départ
+    startTime = time(0);
+
 }
 
 
@@ -62,24 +66,24 @@ void MyGLWidget::initializeGL()
     V_walls.insert(V_walls.begin(),InsideWalls.begin(),InsideWalls.end());
     V_walls.insert(V_walls.end(),OutsideWalls.begin(),OutsideWalls.end());
 
-    // création de la skybox
+    //création de la skybox
     skybox = new Skybox(50);
 
     //creation de la sphere
-    Sphere * boule = new Sphere(Point(2*rand() % LENGTH +1,1,2*rand() % WIDTH +1), 0.5);
+    Sphere * boule = new Sphere(Point(2*rand() % (LENGTH *2) +1,1,2*rand() % (WIDTH *2) +1), 0.5);
     V_spheres.push_back(boule);
 
-    // creation du plafond et du sol
+    //creation du plafond et du sol
     Surface * ceiling = new Surface(false);//plafond
     V_surfaces.push_back(ceiling);
     Surface * floor = new Surface(true);//sol
     V_surfaces.push_back(floor);
 
-    // démarre la musique
+    //démarre la musique
     dj.play("BACKGROUND");
     dj.volume("BACKGROUND",10);
 
-    // Activation du zbuffer
+    //Activation du zbuffer
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
 
@@ -107,6 +111,18 @@ void MyGLWidget::resizeGL(int width, int height)
 // Fonction d'affichage
 void MyGLWidget::paintGL()
 {
+
+    // verification victoire
+    if (player.getPos().x < 0
+            || player.getPos().x > LENGTH * 2
+            || player.getPos().z < 0
+            || player.getPos().z > WIDTH * 2){
+        victory = true;
+        showNormal();
+        setMouseTracking(false);
+        setCursor(Qt::ArrowCursor);
+    }
+
     // Reinitialisation des tampons
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //glEnable(GL_LIGHTING);
@@ -136,9 +152,20 @@ void MyGLWidget::paintGL()
     // ---- Affichage des Boules ----
     bool AllSpheresFound = true;
     for(Sphere * s: V_spheres){
-        s->draw(timeElapsed);
+        s->draw(animTime);
         s->detect(player); // detecte si un joueur ramasse la sphere
         AllSpheresFound = AllSpheresFound & s->isFound(); // vérifie que toutes les spheres sont trouvées
+        //son
+        if (!s->isFound()){
+            int d = player.getPos().distanceTo(s->getPos());
+            if (100 - 15*d > 10) {
+                dj.volume("SPHERESOUND", 100 - 15*d);
+                dj.play("SPHERESOUND");
+            } else {
+                dj.volume("SPHERESOUND",0);
+
+            }
+        }
     }
     if (AllSpheresFound && !player.getAchievement()){ //evite de répeter la commande si le joueur a déjà tout trouvé
         player.foundSpheres(); // indique au joueur qu'il a trouvé toutes les spheres
@@ -166,6 +193,7 @@ void MyGLWidget::paintGL()
     glDisable(GL_CULL_FACE);
     glClear(GL_DEPTH_BUFFER_BIT);
 
+    if (!victory) {
         //carré
     glBegin(GL_QUADS);
         if (player.getAchievement()) {
@@ -201,7 +229,7 @@ void MyGLWidget::paintGL()
 
         //texte
     qglColor(Qt::black);
-    renderText(squareSize + 20 , 20, QString("Vous jouez depuis %1 secondes").arg(timeElapsed/1000));
+    renderText(squareSize + 20 , 20, QString("Vous jouez depuis %1 secondes").arg(time(0) - startTime));
     renderText(squareSize + 20 , 35, QString("FOV : %1 deg").arg(FOV));
     if (player.getAchievement()){
         renderText(squareSize + 20 , 50, QString("Vous avez trouvé toutes les sphères,"));
@@ -209,90 +237,137 @@ void MyGLWidget::paintGL()
     }
     if (DEBUG) renderText(squareSize + 20 , 80, QString("coord : %1 %2 %3").arg(player.getPos().x).arg(player.getPos().y).arg(player.getPos().z));
 
+    } else { // ---- VICTOIRE ----
+        //carré
+    glBegin(GL_QUADS);
+        glColor3f(1.0f, 1.0f, 1.0f);
+        float squareSize = 75.0f; //taille du carré de couleur
+        glVertex2f(WIN_WIDTH/2 - squareSize, WIN_HEIGHT/2 - squareSize);
+        glVertex2f(WIN_WIDTH/2 + squareSize, WIN_HEIGHT/2 - squareSize);
+        glVertex2f(WIN_WIDTH/2 + squareSize, WIN_HEIGHT/2 + squareSize);
+        glVertex2f(WIN_WIDTH/2 - squareSize, WIN_HEIGHT/2 + squareSize);
+    glEnd();
+
+
+        //texte
+    qglColor(Qt::black);
+    renderText(WIN_WIDTH/2 - 20 , WIN_HEIGHT/2 + 20, QString("Vous avez gagné"));
+
+    }
     glPopMatrix();
 
 }
+/*
+void MyGLWidget::victory(){
+    while(true) {
+            //paramétrage
+        glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+        glLoadIdentity();
+        glOrtho(0.0, WIN_WIDTH, WIN_HEIGHT, 0.0, -1.0, 10.0);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glDisable(GL_CULL_FACE);
+        glClear(GL_DEPTH_BUFFER_BIT);
+
+            //carré
+        glBegin(GL_QUADS);
+            glColor3f(1.0f, 1.0f, 1.0f);
+            float squareSize = 75.0f; //taille du carré de couleur
+            glVertex2f(WIN_WIDTH - squareSize, WIN_HEIGHT - squareSize);
+            glVertex2f(WIN_WIDTH + squareSize, WIN_HEIGHT - squareSize);
+            glVertex2f(WIN_WIDTH + squareSize, WIN_HEIGHT + squareSize);
+            glVertex2f(WIN_WIDTH - squareSize, WIN_HEIGHT + squareSize);
+        glEnd();
 
 
+            //texte
+        qglColor(Qt::black);
+        renderText(WIN_WIDTH +20 , WIN_HEIGHT + 20, QString("Vous avez gagné"));
+
+        glPopMatrix();
+    }
+}
+*/
 // Fonction de gestion d'interactions clavier
 void MyGLWidget::keyPressEvent(QKeyEvent * event)
 {
-   switch(event->key())
-    {
-        case Qt::Key::Key_Q://gauche
-            player.moveWithCollisions(0,-0.1,V_walls);
-            break;
-        case Qt::Key::Key_D://droite
-            player.moveWithCollisions(0,0.1,V_walls);
-            break;
-        case Qt::Key::Key_Z://avant
-            //player.move(0.1,0);
-            player.moveWithCollisions(0.1,0,V_walls);
-            break;
-        case Qt::Key::Key_S://arriere
-            player.moveWithCollisions(-0.1,0,V_walls);
-            break;
-        case Qt::Key::Key_E:
-            player.look(3,0);
-            break;
-        case Qt::Key::Key_A:
-            player.look(-3,0);
-            break;
-        case Qt::Key::Key_R:
-            mouse ^= true;
-            setMouseTracking(mouse);
-            if (mouse) {
-                setCursor(Qt::CrossCursor);
-                //setCursor(Qt::BlankCursor);
-            } else {
-                setCursor(Qt::ArrowCursor);
-            }
-
-            break;
-        case Qt::Key::Key_F:
-            if (fullScreen){
-                showNormal();
-            } else {
-                showFullScreen();
-            }
-            fullScreen ^= true;
-            break;
-        case Qt::Key::Key_Tab:
-            if (Zbuf){
-                glDisable(GL_DEPTH_TEST);
-                glDisable(GL_TEXTURE_2D);
-            } else { 
-                glEnable(GL_DEPTH_TEST);
-                glEnable(GL_TEXTURE_2D);
-            }
-            Zbuf ^= true;
-        break;
-        case Qt::Key::Key_Escape:
-            exit(0);
-        break;
-        default:
+   if (!victory) {
+       switch(event->key())
         {
-            // Ignorer l'evenement
-            event->ignore();
-            return;
-        }
-    }
+            case Qt::Key::Key_Q://gauche
+                player.moveWithCollisions(0,-0.1,V_walls);
+                break;
+            case Qt::Key::Key_D://droite
+                player.moveWithCollisions(0,0.1,V_walls);
+                break;
+            case Qt::Key::Key_Z://avant
+                //player.move(0.1,0);
+                player.moveWithCollisions(0.1,0,V_walls);
+                break;
+            case Qt::Key::Key_S://arriere
+                player.moveWithCollisions(-0.1,0,V_walls);
+                break;
+            case Qt::Key::Key_E:
+                player.look(3,0);
+                break;
+            case Qt::Key::Key_A:
+                player.look(-3,0);
+                break;
+            case Qt::Key::Key_R:
+                mouse ^= true;
+                setMouseTracking(mouse);
+                if (mouse) {
+                    setCursor(Qt::CrossCursor);
+                    //setCursor(Qt::BlankCursor);
+                } else {
+                    setCursor(Qt::ArrowCursor);
+                }
 
+                break;
+            case Qt::Key::Key_F:
+                if (fullScreen){
+                    showNormal();
+                } else {
+                    showFullScreen();
+                }
+                fullScreen ^= true;
+                break;
+            case Qt::Key::Key_Tab:
+                if (Zbuf){
+                    glDisable(GL_DEPTH_TEST);
+                    glDisable(GL_TEXTURE_2D);
+                } else {
+                    glEnable(GL_DEPTH_TEST);
+                    glEnable(GL_TEXTURE_2D);
+                }
+                Zbuf ^= true;
+            break;
+            case Qt::Key::Key_Escape:
+                exit(0);
+            break;
+            default:
+            {
+                // Ignorer l'evenement
+                event->ignore();
+                return;
+            }
+        }
+    } else {
+       switch(event->key()){
+       case Qt::Key::Key_Escape:
+       case Qt::Key_Space:
+           exit(0);
+       break;
+       default:
+           event->ignore();
+           return;
+       }
+    }
     // Acceptation de l'evenement et mise a jour de la scene
     event->accept();
     updateGL();
-    for(Sphere * s: V_spheres){
-        if (!s->isFound()){
-            int d = player.getPos().distanceTo(s->getPos());
-            if (100 - 15*d > 10) {
-                dj.volume("SPHERESOUND", 100 - 15*d);
-                dj.play("SPHERESOUND");
-            } else {
-                dj.volume("SPHERESOUND",0);
 
-            }
-        }
-    }
 }
 
 void MyGLWidget::wheelEvent(QWheelEvent *event)

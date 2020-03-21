@@ -37,14 +37,17 @@ protected:
     void keyPressEvent(QKeyEvent * event);// Fonction de gestion d'interactions clavier
     void wheelEvent(QWheelEvent *event);//Fonction de gestion d'interaction molette
     void mouseMoveEvent(QMouseEvent *event);//Fonction de gestion d'interaction souris
+    //void victory(); //fonction pour écran de victoire
 private :
     QTimer timer;
-    float timeElapsed = 0.0f;
+    float animTime = 0;
+    time_t startTime;
     Player player = Player(Point(1,1,1), Point(2,1,1));
     Skybox * skybox;
     bool fullScreen = false;
     bool Zbuf = true;
     bool mouse = false;
+    bool victory = false;
     float FOV = 80.0f;
     vector<Wall *> V_walls;
     vector<Sphere *> V_spheres;
