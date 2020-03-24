@@ -13,6 +13,7 @@ using namespace std;
 const unsigned int WIN_WIDTH  = 1600;
 const unsigned int WIN_HEIGHT = 900;
 const float MAX_DIMENSION     = 50.0f;
+const bool AUTOHIDEMINIMAP    = true;
 
 
 // Constructeur
@@ -51,6 +52,7 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 
     //horaire de départ
     startTime = time(0);
+    sinceMoveTime = time(0) - 5;
 
 }
 
@@ -213,18 +215,21 @@ void MyGLWidget::paintGL()
         glVertex2f(squareSize, squareSize);
     glEnd();
 
+        //MINIMAP
     float scale = 10.0;
-        //Mur 2D
-    for(Wall * w: V_walls){
-        w->draw2D(WIN_WIDTH - LENGTH * 2 * scale - 20, 20, scale);
+    if (time(0) - sinceMoveTime > 3.0 || !AUTOHIDEMINIMAP)
+    {
+            //Mur 2D
+        for(Wall * w: V_walls){
+            w->draw2D(WIN_WIDTH - LENGTH * 2 * scale - 20, 20, scale);
+        }
+            //Position des spheres
+        for(Sphere * s: V_spheres){
+            s->draw2D(WIN_WIDTH - LENGTH * 2 * scale - 20 , 20, scale);
+        }
+            //Position du joueur
+        player.draw2D(WIN_WIDTH - LENGTH * 2 * scale - 20 , 20, scale);
     }
-        //Position des spheres
-    for(Sphere * s: V_spheres){
-        s->draw2D(WIN_WIDTH - LENGTH * 2 * scale - 20 , 20, scale);
-    }
-        //Position du joueur
-    player.draw2D(WIN_WIDTH - LENGTH * 2 * scale - 20 , 20, scale);
-
         //texte
     qglColor(Qt::black);
     renderText(squareSize + 20 , 20, QString("Vous jouez depuis %1 secondes").arg(time(0) - startTime));
@@ -272,16 +277,20 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
         {
             case Qt::Key::Key_Q://gauche
                 player.moveWithCollisions(0,-0.1,V_walls);
+                resetMinimapTimer();
                 break;
             case Qt::Key::Key_D://droite
                 player.moveWithCollisions(0,0.1,V_walls);
+                resetMinimapTimer();
                 break;
             case Qt::Key::Key_Z://avant
                 //player.move(0.1,0);
                 player.moveWithCollisions(0.1,0,V_walls);
+                resetMinimapTimer();
                 break;
             case Qt::Key::Key_S://arriere
                 player.moveWithCollisions(-0.1,0,V_walls);
+                resetMinimapTimer();
                 break;
             case Qt::Key::Key_E:
                 player.look(3,0);

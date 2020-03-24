@@ -38,10 +38,12 @@ protected:
     void wheelEvent(QWheelEvent *event);//Fonction de gestion d'interaction molette
     void mouseMoveEvent(QMouseEvent *event);//Fonction de gestion d'interaction souris
     //void victory(); //fonction pour écran de victoire
+    void resetMinimapTimer() {sinceMoveTime = time(0);}
 private :
     QTimer timer;
     float animTime = 0;
     time_t startTime;
+    time_t sinceMoveTime;
     Player player = Player(Point(1,1,1), Point(2,1,1));
     Skybox * skybox;
     bool fullScreen = false;
