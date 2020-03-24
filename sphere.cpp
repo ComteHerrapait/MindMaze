@@ -30,7 +30,6 @@ Sphere::Sphere(Point p, float r){
 }
 void Sphere::draw(float time_){
 
-    cout << time_ << endl;
     if (found) return; //ne trace pas la boule si elle est trouvée
 
     // paramètres d'affichages //

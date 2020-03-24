@@ -10,8 +10,8 @@
 using namespace std;
 
 // Declarations des constantes
-const unsigned int WIN_WIDTH  = 800;
-const unsigned int WIN_HEIGHT = 450;
+const unsigned int WIN_WIDTH  = 1600;
+const unsigned int WIN_HEIGHT = 900;
 const float MAX_DIMENSION     = 50.0f;
 
 
@@ -255,11 +255,13 @@ void MyGLWidget::paintGL()
     glPopMatrix();
 
 }
+
 /*
 void MyGLWidget::victory(){
 
 }
 */
+
 // Fonction de gestion d'interactions clavier
 void MyGLWidget::keyPressEvent(QKeyEvent * event)
 {
