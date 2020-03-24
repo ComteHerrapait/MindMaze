@@ -241,8 +241,8 @@ void MyGLWidget::paintGL()
     } else { // ---- VICTOIRE ----
         //carré
     glBegin(GL_QUADS);
-        glColor3f(1.0f, 1.0f, 1.0f);
-        float squareSize = 75.0f; //taille du carré de couleur
+        glColor3f(0.0f, 0.0f, 0.0f);
+        float squareSize = 900.0f; //taille du carré de couleur
         glVertex2f(WIN_WIDTH/2 - squareSize, WIN_HEIGHT/2 - squareSize);
         glVertex2f(WIN_WIDTH/2 + squareSize, WIN_HEIGHT/2 - squareSize);
         glVertex2f(WIN_WIDTH/2 + squareSize, WIN_HEIGHT/2 + squareSize);
@@ -251,43 +251,16 @@ void MyGLWidget::paintGL()
 
 
         //texte
-    qglColor(Qt::black);
-    renderText(WIN_WIDTH/2 - 20 , WIN_HEIGHT/2 + 20, QString("Vous avez gagné"));
-
+    qglColor(Qt::white);
+    QFont font("IM Fell English", 40);
+    renderText(WIN_WIDTH/2 - 260 , WIN_HEIGHT/2 - 20, QString("Vous avez gagné!"), font);
     }
     glPopMatrix();
 
 }
 /*
 void MyGLWidget::victory(){
-    while(true) {
-            //paramétrage
-        glMatrixMode(GL_PROJECTION);
-        glPushMatrix();
-        glLoadIdentity();
-        glOrtho(0.0, WIN_WIDTH, WIN_HEIGHT, 0.0, -1.0, 10.0);
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        glDisable(GL_CULL_FACE);
-        glClear(GL_DEPTH_BUFFER_BIT);
 
-            //carré
-        glBegin(GL_QUADS);
-            glColor3f(1.0f, 1.0f, 1.0f);
-            float squareSize = 75.0f; //taille du carré de couleur
-            glVertex2f(WIN_WIDTH - squareSize, WIN_HEIGHT - squareSize);
-            glVertex2f(WIN_WIDTH + squareSize, WIN_HEIGHT - squareSize);
-            glVertex2f(WIN_WIDTH + squareSize, WIN_HEIGHT + squareSize);
-            glVertex2f(WIN_WIDTH - squareSize, WIN_HEIGHT + squareSize);
-        glEnd();
-
-
-            //texte
-        qglColor(Qt::black);
-        renderText(WIN_WIDTH +20 , WIN_HEIGHT + 20, QString("Vous avez gagné"));
-
-        glPopMatrix();
-    }
 }
 */
 // Fonction de gestion d'interactions clavier
