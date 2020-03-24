@@ -156,67 +156,31 @@ vector<Wall *> Maze::get()
     {
         for (int y = 0; y < width_ ; y++)
         {  
-            if(grid_[x][y].isFrontier(Cell::S) && x<height_-1)
+            if(grid_[x][y].isFrontier(Cell::S))
             {
                 Wall * w =new Wall(Point(2*y    ,0  ,2*(x+1)),
-                                   Point(2*(y+1),0  ,2*(x+1)));
+                                   Point(2*(y+1),0  ,2*(x+1)), x>=height_-1);
                 result.push_back(w);
             }
-            if(grid_[x][y].isFrontier(Cell::E) && y<width_-1)
+            if(grid_[x][y].isFrontier(Cell::E))
             {
                 Wall * w =new Wall(Point(2*(y+1),0  ,2*x),
-                                   Point(2*(y+1),0  ,2*(x+1)));
+                                   Point(2*(y+1),0  ,2*(x+1)), y>=width_-1);
+                result.push_back(w);
+            }
+            if(x == 0)//bordure
+            {
+                Wall * w =new Wall(Point(2*y    ,0  ,2*(x)),
+                                   Point(2*(y+1),0  ,2*(x)),true);
+                result.push_back(w);
+            }
+            if(y == 0)//bordure
+            {
+                Wall * w =new Wall(Point(2*y,0  ,2*x),
+                                   Point(2*y,0  ,2*(x+1)),true);
                 result.push_back(w);
             }
         }
-    }
-    return result;
-}
-
-vector<Wall *> Maze::generateBorder(){
-    vector<Wall *> result;
-    vector<Point> Points {
-                    Point(0,0,0),
-                    Point(2,0,0),
-                    Point(4,0,0),
-                    Point(6,0,0),
-                    Point(8,0,0),
-                    Point(10,0,0),
-                    Point(12,0,0),
-                    Point(14,0,0),
-                    Point(16,0,0),
-                    Point(18,0,0),
-                    Point(20,0,0),
-                    Point(20,0,2),
-                    Point(20,0,4),
-                    Point(20,0,6),
-                    Point(20,0,8),
-                    Point(20,0,10),
-                    Point(20,0,12),
-                    Point(18,0,12),
-                    Point(16,0,12),
-                    Point(14,0,12),
-                    Point(12,0,12),
-                    Point(10,0,12),
-                    Point(8,0,12),
-                    Point(6,0,12),
-                    Point(4,0,12),
-                    Point(2,0,12),
-                    Point(0,0,12),
-                    Point(0,0,12),
-                    Point(0,0,10),
-                    Point(0,0,8),
-                    Point(0,0,6),
-                    Point(0,0,4),
-                    Point(0,0,2),
-                    Point(0,0,0)
-            };
-    Point last;
-    for (Point p : Points){
-        if (p.x == last.x && p.y == last.y && p.z == last.z)
-            continue;
-        result.push_back(new Wall(last, p, true));
-        last = p;
     }
     return result;
 }

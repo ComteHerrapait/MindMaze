@@ -10,8 +10,8 @@
 using namespace std;
 
 // Declarations des constantes
-const unsigned int WIN_WIDTH  = 1600;
-const unsigned int WIN_HEIGHT = 900;
+const unsigned int WIN_WIDTH  = 800;
+const unsigned int WIN_HEIGHT = 450;
 const float MAX_DIMENSION     = 50.0f;
 
 
@@ -61,10 +61,7 @@ void MyGLWidget::initializeGL()
     //creation des murs
     Maze mazegen = Maze(LENGTH,WIDTH);
     mazegen.generate();
-    vector<Wall *> InsideWalls = mazegen.get();
-    vector<Wall *> OutsideWalls = mazegen.generateBorder();
-    V_walls.insert(V_walls.begin(),InsideWalls.begin(),InsideWalls.end());
-    V_walls.insert(V_walls.end(),OutsideWalls.begin(),OutsideWalls.end());
+    V_walls = mazegen.get();
 
     //création de la skybox
     skybox = new Skybox(50);
@@ -74,9 +71,9 @@ void MyGLWidget::initializeGL()
     V_spheres.push_back(boule);
 
     //creation du plafond et du sol
-    Surface * ceiling = new Surface(false);//plafond
+    Surface * ceiling = new Surface(false,LENGTH,WIDTH);//plafond
     V_surfaces.push_back(ceiling);
-    Surface * floor = new Surface(true);//sol
+    Surface * floor = new Surface(true,LENGTH,WIDTH);//sol
     V_surfaces.push_back(floor);
 
     //démarre la musique

@@ -55,7 +55,7 @@ private :
     QPoint lastPosMouse;
     DJ dj;
     int LENGTH = 10;
-    int WIDTH = 6;
+    int WIDTH = 10;
 };
 
 #endif // MYGLWIDGET_H

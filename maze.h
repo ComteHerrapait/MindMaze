@@ -33,7 +33,6 @@ private:
     Cell::Direction direction(PointInt f, PointInt t);
 
 public:
-    vector<Wall *> generateBorder();
     Maze(int width,int height);
     void reinit();
     void display(bool pause=false);
