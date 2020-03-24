@@ -254,6 +254,8 @@ void MyGLWidget::paintGL()
     }
     glPopMatrix();
 
+    // ---- MUSIQUE ----
+    dj.play("BACKGROUND"); // relance la musique en permanence, pour faire une boucle
 }
 
 /*
