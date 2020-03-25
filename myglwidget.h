@@ -44,20 +44,23 @@ private :
     float animTime = 0;
     time_t startTime;
     time_t sinceMoveTime;
+    QPoint lastPosMouse;
+
     Player player = Player(Point(1,1,1), Point(2,1,1));
     Skybox * skybox;
+    vector<Wall *> V_walls;
+    vector<Sphere *> V_spheres;
+    vector<Surface *> V_surfaces;
+    DJ dj;
+
     bool fullScreen = false;
     bool Zbuf = true;
     bool mouse = false;
     bool victory = false;
-    float FOV = 80.0f;
-    vector<Wall *> V_walls;
-    vector<Sphere *> V_spheres;
-    vector<Surface *> V_surfaces;
-    QPoint lastPosMouse;
-    DJ dj;
     int LENGTH = 10;
     int WIDTH = 10;
+    float FOV = 80.0f;
+    int musicVolume = 10;
 };
 
 #endif // MYGLWIDGET_H

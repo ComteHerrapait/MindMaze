@@ -13,7 +13,10 @@ using namespace std;
 const unsigned int WIN_WIDTH  = 1600;
 const unsigned int WIN_HEIGHT = 900;
 const float MAX_DIMENSION     = 50.0f;
-const bool AUTOHIDEMINIMAP    = true;
+
+const float SKYBOX_SIZE       = 50.0f;
+const bool AUTOHIDE_MAP       = true;
+const float HIDE_MAP_TIME     = 3.0;
 
 
 // Constructeur
@@ -66,7 +69,7 @@ void MyGLWidget::initializeGL()
     V_walls = mazegen.get();
 
     //création de la skybox
-    skybox = new Skybox(50);
+    skybox = new Skybox(SKYBOX_SIZE);
 
     //creation de la sphere
     Sphere * boule = new Sphere(Point(2*rand() % (LENGTH*2) +1,1,2*rand() % (WIDTH*2) +1), 0.5);
@@ -80,7 +83,7 @@ void MyGLWidget::initializeGL()
 
     //démarre la musique
     dj.play("BACKGROUND");
-    dj.volume("BACKGROUND",10);
+    dj.volume("BACKGROUND",musicVolume);
 
     //Activation du zbuffer
     glEnable(GL_DEPTH_TEST);
@@ -129,7 +132,7 @@ void MyGLWidget::paintGL()
     //Definition de la matrice projection
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(FOV, 16.0/9.0, 0.1f, 250.0f);
+    gluPerspective(FOV, (float)WIN_WIDTH/WIN_HEIGHT, 0.1f, 250.0f);
 
     //Definition de la matrice modelview
     glMatrixMode(GL_MODELVIEW);
@@ -217,7 +220,7 @@ void MyGLWidget::paintGL()
 
         //MINIMAP
     float scale = 10.0;
-    if (time(0) - sinceMoveTime > 3.0 || !AUTOHIDEMINIMAP)
+    if (time(0) - sinceMoveTime > HIDE_MAP_TIME || !AUTOHIDE_MAP)
     {
             //Mur 2D
         for(Wall * w: V_walls){
