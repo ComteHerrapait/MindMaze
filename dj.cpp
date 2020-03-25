@@ -8,7 +8,7 @@ DJ::DJ()
     sphereSound.setMedia(QUrl::fromLocalFile("../MindMaze/sounds/sphereSound.mp3"));
 }
 
-void DJ::play(QString soundName){
+void DJ::play(const QString& soundName){
     if (soundName.toUpper() == "BACKGROUND"){
         background.play();
     }else if (soundName.toUpper() == "SPHERESOUND"){
@@ -18,7 +18,7 @@ void DJ::play(QString soundName){
     }
 }
 
-void DJ::volume(QString soundName, int volume){
+void DJ::volume(const QString& soundName, int volume){
     if (soundName.toUpper() == "BACKGROUND"){
         background.setVolume(volume);
     }else if (soundName.toUpper() == "SPHERESOUND"){
@@ -28,7 +28,7 @@ void DJ::volume(QString soundName, int volume){
     }
 }
 
-void DJ::stop(QString soundName){
+void DJ::stop(const QString& soundName){
     if (soundName.toUpper() == "BACKGROUND"){
         background.stop();
     }else if (soundName.toUpper() == "SPHERESOUND"){

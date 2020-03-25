@@ -14,7 +14,7 @@ public:
     Player(Point position, Point lookingAt);
     void move(float forward, float rightward); //movement of the Player
     void moveWithCollisions(float forward, float rightward, std::vector<Wall *> walls); //movement of the Player with collisions
-    void look(float vertical, float horizontal); //change head orientation
+    void look(float horizontal, float vertical); //change head orientation
     void foundSpheres();
     Point getPos() {return pos;}
     Point getTarget() {return target;}

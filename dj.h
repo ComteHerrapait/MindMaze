@@ -8,9 +8,9 @@ class DJ
 {
 public:
     DJ();
-    void play(QString soundName);
-    void stop(QString soundName);
-    void volume(QString soundName, int volume);
+    void play(const QString& soundName);
+    void stop(const QString& soundName);
+    void volume(const QString& soundName, int volume);
 private:
     QMediaPlayer background;
     QMediaPlayer sphereSound;
