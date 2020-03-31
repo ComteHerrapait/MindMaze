@@ -24,7 +24,8 @@ SOURCES	+= main.cpp myglwidget.cpp \
     skybox.cpp \
     sphere.cpp \
     surface.cpp \
-    wall.cpp
+    wall.cpp \
+    webcamwidget.cpp
 
 HEADERS += \
     cell.h \
@@ -36,7 +37,8 @@ HEADERS += \
     skybox.h \
     sphere.h \
     surface.h \
-    wall.h
+    wall.h \
+    webcamwidget.h
 
 DISTFILES +=
 
