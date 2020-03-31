@@ -33,9 +33,6 @@ void Player::look(float horizontal, float vertical = 0.0f){
     //float dy = target.y - pos.y;
     float dz = target.z - pos.z;
 
-    target.x -= pos.x;
-    target.z -= pos.z;
-
     float newX = dx * ch - dz * sh;
     float newZ = dx * sh + dz * ch;
 
