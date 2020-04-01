@@ -18,6 +18,7 @@ const float SKYBOX_SIZE       = 50.0f;
 const bool AUTOHIDE_MAP       = true;
 const float HIDE_MAP_TIME     = 3.0;
 
+const int ANIMATION_COUNT     = 100;
 
 // Constructeur
 MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
@@ -113,6 +114,8 @@ void MyGLWidget::resizeGL(int width, int height)
 // Fonction d'affichage
 void MyGLWidget::paintGL()
 {
+    // Continue movement animation
+    if (player.isMoving()) { player.continueMove(); }
 
     //Verification victoire
     if (player.getPos().x < 0
@@ -196,6 +199,9 @@ void MyGLWidget::paintGL()
     glDisable(GL_CULL_FACE);
     glClear(GL_DEPTH_BUFFER_BIT);
 
+    float squareSize = 75.0f; //taille du carré de couleur
+    float textBackgroudSize = 250.0f; //taille du fond du texte
+
     if (!victory) {
         //carré
     glBegin(GL_QUADS);
@@ -204,17 +210,16 @@ void MyGLWidget::paintGL()
         } else {
             glColor3f(1.0f, 0.0f, 0.0f);
         }
-        float squareSize = 75.0f; //taille du carré de couleur
+
         glVertex2f(0.0, 0.0);
         glVertex2f(squareSize, 0.0);
         glVertex2f(squareSize, squareSize);
         glVertex2f(0.0, squareSize);
 
-        float squareSize2 = 250.0f; //taille du fond du texte
         glColor3f(0.7,0.7,0.7);
         glVertex2f(squareSize, 0.0);
-        glVertex2f(squareSize + squareSize2,0);
-        glVertex2f(squareSize + squareSize2, squareSize);
+        glVertex2f(squareSize + textBackgroudSize,0);
+        glVertex2f(squareSize + textBackgroudSize, squareSize);
         glVertex2f(squareSize, squareSize);
     glEnd();
 
@@ -242,6 +247,27 @@ void MyGLWidget::paintGL()
         renderText(squareSize + 20 , 65, QString("trouvez la sortie !"));
     }
     if (DEBUG) renderText(squareSize + 20 , 80, QString("coord : %1 %2 %3").arg(player.getPos().x).arg(player.getPos().y).arg(player.getPos().z));
+
+        //modes
+    if (mouse)  qglColor(Qt::green);
+    else        qglColor(Qt::red);
+    renderText(5 , squareSize + 25, QString("(R) Mouse"));
+
+    if (freeMovement)   qglColor(Qt::green);
+    else                qglColor(Qt::red);
+    renderText(5 , squareSize + 40, QString("(T) Free movement"));
+
+    if (camera) qglColor(Qt::green);
+    else        qglColor(Qt::red);
+    renderText(5 , squareSize + 55, QString("(Y) Camera"));
+
+    if (fullScreen) qglColor(Qt::green);
+    else            qglColor(Qt::red);
+    renderText(5 , squareSize + 70, QString("(F) Fullscreen"));
+
+    if (Zbuf)   qglColor(Qt::green);
+    else        qglColor(Qt::red);
+    renderText(5 , squareSize + 85, QString("(tab) Z-Buffer"));
 
     } else { // ---- VICTOIRE ----
         //carré
@@ -279,39 +305,58 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
        switch(event->key())
         {
             case Qt::Key::Key_Q://gauche
-                player.moveWithCollisions(0,-0.1,V_walls);
+                if (freeMovement){player.moveWithCollisions(0,-0.1,V_walls);}
+                else if (! player.isMoving())
+                {player.moveWithAnimations(0,-1,ANIMATION_COUNT,V_walls);}
                 resetMinimapTimer();
                 break;
             case Qt::Key::Key_D://droite
-                player.moveWithCollisions(0,0.1,V_walls);
+                if (freeMovement){player.moveWithCollisions(0,0.1,V_walls);}
+                else if (! player.isMoving())
+                {player.moveWithAnimations(0,1,ANIMATION_COUNT,V_walls);}
                 resetMinimapTimer();
                 break;
             case Qt::Key::Key_Z://avant
                 //player.move(0.1,0);
-                player.moveWithCollisions(0.1,0,V_walls);
+                if (freeMovement) {player.moveWithCollisions(0.1,0,V_walls);}
+                else if (! player.isMoving())
+                {player.moveWithAnimations(1,0,ANIMATION_COUNT,V_walls);}
                 resetMinimapTimer();
                 break;
             case Qt::Key::Key_S://arriere
-                player.moveWithCollisions(-0.1,0,V_walls);
+                if (freeMovement){player.moveWithCollisions(-0.1,0,V_walls);}
+                else if (! player.isMoving())
+                {player.moveWithAnimations(-1,0,ANIMATION_COUNT,V_walls);}
                 resetMinimapTimer();
                 break;
             case Qt::Key::Key_E:
-                player.look(3,0);
+                if (freeMovement){player.look(3);}
+                else if (! player.isMoving())
+                {player.lookWithAnimations(1,ANIMATION_COUNT);}
                 break;
             case Qt::Key::Key_A:
-                player.look(-3,0);
+                if (freeMovement){player.look(-3);}
+                else if (! player.isMoving())
+                {player.lookWithAnimations(-1,ANIMATION_COUNT);}
                 break;
             case Qt::Key::Key_R:
                 mouse ^= true;
                 setMouseTracking(mouse);
                 if (mouse) {
                     setCursor(Qt::CrossCursor);
-                    //setCursor(Qt::BlankCursor);
                 } else {
                     setCursor(Qt::ArrowCursor);
                 }
-
                 break;
+            case Qt::Key::Key_T:
+               freeMovement ^= true;
+               if (!freeMovement){
+                   player.roundPosition();
+               }
+               break;
+            case Qt::Key::Key_Y:
+               camera ^= true;
+               break;
             case Qt::Key::Key_F:
                 if (fullScreen){
                     showNormal();
@@ -374,7 +419,17 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event){
     if (mouse){
         //tourne la caméra en fonction du mouvement de la souris
         float dx = event->x() - lastPosMouse.x();
-        player.look(dx/4.0f,0);
+
+        if (freeMovement) {
+            player.look(dx/4.0f);
+        } else if (!player.isMoving()) {
+            if (dx > 20) {
+                player.lookWithAnimations(1,ANIMATION_COUNT);
+            }
+            else if (dx < -20) {
+                player.lookWithAnimations(-1,ANIMATION_COUNT);
+            }
+        }
         //garde la souris au centre
         QPoint glob = mapToGlobal(QPoint(width()/2,height()/2));
         QCursor::setPos(glob);

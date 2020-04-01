@@ -14,17 +14,24 @@ public:
     Player(Point position, Point lookingAt);
     void move(float forward, float rightward); //movement of the Player
     void moveWithCollisions(float forward, float rightward, std::vector<Wall *> walls); //movement of the Player with collisions
-    void look(float horizontal, float vertical); //change head orientation
+    void moveWithAnimations(int forward, int rightward, int animCount, vector<Wall *> walls);
+    void look(float angle); //change head orientation
+    void lookWithAnimations(int angle, int animCount);
     void foundSpheres();
     Point getPos() {return pos;}
     Point getTarget() {return target;}
     bool getAchievement() {return achievement;}
     bool CheckCollision(Wall w);
     void draw2D(float offX, float offY, float scale);
+    void continueMove();
+    void roundPosition();
+    bool isMoving() { return animationsLeft > 0;}
 private :
     Point pos ; //position of the player
     Point target ; //position the player is looking at
     bool achievement = false; //store if the player has succeded at the mission (TBD)
+    int animationsLeft;
+    vector<double> stepSize{0,0,0};//forward, rightward and looking angle
 
 };
 

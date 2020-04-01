@@ -25,12 +25,10 @@ void Player::move(float forward, float rightward)
     target.x += rightward * - vectZ / norm;
     target.z += rightward * vectX /norm;
 }
-void Player::look(float horizontal, float vertical = 0.0f){
-    //float cv=cos(vertical* PI / 180.0), sv=sin(vertical* PI / 180.0);
+void Player::look(float horizontal){
     float ch=cos(horizontal* PI / 180.0), sh=sin(horizontal* PI / 180.0);
 
     float dx = target.x - pos.x;
-    //float dy = target.y - pos.y;
     float dz = target.z - pos.z;
 
     float newX = dx * ch - dz * sh;
@@ -77,6 +75,65 @@ void Player::moveWithCollisions(float forward, float rightward, vector<Wall *> w
         }
     }
 }
+void Player::moveWithAnimations(int forward, int rightward, int animCount, vector<Wall *> walls){
+    // Check
+    move(forward*1.0,rightward*1.0);
+    for(Wall * w: walls){
+        if (CheckCollision(*w)){
+            move(-forward*1.0,-rightward*1.0);
+            return;// if collision with a wall, cancel movement
+        }
+    }
+    move(-forward*1.0,-rightward*1.0);
+
+    // Initialization
+    animationsLeft = animCount;
+    stepSize = {forward*2.0 / animCount, rightward*2.0 / animCount, 0.0 };
+
+    // Move
+    continueMove();
+}
+
+void Player::lookWithAnimations(int angle, int animCount){
+    // Initialization
+    animationsLeft = animCount;
+    stepSize = {0.0,0.0, angle * 90.0 / animCount };
+
+    // Move
+    continueMove();
+}
+
+void Player::continueMove(){
+    if (animationsLeft>0){
+        move(stepSize[0],stepSize[1]);
+        look(stepSize[2]);
+        animationsLeft--;
+        if (animationsLeft == 0){
+            stepSize = {0.0,0.0,0.0};
+        }
+    }
+}
+
+void Player::roundPosition(){
+    float offsetX = target.x - pos.x;
+    float offsetZ = target.z - pos.z;
+
+    //position du joueur
+    pos.x = 2*floor(pos.x/2)+1;
+    pos.z = 2*floor(pos.z/2)+1;
+
+    //position de la cible camera
+    if (round(offsetX) != 0 && round(offsetZ) != 0 ){
+        if (offsetX - round(offsetX) < offsetZ - round(offsetZ)){
+            offsetX = 0;
+        } else {
+            offsetZ = 0;
+        }
+    }
+    target.x = pos.x + round(offsetX);
+    target.z = pos.z + round(offsetZ);
+}
+
 void Player::draw2D(float offX, float offY, float scale){
     float r = 0.6 * scale;
     float x = offX + pos.x*scale;

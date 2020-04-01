@@ -53,9 +53,12 @@ private :
     vector<Surface *> V_surfaces;
     DJ dj;
 
+    bool mouse = false;
+    bool camera = false;
+    bool freeMovement = false;
+
     bool fullScreen = false;
     bool Zbuf = true;
-    bool mouse = false;
     bool victory = false;
     int LENGTH = 10;
     int WIDTH = 10;
