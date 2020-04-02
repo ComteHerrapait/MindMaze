@@ -20,6 +20,7 @@ TARGET 	  = MindMaze
 SOURCES	+= main.cpp myglwidget.cpp \
     dj.cpp \
     maze.cpp \
+    menu.cpp \
     player.cpp \
     skybox.cpp \
     sphere.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     cell.h \
     dj.h \
     maze.h \
+    menu.h \
     myglwidget.h \
     player.h \
     point.h \
@@ -54,3 +56,6 @@ LIBS += -L$$(OPENCV_DIR)\lib \
 RESOURCES += \
     sounds/sounds.qrc \
     textures/textures.qrc
+
+FORMS += \
+    menu.ui

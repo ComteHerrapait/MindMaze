@@ -15,6 +15,7 @@
 #include "maze.h"
 #include "dj.h"
 #include "skybox.h"
+#include "menu.h"
 #include <QtMultimedia/QMediaPlayer>
 #define PI 3.14159265
 
@@ -28,8 +29,7 @@ class MyGLWidget : public QGLWidget
 public:
 
     // Constructeur
-    MyGLWidget(QWidget * parent = nullptr);
-
+    MyGLWidget(Menu* menu, QWidget * parent = nullptr);
 protected: 
     void initializeGL();// Fonction d'initialisation
     void resizeGL(int width, int height);// Fonction de redimensionnement
@@ -57,6 +57,9 @@ private :
     bool camera = false;
     bool freeMovement = false;
 
+    unsigned int WIN_WIDTH  = 1600;
+    unsigned int WIN_HEIGHT = 900;
+    int nbSpheres = 1;
     bool fullScreen = false;
     bool Zbuf = true;
     bool victory = false;

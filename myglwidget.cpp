@@ -10,8 +10,6 @@
 using namespace std;
 
 // Declarations des constantes
-const unsigned int WIN_WIDTH  = 1600;
-const unsigned int WIN_HEIGHT = 900;
 const float MAX_DIMENSION     = 50.0f;
 
 const float SKYBOX_SIZE       = 50.0f;
@@ -21,8 +19,19 @@ const float HIDE_MAP_TIME     = 3.0;
 const int ANIMATION_COUNT     = 100;
 
 // Constructeur
-MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
+MyGLWidget::MyGLWidget(Menu* menu, QWidget * parent) : QGLWidget(parent)
 {
+    //recuperation des paramètres
+    LENGTH = menu->width;
+    WIDTH = menu->height;
+    nbSpheres = menu->nbSpheres;
+    WIN_WIDTH = menu->winWidth;
+    WIN_HEIGHT = menu->winHeight;
+    FOV = menu->FOV;
+    musicVolume = menu->volume;
+    fullScreen = menu->fullscreen;
+    freeMovement = menu->freeMovement;
+
     //icone de l'application
     QIcon icon = QIcon(":/maze.ico");
     setWindowIcon(icon);
@@ -40,6 +49,7 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
     setFixedSize(WIN_WIDTH, WIN_HEIGHT);
     QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
     move(screenGeometry.width()/2 - WIN_WIDTH/2, screenGeometry.height()/2 - WIN_HEIGHT/2);
+    if(fullScreen) showFullScreen();
 
     //Connexion du timer
     connect(&timer,  &QTimer::timeout, [&] {
@@ -53,10 +63,6 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
     int x = 2*rand() % (LENGTH *2)+1;
     int z = 2*rand() % (WIDTH *2) +1;
     player = Player(Point(x,1,z), Point(x+1,1,z));
-
-    //horaire de départ
-    startTime = time(0);
-    sinceMoveTime = time(0) - 5;
 
 }
 
@@ -72,9 +78,11 @@ void MyGLWidget::initializeGL()
     //création de la skybox
     skybox = new Skybox(SKYBOX_SIZE);
 
-    //creation de la sphere
-    Sphere * boule = new Sphere(Point(2*rand() % (LENGTH*2) +1,1,2*rand() % (WIDTH*2) +1), 0.5);
-    V_spheres.push_back(boule);
+    //creation des spheres
+    for (int i = 0; i < nbSpheres; i++){
+        Sphere * s = new Sphere(Point(2*rand() % (LENGTH*2) +1,1,2*rand() % (WIDTH*2) +1), 0.5);
+        V_spheres.push_back(s);
+    }
 
     //creation du plafond et du sol
     Surface * ceiling = new Surface(false,LENGTH,WIDTH);//plafond
@@ -90,6 +98,9 @@ void MyGLWidget::initializeGL()
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
 
+    //horaire de départ
+    startTime = time(0);
+    sinceMoveTime = time(0) - 5;
 }
 
 
@@ -389,7 +400,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
        switch(event->key()){
        case Qt::Key::Key_Escape:
        case Qt::Key_Space:
-           exit(0);
+           close();
        break;
        default:
            event->ignore();
