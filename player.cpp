@@ -105,11 +105,19 @@ void Player::lookWithAnimations(int angle, int animCount){
 
 void Player::continueMove(){
     if (animationsLeft>0){
+        //mouvement
         move(stepSize[0],stepSize[1]);
         look(stepSize[2]);
         animationsLeft--;
+
+        // Head-bobbing
+        pos.y = 1 + abs(0.05 * sin(2*PI * (100 - animationsLeft)/100));
+        target.y = pos.y;
+
+        //reinitialisation fin du mouvement
         if (animationsLeft == 0){
             stepSize = {0.0,0.0,0.0};
+            roundPosition();
         }
     }
 }
@@ -120,6 +128,7 @@ void Player::roundPosition(){
 
     //position du joueur
     pos.x = 2*floor(pos.x/2)+1;
+    pos.y = 1;
     pos.z = 2*floor(pos.z/2)+1;
 
     //position de la cible camera
@@ -131,7 +140,9 @@ void Player::roundPosition(){
         }
     }
     target.x = pos.x + round(offsetX);
+    target.y = 1;
     target.z = pos.z + round(offsetZ);
+
 }
 
 void Player::draw2D(float offX, float offY, float scale){

@@ -46,7 +46,7 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
         updateGL();
         animTime ++;
     });
-    timer.setInterval(1); //tick-rate en ms
+    timer.setInterval(0); //tick-rate en ms
     timer.start();
 
     //création du joueur
