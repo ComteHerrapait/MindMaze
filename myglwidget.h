@@ -15,7 +15,9 @@
 #include "maze.h"
 #include "dj.h"
 #include "skybox.h"
-#include "menu.h"
+#include "victory.h"
+#include <QMessageBox>
+
 #include <QtMultimedia/QMediaPlayer>
 #define PI 3.14159265
 
@@ -29,7 +31,10 @@ class MyGLWidget : public QGLWidget
 public:
 
     // Constructeur
-    MyGLWidget(Menu* menu, QWidget * parent = nullptr);
+    MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_,
+               QWidget * parent = nullptr);
+    int winTime;
+
 protected: 
     void initializeGL();// Fonction d'initialisation
     void resizeGL(int width, int height);// Fonction de redimensionnement
@@ -37,7 +42,6 @@ protected:
     void keyPressEvent(QKeyEvent * event);// Fonction de gestion d'interactions clavier
     void wheelEvent(QWheelEvent *event);//Fonction de gestion d'interaction molette
     void mouseMoveEvent(QMouseEvent *event);//Fonction de gestion d'interaction souris
-    //void victory(); //fonction pour écran de victoire
     void resetMinimapTimer() {sinceMoveTime = time(0);}
 private :
     QTimer timer;
@@ -56,6 +60,7 @@ private :
     bool mouse = false;
     bool camera = false;
     bool freeMovement = false;
+    bool keyboard = true;
 
     unsigned int WIN_WIDTH  = 1600;
     unsigned int WIN_HEIGHT = 900;

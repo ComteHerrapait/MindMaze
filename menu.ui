@@ -379,46 +379,17 @@
       <x>350</x>
       <y>70</y>
       <width>171</width>
-      <height>151</height>
+      <height>161</height>
      </rect>
     </property>
     <property name="title">
      <string>Controles</string>
     </property>
-    <widget class="QRadioButton" name="RadioKeyboard">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>30</y>
-       <width>85</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Clavier</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="RadioCamera">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>60</y>
-       <width>85</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Camera</string>
-     </property>
-    </widget>
     <widget class="QCheckBox" name="CheckSnapping">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>100</y>
+       <x>30</x>
+       <y>120</y>
        <width>72</width>
        <height>20</height>
       </rect>
@@ -438,6 +409,93 @@ et de tourner de 90degrés par mouvement (plus simple)</string>
      </property>
      <property name="text">
       <string>snapping</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="CheckKeyboard">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>30</y>
+       <width>72</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string extracomment="(plus simple)">permet de ne se déplacer que sur le centre des cases
+et de tourner de 90degrés par mouvement (plus simple)</string>
+     </property>
+     <property name="toolTipDuration">
+      <number>-1</number>
+     </property>
+     <property name="statusTip">
+      <string/>
+     </property>
+     <property name="whatsThis">
+      <string/>
+     </property>
+     <property name="text">
+      <string>clavier</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="CheckCamera">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>60</y>
+       <width>72</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string extracomment="(plus simple)">permet de ne se déplacer que sur le centre des cases
+et de tourner de 90degrés par mouvement (plus simple)</string>
+     </property>
+     <property name="toolTipDuration">
+      <number>-1</number>
+     </property>
+     <property name="statusTip">
+      <string/>
+     </property>
+     <property name="whatsThis">
+      <string/>
+     </property>
+     <property name="text">
+      <string>camera</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="CheckMouse">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>90</y>
+       <width>72</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string extracomment="(plus simple)">permet de ne se déplacer que sur le centre des cases
+et de tourner de 90degrés par mouvement (plus simple)</string>
+     </property>
+     <property name="toolTipDuration">
+      <number>-1</number>
+     </property>
+     <property name="statusTip">
+      <string/>
+     </property>
+     <property name="whatsThis">
+      <string/>
+     </property>
+     <property name="text">
+      <string>souris</string>
      </property>
      <property name="checked">
       <bool>true</bool>

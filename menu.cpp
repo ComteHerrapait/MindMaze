@@ -1,8 +1,6 @@
 #include "menu.h"
 #include "ui_menu.h"
-#include <QIntValidator>
-#include <QString>
-#include <iostream>
+
 
 using namespace std;
 
@@ -30,7 +28,6 @@ Menu::Menu(QWidget *parent) :
 Menu::~Menu()
 {
     delete ui;
-    cout <<"deleted UI" << endl;
 }
 
 //largeur
@@ -80,14 +77,41 @@ void Menu::on_pushButton_clicked()
     winHeight= ui->TextWinHeight->text().toInt();
     FOV= ui->TextFOV->text().toInt();
     volume= ui->TextVolume->text().toInt();
+
     fullscreen = ui->CheckFullscreen->isChecked();
     freeMovement = ! ui->CheckSnapping->isChecked();
+    mouse = ui->CheckMouse->isChecked();
+    keyboard = ui->CheckKeyboard->isChecked();
 
-    //ferme la fenêtre
-    close();
+    //ferme la fenêtre pour lancer le jeu
+    Menu menu;
+    MyGLWidget* game = new MyGLWidget(width, height, nbSpheres, winWidth, winHeight, FOV, volume, fullscreen, freeMovement, mouse, keyboard);//menu en argument pour récuperer les paramètres du jeu
+    game->show();
+    this->hide();//cache le menu
 }
 
 void Menu::on_actionQuit_changed()
 {
-    exit(0);
+    QMessageBox::StandardButton resBtn = QMessageBox::question( this, "Mindmaze",
+                                                                tr("Etes vous certain de vouloir quitter le jeu ?\n"),
+                                                                QMessageBox::No | QMessageBox::Yes,
+                                                                QMessageBox::Yes);
+    if (resBtn == QMessageBox::Yes) {
+        exit(0);
+    }
 }
+
+void Menu::closeEvent (QCloseEvent *event)
+{
+    QMessageBox::StandardButton resBtn = QMessageBox::question( this, "Mindmaze",
+                                                                tr("Etes vous certain de vouloir quitter le jeu ?\n"),
+                                                                QMessageBox::No | QMessageBox::Yes,
+                                                                QMessageBox::Yes);
+    if (resBtn != QMessageBox::Yes) {
+        event->ignore();
+    } else {
+        event->accept();
+        exit(0);
+    }
+}
+

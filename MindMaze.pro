@@ -25,6 +25,7 @@ SOURCES	+= main.cpp myglwidget.cpp \
     skybox.cpp \
     sphere.cpp \
     surface.cpp \
+    victory.cpp \
     wall.cpp
 
 HEADERS += \
@@ -38,6 +39,7 @@ HEADERS += \
     skybox.h \
     sphere.h \
     surface.h \
+    victory.h \
     wall.h
 
 DISTFILES +=
@@ -58,4 +60,5 @@ RESOURCES += \
     textures/textures.qrc
 
 FORMS += \
-    menu.ui
+    menu.ui \
+    victory.ui

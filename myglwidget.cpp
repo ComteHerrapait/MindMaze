@@ -19,18 +19,21 @@ const float HIDE_MAP_TIME     = 3.0;
 const int ANIMATION_COUNT     = 100;
 
 // Constructeur
-MyGLWidget::MyGLWidget(Menu* menu, QWidget * parent) : QGLWidget(parent)
+MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_,
+                       QWidget * parent) : QGLWidget(parent)
 {
-    //recuperation des paramètres
-    LENGTH = menu->width;
-    WIDTH = menu->height;
-    nbSpheres = menu->nbSpheres;
-    WIN_WIDTH = menu->winWidth;
-    WIN_HEIGHT = menu->winHeight;
-    FOV = menu->FOV;
-    musicVolume = menu->volume;
-    fullScreen = menu->fullscreen;
-    freeMovement = menu->freeMovement;
+    // attribution des paramètres
+    LENGTH = width_;
+    WIDTH = height_;
+    nbSpheres = nbSpheres_;
+    WIN_WIDTH = winWidth_;
+    WIN_HEIGHT = winHeight_;
+    FOV = FOV_;
+    musicVolume = volume_;
+    fullScreen = fullscreen_;
+    freeMovement = freeMovement_;
+    mouse = mouse_;
+    keyboard = keyboard_;
 
     //icone de l'application
     QIcon icon = QIcon(":/maze.ico");
@@ -94,6 +97,7 @@ void MyGLWidget::initializeGL()
     dj.play("BACKGROUND");
     dj.volume("BACKGROUND",musicVolume);
 
+
     //Activation du zbuffer
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
@@ -101,6 +105,7 @@ void MyGLWidget::initializeGL()
     //horaire de départ
     startTime = time(0);
     sinceMoveTime = time(0) - 5;
+    if (DEBUG) cout << "fin de la génération du jeu" << endl;
 }
 
 
@@ -125,6 +130,15 @@ void MyGLWidget::resizeGL(int width, int height)
 // Fonction d'affichage
 void MyGLWidget::paintGL()
 {
+    // ---- CAS VICTOIRE ----
+    if (victory){
+        dj.stop("BACKGROUND");
+        Victory* victoryWindow = new Victory(time(0) - startTime);
+        victoryWindow->show();
+        this->close();
+        return;
+    }
+
     // Continue movement animation
     if (player.isMoving()) { player.continueMove(); }
 
@@ -198,6 +212,8 @@ void MyGLWidget::paintGL()
             }
         }
     }
+    // ---- MUSIQUE ----
+    dj.play("BACKGROUND"); // relance la musique en permanence, pour faire une boucle
 
     // ---- HUD 2D ----
         //paramétrage
@@ -213,7 +229,6 @@ void MyGLWidget::paintGL()
     float squareSize = 75.0f; //taille du carré de couleur
     float textBackgroudSize = 250.0f; //taille du fond du texte
 
-    if (!victory) {
         //carré
     glBegin(GL_QUADS);
         if (player.getAchievement()) {
@@ -280,132 +295,118 @@ void MyGLWidget::paintGL()
     else        qglColor(Qt::red);
     renderText(5 , squareSize + 85, QString("(tab) Z-Buffer"));
 
-    } else { // ---- VICTOIRE ----
-        //carré
-    glBegin(GL_QUADS);
-        glColor3f(0.0f, 0.0f, 0.0f);
-        float squareSize = 900.0f; //taille du carré de couleur
-        glVertex2f(WIN_WIDTH/2 - squareSize, WIN_HEIGHT/2 - squareSize);
-        glVertex2f(WIN_WIDTH/2 + squareSize, WIN_HEIGHT/2 - squareSize);
-        glVertex2f(WIN_WIDTH/2 + squareSize, WIN_HEIGHT/2 + squareSize);
-        glVertex2f(WIN_WIDTH/2 - squareSize, WIN_HEIGHT/2 + squareSize);
-    glEnd();
+    if (keyboard)   qglColor(Qt::green);
+    else            qglColor(Qt::red);
+    renderText(5 , squareSize + 100, QString("( ) Keyboard"));
 
 
-        //texte
-    qglColor(Qt::white);
-    QFont font("IM Fell English", 40);
-    renderText(WIN_WIDTH/2 - 260 , WIN_HEIGHT/2 - 20, QString("Vous avez gagné!"), font);
-    }
     glPopMatrix();
 
-    // ---- MUSIQUE ----
-    dj.play("BACKGROUND"); // relance la musique en permanence, pour faire une boucle
-}
-
-/*
-void MyGLWidget::victory(){
 
 }
-*/
+
 
 // Fonction de gestion d'interactions clavier
 void MyGLWidget::keyPressEvent(QKeyEvent * event)
 {
-   if (!victory) {
-       switch(event->key())
-        {
-            case Qt::Key::Key_Q://gauche
-                if (freeMovement){player.moveWithCollisions(0,-0.1,V_walls);}
-                else if (! player.isMoving())
-                {player.moveWithAnimations(0,-1,ANIMATION_COUNT,V_walls);}
-                resetMinimapTimer();
-                break;
-            case Qt::Key::Key_D://droite
-                if (freeMovement){player.moveWithCollisions(0,0.1,V_walls);}
-                else if (! player.isMoving())
-                {player.moveWithAnimations(0,1,ANIMATION_COUNT,V_walls);}
-                resetMinimapTimer();
-                break;
-            case Qt::Key::Key_Z://avant
-                //player.move(0.1,0);
-                if (freeMovement) {player.moveWithCollisions(0.1,0,V_walls);}
-                else if (! player.isMoving())
-                {player.moveWithAnimations(1,0,ANIMATION_COUNT,V_walls);}
-                resetMinimapTimer();
-                break;
-            case Qt::Key::Key_S://arriere
-                if (freeMovement){player.moveWithCollisions(-0.1,0,V_walls);}
-                else if (! player.isMoving())
-                {player.moveWithAnimations(-1,0,ANIMATION_COUNT,V_walls);}
-                resetMinimapTimer();
-                break;
-            case Qt::Key::Key_E:
-                if (freeMovement){player.look(3);}
-                else if (! player.isMoving())
-                {player.lookWithAnimations(1,ANIMATION_COUNT);}
-                break;
-            case Qt::Key::Key_A:
-                if (freeMovement){player.look(-3);}
-                else if (! player.isMoving())
-                {player.lookWithAnimations(-1,ANIMATION_COUNT);}
-                break;
-            case Qt::Key::Key_R:
-                mouse ^= true;
-                setMouseTracking(mouse);
-                if (mouse) {
-                    setCursor(Qt::CrossCursor);
-                } else {
-                    setCursor(Qt::ArrowCursor);
-                }
-                break;
-            case Qt::Key::Key_T:
-               freeMovement ^= true;
-               if (!freeMovement){
-                   player.roundPosition();
-               }
-               break;
-            case Qt::Key::Key_Y:
-               camera ^= true;
-               break;
-            case Qt::Key::Key_F:
-                if (fullScreen){
-                    showNormal();
-                } else {
-                    showFullScreen();
-                }
-                fullScreen ^= true;
-                break;
-            case Qt::Key::Key_Tab:
-                if (Zbuf){
-                    glDisable(GL_DEPTH_TEST);
-                    glDisable(GL_TEXTURE_2D);
-                } else {
-                    glEnable(GL_DEPTH_TEST);
-                    glEnable(GL_TEXTURE_2D);
-                }
-                Zbuf ^= true;
+    switch(event->key())
+    {
+        case Qt::Key::Key_Q://gauche
+            if(!keyboard) break;
+            if (freeMovement){player.moveWithCollisions(0,-0.1,V_walls);}
+            else if (! player.isMoving())
+            {player.moveWithAnimations(0,-1,ANIMATION_COUNT,V_walls);}
+            resetMinimapTimer();
             break;
-            case Qt::Key::Key_Escape:
-                exit(0);
+        case Qt::Key::Key_D://droite
+            if(!keyboard) break;
+            if (freeMovement){player.moveWithCollisions(0,0.1,V_walls);}
+            else if (! player.isMoving())
+            {player.moveWithAnimations(0,1,ANIMATION_COUNT,V_walls);}
+            resetMinimapTimer();
             break;
-            default:
-            {
-                // Ignorer l'evenement
-                event->ignore();
-                return;
+        case Qt::Key::Key_Z://avant
+            if(!keyboard) break;
+            if (freeMovement) {player.moveWithCollisions(0.1,0,V_walls);}
+            else if (! player.isMoving())
+            {player.moveWithAnimations(1,0,ANIMATION_COUNT,V_walls);}
+            resetMinimapTimer();
+            break;
+        case Qt::Key::Key_S://arriere
+            if(!keyboard) break;
+            if (freeMovement){player.moveWithCollisions(-0.1,0,V_walls);}
+            else if (! player.isMoving())
+            {player.moveWithAnimations(-1,0,ANIMATION_COUNT,V_walls);}
+            resetMinimapTimer();
+            break;
+        case Qt::Key::Key_E:
+            if(!keyboard) break;
+            if (freeMovement){player.look(3);}
+            else if (! player.isMoving())
+            {player.lookWithAnimations(1,ANIMATION_COUNT);}
+            break;
+        case Qt::Key::Key_A:
+            if(!keyboard) break;
+            if (freeMovement){player.look(-3);}
+            else if (! player.isMoving())
+            {player.lookWithAnimations(-1,ANIMATION_COUNT);}
+            break;
+        case Qt::Key::Key_R:
+            mouse ^= true;
+            setMouseTracking(mouse);
+            if (mouse) {
+                setCursor(Qt::CrossCursor);
+            } else {
+                setCursor(Qt::ArrowCursor);
             }
+            break;
+        case Qt::Key::Key_T:
+           freeMovement ^= true;
+           if (!freeMovement){
+               player.roundPosition();
+           }
+           break;
+        case Qt::Key::Key_Y:
+           camera ^= true;
+           break;
+        case Qt::Key::Key_F:
+            if (fullScreen){
+                showNormal();
+            } else {
+                showFullScreen();
+            }
+            fullScreen ^= true;
+            break;
+        case Qt::Key::Key_Tab:
+            if (Zbuf){
+                glDisable(GL_DEPTH_TEST);
+                glDisable(GL_TEXTURE_2D);
+            } else {
+                glEnable(GL_DEPTH_TEST);
+                glEnable(GL_TEXTURE_2D);
+            }
+            Zbuf ^= true;
+        break;
+        case Qt::Key::Key_Escape:
+        if (QMessageBox::question( this, "Mindmaze",
+                                   tr("Etes vous certain de vouloir quitter le jeu ?\n"),
+                                   QMessageBox::No | QMessageBox::Yes,
+                                   QMessageBox::No)
+                != QMessageBox::Yes)
+        {
+            event->ignore();
+        } else {
+            event->accept();
+            exit(0);
+        };
+
+        break;
+        default:
+        {
+            // Ignorer l'evenement
+            event->ignore();
+            return;
         }
-    } else {
-       switch(event->key()){
-       case Qt::Key::Key_Escape:
-       case Qt::Key_Space:
-           close();
-       break;
-       default:
-           event->ignore();
-           return;
-       }
     }
     //Acceptation de l'evenement et mise a jour de la scene
     event->accept();

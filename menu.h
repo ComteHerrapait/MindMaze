@@ -2,6 +2,12 @@
 #define MENU_H
 
 #include <QMainWindow>
+#include <QIntValidator>
+#include <QString>
+#include <QCloseEvent>
+#include <QMessageBox>
+#include "myglwidget.h"
+#include <iostream>
 
 namespace Ui {
 class Menu;
@@ -23,6 +29,8 @@ public:
     unsigned int volume;
     bool fullscreen;
     bool freeMovement;
+    bool mouse;
+    bool keyboard;
 
 private slots:
     //largeur
@@ -50,6 +58,7 @@ private slots:
 
     //Quitter
     void on_actionQuit_changed();
+    void closeEvent (QCloseEvent *event);
 
 private:
     Ui::Menu *ui;
