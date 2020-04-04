@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-Player::Player(Point position, Point lookingAt)
+Player::Player(myPoint position, myPoint lookingAt)
 {
     pos = position;
     target = lookingAt;
@@ -44,9 +44,9 @@ void Player::foundSpheres(){
 
 bool Player::CheckCollision(Wall w){
     float HitBoxWidth = 0.2;
-    Point end_1 = w.getEnd1();
-    Point end_2 = w.getEnd2();
-    Point milieu = Point(   (end_1.x + end_2.x)/2,
+    myPoint end_1 = w.getEnd1();
+    myPoint end_2 = w.getEnd2();
+    myPoint milieu = myPoint(   (end_1.x + end_2.x)/2,
                             (end_1.y + end_2.y)/2,
                             (end_1.z + end_2.z)/2   );
     float length;

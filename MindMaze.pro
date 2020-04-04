@@ -36,8 +36,8 @@ HEADERS += \
     maze.h \
     menu.h \
     myglwidget.h \
+    mypoint.h \
     player.h \
-    point.h \
     skybox.h \
     sphere.h \
     surface.h \

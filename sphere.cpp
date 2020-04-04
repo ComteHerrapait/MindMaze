@@ -1,6 +1,6 @@
 #include "sphere.h"
 
-Sphere::Sphere(Point p, float r){
+Sphere::Sphere(myPoint p, float r){
      radius = r ;
      pos = p;
 

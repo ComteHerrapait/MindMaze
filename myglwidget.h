@@ -51,7 +51,7 @@ private :
     time_t sinceMoveTime;
     QPoint lastPosMouse;
 
-    Player player = Player(Point::Point(1,1,1), Point(2,1,1));
+    Player player = Player(myPoint(1,1,1), myPoint(2,1,1));
     Skybox * skybox;
     vector<Wall *> V_walls;
     vector<Sphere *> V_spheres;

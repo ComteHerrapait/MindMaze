@@ -65,7 +65,7 @@ MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int 
     //création du joueur
     int x = 2*rand() % (LENGTH *2)+1;
     int z = 2*rand() % (WIDTH *2) +1;
-    player = Player(Point(x,1,z), Point(x+1,1,z));
+    player = Player(myPoint(x,1,z), myPoint(x+1,1,z));
 
 }
 
@@ -83,7 +83,7 @@ void MyGLWidget::initializeGL()
 
     //creation des spheres
     for (int i = 0; i < nbSpheres; i++){
-        Sphere * s = new Sphere(Point(2*rand() % (LENGTH*2) +1,1,2*rand() % (WIDTH*2) +1), 0.5);
+        Sphere * s = new Sphere(myPoint(2*rand() % (LENGTH*2) +1,1,2*rand() % (WIDTH*2) +1), 0.5);
         V_spheres.push_back(s);
     }
 
