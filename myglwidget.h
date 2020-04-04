@@ -16,6 +16,7 @@
 #include "dj.h"
 #include "skybox.h"
 #include "victory.h"
+#include "camera.h"
 #include <QMessageBox>
 
 #include <QtMultimedia/QMediaPlayer>
@@ -50,18 +51,18 @@ private :
     time_t sinceMoveTime;
     QPoint lastPosMouse;
 
-    Player player = Player(Point(1,1,1), Point(2,1,1));
+    Player player = Player(Point::Point(1,1,1), Point(2,1,1));
     Skybox * skybox;
     vector<Wall *> V_walls;
     vector<Sphere *> V_spheres;
     vector<Surface *> V_surfaces;
     DJ dj;
 
+    //PARAMETRES DE JEU
     bool mouse = false;
     bool camera = false;
     bool freeMovement = false;
     bool keyboard = true;
-
     unsigned int WIN_WIDTH  = 1600;
     unsigned int WIN_HEIGHT = 900;
     int nbSpheres = 1;
