@@ -420,6 +420,12 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             }
             Zbuf ^= true;
         break;
+        case Qt::Key::Key_Space:
+            if (camera){
+                webcam.~Camera();
+                webcam = Camera();
+            }
+        break;
         case Qt::Key::Key_Escape:
         if (QMessageBox::question( this, "Mindmaze",
                                    tr("Etes vous certain de vouloir quitter le jeu ?\n"),

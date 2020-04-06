@@ -36,6 +36,7 @@ private:
     Rect templateRect;
     Mat resultImage;    // to store the matchTemplate result
     Point workingCenter;
+    CascadeClassifier face_cascade;
 
 };
 

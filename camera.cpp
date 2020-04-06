@@ -11,7 +11,6 @@ Camera::Camera()
         return;
     }
 
-    CascadeClassifier face_cascade;
     if( !face_cascade.load( "D:/Travail/FISE2/MindMaze/resources/haarcascade_frontalface_alt.xml" ) )
     {
         cerr<<"Error loading haarcascade"<<endl;
@@ -19,26 +18,27 @@ Camera::Camera()
     }
 
 
-
-    // Get frame
-    cap >> frame;
-    // Mirror effect
-    cv::flip(frame,frame,1);
-    // Convert to gray
-    cv::cvtColor(frame,frame_gray,COLOR_BGR2GRAY);
-    // Equalize graylevels
-    equalizeHist( frame_gray, frame_gray );
-    //-- Detect faces
-    face_cascade.detectMultiScale(frame_gray, faces);
-    if (faces.size()>0)
-    {
-        // Draw green rectangle
-        for (int i=0;i<(int)faces.size();i++)
-            rectangle(frame,faces[i],Scalar(0,255,0),2);
+    while (faces.size()==0){
+        cout << "tried getting face " << endl;
+        // Get frame
+        cap >> frame;
+        // Display frame
+        imshow("WebCam", frame);
+        // Mirror effect
+        cv::flip(frame,frame,1);
+        // Convert to gray
+        cv::cvtColor(frame,frame_gray,COLOR_BGR2GRAY);
+        // Equalize graylevels
+        equalizeHist( frame_gray, frame_gray );
+        //-- Detect faces
+        face_cascade.detectMultiScale(frame_gray, faces);
     }
-
+    // Draw green rectangle
+    for (int i=0;i<(int)faces.size();i++)
+        rectangle(frame,faces[i],Scalar(0,255,0),2);
     // Display frame
     imshow("WebCam", frame);
+
 
     workingRect = faces[0];
     //workingRect = Rect((frameWidth-subImageWidth)/2,frameHeight/2+(frameHeight/2-subImageHeight)/2,subImageWidth,subImageHeight);
