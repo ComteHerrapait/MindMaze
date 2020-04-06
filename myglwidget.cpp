@@ -135,7 +135,7 @@ void MyGLWidget::paintGL()
     vector<Point> result;
     if (camera){
         // récupère le vecteur de mouvement depuis la camera
-        result = webcam.detect(true, true);
+        result = webcam.detect(true, false);
         int offX = result[0].x - result[1].x;
         int offY = result[0].y - result[1].y;
 
@@ -259,27 +259,44 @@ void MyGLWidget::paintGL()
     glDisable(GL_CULL_FACE);
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    float squareSize = 75.0f; //taille du carré de couleur
+    float cameraSize = 175.0f; //taille de la camera
     float textBackgroudSize = 250.0f; //taille du fond du texte
 
         //carré
-    glBegin(GL_QUADS);
+
+    GLuint image_tex;
+    if (camera) {
+        //afiche la camera dans le carré
+        glEnable(GL_TEXTURE_2D);
+        GLuint image_tex = webcam.getTexture();
+        glBindTexture(GL_TEXTURE_2D, image_tex );
+        glColor3f(1.0f, 1.0f, 1.0f);
+    } else {
+        //affiche un carré rouge ou vert suivant si on a recupéré la sphere
+        glDisable(GL_TEXTURE_2D);
         if (player.getAchievement()) {
             glColor3f(0.0f, 1.0f, 0.0f);
         } else {
             glColor3f(1.0f, 0.0f, 0.0f);
         }
+    }
+    glBegin(GL_QUADS);
+        glTexCoord2i(0, 0);     glVertex2f(0.0, 0.0);
+        glTexCoord2i(1, 0);     glVertex2f(cameraSize, 0.0);
+        glTexCoord2i(1, 1);     glVertex2f(cameraSize, cameraSize * 3/4);
+        glTexCoord2i(0, 1);     glVertex2f(0.0, cameraSize * 3/4);
+    glEnd();
 
-        glVertex2f(0.0, 0.0);
-        glVertex2f(squareSize, 0.0);
-        glVertex2f(squareSize, squareSize);
-        glVertex2f(0.0, squareSize);
+    glDeleteTextures(1, &image_tex);
+    glDisable(GL_TEXTURE_2D);
 
+        // rectangle fond de texte
+    glBegin(GL_QUADS);
         glColor3f(0.7,0.7,0.7);
-        glVertex2f(squareSize, 0.0);
-        glVertex2f(squareSize + textBackgroudSize,0);
-        glVertex2f(squareSize + textBackgroudSize, squareSize);
-        glVertex2f(squareSize, squareSize);
+        glVertex2f(cameraSize, 0.0);
+        glVertex2f(cameraSize + textBackgroudSize,0);
+        glVertex2f(cameraSize + textBackgroudSize, cameraSize * 3/4);
+        glVertex2f(cameraSize, cameraSize * 3/4);
     glEnd();
 
         //MINIMAP
@@ -299,38 +316,38 @@ void MyGLWidget::paintGL()
     }
         //texte
     qglColor(Qt::black);
-    renderText(squareSize + 20 , 20, QString("Vous jouez depuis %1 secondes").arg(time(0) - startTime));
-    renderText(squareSize + 20 , 35, QString("FOV : %1 deg").arg(FOV));
+    renderText(cameraSize + 20 , 20, QString("Vous jouez depuis %1 secondes").arg(time(0) - startTime));
+    renderText(cameraSize + 20 , 35, QString("FOV : %1 deg").arg(FOV));
     if (player.getAchievement()){
-        renderText(squareSize + 20 , 50, QString("Vous avez trouvé toutes les sphères,"));
-        renderText(squareSize + 20 , 65, QString("trouvez la sortie !"));
+        renderText(cameraSize + 20 , 50, QString("Vous avez trouvé toutes les sphères,"));
+        renderText(cameraSize + 20 , 65, QString("trouvez la sortie !"));
     }
-    if (DEBUG) renderText(squareSize + 20 , 80, QString("coord : %1 %2 %3").arg(player.getPos().x).arg(player.getPos().y).arg(player.getPos().z));
+    if (DEBUG) renderText(cameraSize + 20 , 80, QString("coord : %1 %2 %3").arg(player.getPos().x).arg(player.getPos().y).arg(player.getPos().z));
 
         //modes
     if (mouse)  qglColor(Qt::green);
     else        qglColor(Qt::red);
-    renderText(5 , squareSize + 25, QString("(R) Mouse"));
+    renderText(5 , cameraSize + 25, QString("(R) Mouse"));
 
     if (freeMovement)   qglColor(Qt::green);
     else                qglColor(Qt::red);
-    renderText(5 , squareSize + 40, QString("(T) Free movement"));
+    renderText(5 , cameraSize + 40, QString("(T) Free movement"));
 
     if (camera) qglColor(Qt::green);
     else        qglColor(Qt::red);
-    renderText(5 , squareSize + 55, QString("(Y) Camera"));
+    renderText(5 , cameraSize + 55, QString("(Y) Camera"));
 
     if (fullScreen) qglColor(Qt::green);
     else            qglColor(Qt::red);
-    renderText(5 , squareSize + 70, QString("(F) Fullscreen"));
+    renderText(5 , cameraSize + 70, QString("(F) Fullscreen"));
 
     if (Zbuf)   qglColor(Qt::green);
     else        qglColor(Qt::red);
-    renderText(5 , squareSize + 85, QString("(tab) Z-Buffer"));
+    renderText(5 , cameraSize + 85, QString("(tab) Z-Buffer"));
 
     if (keyboard)   qglColor(Qt::green);
     else            qglColor(Qt::red);
-    renderText(5 , squareSize + 100, QString("( ) Keyboard"));
+    renderText(5 , cameraSize + 100, QString("( ) Keyboard"));
 
 
     glPopMatrix();

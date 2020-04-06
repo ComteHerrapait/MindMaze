@@ -5,6 +5,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include <opencv2/objdetect/objdetect.hpp>
 #include "opencv2/video/tracking.hpp"
+#include <QtOpenGL>
 
 #include <cstdio>
 #include <iostream>
@@ -17,10 +18,11 @@ class Camera
 public:
     Camera();
     vector<Point> detect(bool hold, bool display);
+    GLuint getTexture();
     ~Camera();
 private:
-    int frameWidth=640;
-    int frameHeight=480;
+    int frameWidth=512;
+    int frameHeight=512;
     int templateWidth=100;
     int templateHeight=100;
     VideoCapture cap;
@@ -28,7 +30,6 @@ private:
     Mat frame_gray;
     vector<Rect> faces;
     Rect workingRect;
-    vector<Point> vecteur;
     Mat frame1;
     Mat frame2;
     Mat frameRect1;

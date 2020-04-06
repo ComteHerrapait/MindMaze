@@ -17,13 +17,11 @@ Camera::Camera()
         return;
     }
 
-
+    faces = {};
     while (faces.size()==0){
         cout << "tried getting face " << endl;
         // Get frame
         cap >> frame;
-        // Display frame
-        imshow("WebCam", frame);
         // Mirror effect
         cv::flip(frame,frame,1);
         // Convert to gray
@@ -34,11 +32,7 @@ Camera::Camera()
         face_cascade.detectMultiScale(frame_gray, faces);
     }
     // Draw green rectangle
-    for (int i=0;i<(int)faces.size();i++)
-        rectangle(frame,faces[i],Scalar(0,255,0),2);
-    // Display frame
-    imshow("WebCam", frame);
-
+    rectangle(frame,faces[0],Scalar(0,255,0),2);
 
     workingRect = faces[0];
     templateRect = Rect((workingRect.width-templateWidth)/2,(workingRect.height-templateHeight)/2,templateWidth,templateHeight);
@@ -56,7 +50,6 @@ Camera::Camera()
     cap >> frame1;
     // Mirror effect
     cv::flip(frame1,frame1,1);
-    //Mat(frame1,rect).copyTo(frameRect1);
 
     // Extract rect1 and convert to gray
     cv::cvtColor(Mat(frame,workingRect),frameRect1,COLOR_BGR2GRAY);
@@ -64,14 +57,13 @@ Camera::Camera()
     // Create the matchTemplate image result
     int result_cols =  frame.cols-templateWidth  + 1;
     int result_rows = frame.rows-templateHeight + 1;
+    resultImage.~Mat();
     resultImage.create( result_cols, result_rows, CV_32FC1 );
 }
 
 vector<Point> Camera::detect(bool hold, bool display)
 {
-    vecteur = {};
-    // Init output window
-    namedWindow("WebCam",1);
+    vector<Point> vecteur;
 
     // Get frame2
     cap >> frame2;
@@ -109,6 +101,48 @@ vector<Point> Camera::detect(bool hold, bool display)
     return vecteur;
 }
 
+GLuint Camera::getTexture() {
+    // Generate a number for our textureID's unique handle
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+
+    // Bind to our texture handle
+    glBindTexture(GL_TEXTURE_2D, textureID);
+
+    // Set texture interpolation methods for minification and magnification
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Set texture clamping method
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    // Set incoming texture format to:
+    // GL_BGR       for CV_CAP_OPENNI_BGR_IMAGE,
+    // GL_LUMINANCE for CV_CAP_OPENNI_DISPARITY_MAP,
+    // Work out other mappings as required ( there's a list in comments in main() )
+    GLenum inputColourFormat = GL_BGR;
+    if (frame2.channels() == 1)
+    {
+        inputColourFormat = GL_LUMINANCE;
+    }
+
+    // Create the texture
+    glTexImage2D(GL_TEXTURE_2D,     // Type of texture
+                 0,                 // Pyramid level (for mip-mapping) - 0 is the top level
+                 GL_RGB,            // Internal colour format to convert to
+                 frame2.cols,          // Image width  i.e. 640 for Kinect in standard mode
+                 frame2.rows,          // Image height i.e. 480 for Kinect in standard mode
+                 0,                 // Border width in pixels (can either be 1 or 0)
+                 inputColourFormat, // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
+                 GL_UNSIGNED_BYTE,  // Image data type
+                 frame2.ptr());        // The actual image data itself
+
+
+    return textureID;
+}
+
 Camera::~Camera(){
     destroyWindow("WebCam");
+    destroyAllWindows();
 }
