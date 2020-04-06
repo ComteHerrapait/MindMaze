@@ -110,5 +110,5 @@ vector<Point> Camera::detect(bool hold, bool display)
 }
 
 Camera::~Camera(){
-    destroyAllWindows();
+    destroyWindow("WebCam");
 }

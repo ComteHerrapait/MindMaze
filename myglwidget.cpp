@@ -403,6 +403,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             event->ignore();
         } else {
             event->accept();
+            webcam.~Camera();
             exit(0);
         };
 
