@@ -19,7 +19,7 @@ const float HIDE_MAP_TIME     = 3.0;
 const int ANIMATION_COUNT     = 100;
 
 // Constructeur
-MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_,
+MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_,bool camera_,
                        QWidget * parent) : QGLWidget(parent)
 {
     // attribution des paramètres
@@ -34,6 +34,7 @@ MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int 
     freeMovement = freeMovement_;
     mouse = mouse_;
     keyboard = keyboard_;
+    camera = camera_;
 
     //icone de l'application
     QIcon icon = QIcon(":/maze.ico");
@@ -130,6 +131,11 @@ void MyGLWidget::resizeGL(int width, int height)
 // Fonction d'affichage
 void MyGLWidget::paintGL()
 {
+    clock_t tStart = clock();
+    if (camera){
+    webcam.detect(true, true);
+    }
+    cout << "image/total :  "<<(double)(clock() - tStart)/CLOCKS_PER_SEC;
     // ---- CAS VICTOIRE ----
     if (victory){
         dj.stop("BACKGROUND");
@@ -302,7 +308,7 @@ void MyGLWidget::paintGL()
 
     glPopMatrix();
 
-
+    cout << " / "<<(double)(clock() - tStart)/CLOCKS_PER_SEC << endl;
 }
 
 

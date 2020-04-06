@@ -31,6 +31,7 @@ public:
     bool freeMovement;
     bool mouse;
     bool keyboard;
+    bool camera;
 
 private slots:
     //largeur

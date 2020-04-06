@@ -32,7 +32,7 @@ class MyGLWidget : public QGLWidget
 public:
 
     // Constructeur
-    MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_,
+    MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_, bool camera_,
                QWidget * parent = nullptr);
     int winTime;
 
@@ -57,6 +57,7 @@ private :
     vector<Sphere *> V_spheres;
     vector<Surface *> V_surfaces;
     DJ dj;
+    Camera webcam;
 
     //PARAMETRES DE JEU
     bool mouse = false;

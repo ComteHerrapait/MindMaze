@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>haarcascade_frontalface_alt.xml</file>
+        <file>haarcascade_eye_tree_eyeglasses.xml</file>
     </qresource>
 </RCC>
