@@ -400,6 +400,11 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
            }
            break;
         case Qt::Key::Key_Y:
+           if (camera){
+               webcam.~Camera();
+           }else{
+               webcam = Camera();
+           }
            camera ^= true;
            break;
         case Qt::Key::Key_F:

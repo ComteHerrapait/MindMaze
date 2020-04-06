@@ -11,7 +11,7 @@ Camera::Camera()
         return;
     }
 
-    if( !face_cascade.load( "D:/Travail/FISE2/MindMaze/resources/haarcascade_frontalface_alt.xml" ) )
+    if( !face_cascade.load( "../MindMaze/resources/haarcascade_frontalface_alt.xml" ) )
     {
         cerr<<"Error loading haarcascade"<<endl;
         return;
@@ -41,7 +41,6 @@ Camera::Camera()
 
 
     workingRect = faces[0];
-    //workingRect = Rect((frameWidth-subImageWidth)/2,frameHeight/2+(frameHeight/2-subImageHeight)/2,subImageWidth,subImageHeight);
     templateRect = Rect((workingRect.width-templateWidth)/2,(workingRect.height-templateHeight)/2,templateWidth,templateHeight);
     workingCenter = Point(workingRect.x+workingRect.width/2,workingRect.y+workingRect.height/2);
 
