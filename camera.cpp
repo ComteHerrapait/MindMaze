@@ -70,6 +70,7 @@ Camera::Camera()
 
 vector<Point> Camera::detect(bool hold, bool display)
 {
+    vecteur = {};
     // Init output window
     namedWindow("WebCam",1);
 

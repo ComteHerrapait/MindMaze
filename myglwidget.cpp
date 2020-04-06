@@ -15,8 +15,8 @@ const float MAX_DIMENSION     = 50.0f;
 const float SKYBOX_SIZE       = 50.0f;
 const bool AUTOHIDE_MAP       = true;
 const float HIDE_MAP_TIME     = 3.0;
-
-const int ANIMATION_COUNT     = 100;
+const float CAMERA_SENSITIVITY= 30.0;
+const int ANIMATION_COUNT     = 10;
 
 // Constructeur
 MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_,bool camera_,
@@ -132,14 +132,41 @@ void MyGLWidget::resizeGL(int width, int height)
 void MyGLWidget::paintGL()
 {
     clock_t tStart = clock();
+    vector<Point> result;
     if (camera){
-    webcam.detect(true, true);
+        // récupère le vecteur de mouvement depuis la camera
+        result = webcam.detect(true, true);
+        int offX = result[0].x - result[1].x;
+        int offY = result[0].y - result[1].y;
+
+        // fait une action en fonction du resultat
+        if (offY > CAMERA_SENSITIVITY){
+            if (freeMovement) {player.moveWithCollisions(0.1,0,V_walls);}
+            else if (! player.isMoving())
+            {player.moveWithAnimations(1,0,ANIMATION_COUNT,V_walls);}
+            resetMinimapTimer();
+        } else if (offY < -CAMERA_SENSITIVITY) {
+            if (freeMovement) {player.moveWithCollisions(-0.1,0,V_walls);}
+            else if (! player.isMoving())
+            {player.moveWithAnimations(-1,0,ANIMATION_COUNT,V_walls);}
+            resetMinimapTimer();
+        } else if (offX < -CAMERA_SENSITIVITY) {
+            if (freeMovement){player.look(3);}
+            else if (! player.isMoving())
+            {player.lookWithAnimations(1,ANIMATION_COUNT);}
+        }
+        else if (offX > CAMERA_SENSITIVITY) {
+            if (freeMovement){player.look(-3);}
+            else if (! player.isMoving())
+            {player.lookWithAnimations(-1,ANIMATION_COUNT);}
+        }
     }
     cout << "image/total :  "<<(double)(clock() - tStart)/CLOCKS_PER_SEC;
     // ---- CAS VICTOIRE ----
     if (victory){
         dj.stop("BACKGROUND");
         Victory* victoryWindow = new Victory(time(0) - startTime);
+        webcam.~Camera();
         victoryWindow->show();
         this->close();
         return;
