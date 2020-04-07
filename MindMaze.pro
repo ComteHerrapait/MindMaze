@@ -18,6 +18,7 @@ else {
 TARGET 	  = MindMaze
 # fichiers sources/headers
 SOURCES	+= main.cpp myglwidget.cpp \
+    camera.cpp \
     dj.cpp \
     maze.cpp \
     menu.cpp \
@@ -29,13 +30,14 @@ SOURCES	+= main.cpp myglwidget.cpp \
     wall.cpp
 
 HEADERS += \
+    camera.h \
     cell.h \
     dj.h \
     maze.h \
     menu.h \
     myglwidget.h \
+    mypoint.h \
     player.h \
-    point.h \
     skybox.h \
     sphere.h \
     surface.h \
@@ -53,9 +55,11 @@ LIBS += -L$$(OPENCV_DIR)\lib \
     -lopencv_imgcodecs420 \
     -lopencv_videoio420 \
     -lopencv_features2d420 \
-    -lopencv_calib3d420
+    -lopencv_calib3d420 \
+    -lopencv_objdetect420
 
 RESOURCES += \
+    resources/resources.qrc \
     sounds/sounds.qrc \
     textures/textures.qrc
 

@@ -15,11 +15,11 @@ const float MAX_DIMENSION     = 50.0f;
 const float SKYBOX_SIZE       = 50.0f;
 const bool AUTOHIDE_MAP       = true;
 const float HIDE_MAP_TIME     = 3.0;
-
-const int ANIMATION_COUNT     = 100;
+const float CAMERA_SENSITIVITY= 30.0;
+const int ANIMATION_COUNT     = 30;
 
 // Constructeur
-MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_,
+MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_,bool camera_,
                        QWidget * parent) : QGLWidget(parent)
 {
     // attribution des paramètres
@@ -34,6 +34,7 @@ MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int 
     freeMovement = freeMovement_;
     mouse = mouse_;
     keyboard = keyboard_;
+    camera = camera_;
 
     //icone de l'application
     QIcon icon = QIcon(":/maze.ico");
@@ -65,7 +66,7 @@ MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int 
     //création du joueur
     int x = 2*rand() % (LENGTH *2)+1;
     int z = 2*rand() % (WIDTH *2) +1;
-    player = Player(Point(x,1,z), Point(x+1,1,z));
+    player = Player(myPoint(x,1,z), myPoint(x+1,1,z));
 
 }
 
@@ -83,7 +84,7 @@ void MyGLWidget::initializeGL()
 
     //creation des spheres
     for (int i = 0; i < nbSpheres; i++){
-        Sphere * s = new Sphere(Point(2*rand() % (LENGTH*2) +1,1,2*rand() % (WIDTH*2) +1), 0.5);
+        Sphere * s = new Sphere(myPoint(2*rand() % (LENGTH*2) +1,1,2*rand() % (WIDTH*2) +1), 0.5);
         V_spheres.push_back(s);
     }
 
@@ -130,10 +131,42 @@ void MyGLWidget::resizeGL(int width, int height)
 // Fonction d'affichage
 void MyGLWidget::paintGL()
 {
+    clock_t tStart = clock();
+    vector<Point> result;
+    if (camera){
+        // récupère le vecteur de mouvement depuis la camera
+        result = webcam.detect(true, false);
+        int offX = result[0].x - result[1].x;
+        int offY = result[0].y - result[1].y;
+
+        // fait une action en fonction du resultat
+        if (offY > CAMERA_SENSITIVITY){
+            if (freeMovement) {player.moveWithCollisions(0.1,0,V_walls);}
+            else if (! player.isMoving())
+            {player.moveWithAnimations(1,0,ANIMATION_COUNT,V_walls);}
+            resetMinimapTimer();
+        } else if (offY < -CAMERA_SENSITIVITY) {
+            if (freeMovement) {player.moveWithCollisions(-0.1,0,V_walls);}
+            else if (! player.isMoving())
+            {player.moveWithAnimations(-1,0,ANIMATION_COUNT,V_walls);}
+            resetMinimapTimer();
+        } else if (offX < -CAMERA_SENSITIVITY) {
+            if (freeMovement){player.look(3);}
+            else if (! player.isMoving())
+            {player.lookWithAnimations(1,ANIMATION_COUNT);}
+        }
+        else if (offX > CAMERA_SENSITIVITY) {
+            if (freeMovement){player.look(-3);}
+            else if (! player.isMoving())
+            {player.lookWithAnimations(-1,ANIMATION_COUNT);}
+        }
+    }
+    cout << "image/total :  "<<(double)(clock() - tStart)/CLOCKS_PER_SEC;
     // ---- CAS VICTOIRE ----
     if (victory){
         dj.stop("BACKGROUND");
         Victory* victoryWindow = new Victory(time(0) - startTime);
+        webcam.~Camera();
         victoryWindow->show();
         this->close();
         return;
@@ -226,27 +259,44 @@ void MyGLWidget::paintGL()
     glDisable(GL_CULL_FACE);
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    float squareSize = 75.0f; //taille du carré de couleur
+    float cameraSize = 175.0f; //taille de la camera
     float textBackgroudSize = 250.0f; //taille du fond du texte
 
         //carré
-    glBegin(GL_QUADS);
+
+    GLuint image_tex;
+    if (camera) {
+        //afiche la camera dans le carré
+        glEnable(GL_TEXTURE_2D);
+        GLuint image_tex = webcam.getTexture();
+        glBindTexture(GL_TEXTURE_2D, image_tex );
+        glColor3f(1.0f, 1.0f, 1.0f);
+    } else {
+        //affiche un carré rouge ou vert suivant si on a recupéré la sphere
+        glDisable(GL_TEXTURE_2D);
         if (player.getAchievement()) {
             glColor3f(0.0f, 1.0f, 0.0f);
         } else {
             glColor3f(1.0f, 0.0f, 0.0f);
         }
+    }
+    glBegin(GL_QUADS);
+        glTexCoord2i(0, 0);     glVertex2f(0.0, 0.0);
+        glTexCoord2i(1, 0);     glVertex2f(cameraSize, 0.0);
+        glTexCoord2i(1, 1);     glVertex2f(cameraSize, cameraSize * 3/4);
+        glTexCoord2i(0, 1);     glVertex2f(0.0, cameraSize * 3/4);
+    glEnd();
 
-        glVertex2f(0.0, 0.0);
-        glVertex2f(squareSize, 0.0);
-        glVertex2f(squareSize, squareSize);
-        glVertex2f(0.0, squareSize);
+    glDeleteTextures(1, &image_tex);
+    glDisable(GL_TEXTURE_2D);
 
+        // rectangle fond de texte
+    glBegin(GL_QUADS);
         glColor3f(0.7,0.7,0.7);
-        glVertex2f(squareSize, 0.0);
-        glVertex2f(squareSize + textBackgroudSize,0);
-        glVertex2f(squareSize + textBackgroudSize, squareSize);
-        glVertex2f(squareSize, squareSize);
+        glVertex2f(cameraSize, 0.0);
+        glVertex2f(cameraSize + textBackgroudSize,0);
+        glVertex2f(cameraSize + textBackgroudSize, cameraSize * 3/4);
+        glVertex2f(cameraSize, cameraSize * 3/4);
     glEnd();
 
         //MINIMAP
@@ -266,43 +316,43 @@ void MyGLWidget::paintGL()
     }
         //texte
     qglColor(Qt::black);
-    renderText(squareSize + 20 , 20, QString("Vous jouez depuis %1 secondes").arg(time(0) - startTime));
-    renderText(squareSize + 20 , 35, QString("FOV : %1 deg").arg(FOV));
+    renderText(cameraSize + 20 , 20, QString("Vous jouez depuis %1 secondes").arg(time(0) - startTime));
+    renderText(cameraSize + 20 , 35, QString("FOV : %1 deg").arg(FOV));
     if (player.getAchievement()){
-        renderText(squareSize + 20 , 50, QString("Vous avez trouvé toutes les sphères,"));
-        renderText(squareSize + 20 , 65, QString("trouvez la sortie !"));
+        renderText(cameraSize + 20 , 50, QString("Vous avez trouvé toutes les sphères,"));
+        renderText(cameraSize + 20 , 65, QString("trouvez la sortie !"));
     }
-    if (DEBUG) renderText(squareSize + 20 , 80, QString("coord : %1 %2 %3").arg(player.getPos().x).arg(player.getPos().y).arg(player.getPos().z));
+    if (DEBUG) renderText(cameraSize + 20 , 80, QString("coord : %1 %2 %3").arg(player.getPos().x).arg(player.getPos().y).arg(player.getPos().z));
 
         //modes
     if (mouse)  qglColor(Qt::green);
     else        qglColor(Qt::red);
-    renderText(5 , squareSize + 25, QString("(R) Mouse"));
+    renderText(5 , cameraSize + 25, QString("(R) Mouse"));
 
     if (freeMovement)   qglColor(Qt::green);
     else                qglColor(Qt::red);
-    renderText(5 , squareSize + 40, QString("(T) Free movement"));
+    renderText(5 , cameraSize + 40, QString("(T) Free movement"));
 
     if (camera) qglColor(Qt::green);
     else        qglColor(Qt::red);
-    renderText(5 , squareSize + 55, QString("(Y) Camera"));
+    renderText(5 , cameraSize + 55, QString("(Y) Camera"));
 
     if (fullScreen) qglColor(Qt::green);
     else            qglColor(Qt::red);
-    renderText(5 , squareSize + 70, QString("(F) Fullscreen"));
+    renderText(5 , cameraSize + 70, QString("(F) Fullscreen"));
 
     if (Zbuf)   qglColor(Qt::green);
     else        qglColor(Qt::red);
-    renderText(5 , squareSize + 85, QString("(tab) Z-Buffer"));
+    renderText(5 , cameraSize + 85, QString("(tab) Z-Buffer"));
 
     if (keyboard)   qglColor(Qt::green);
     else            qglColor(Qt::red);
-    renderText(5 , squareSize + 100, QString("( ) Keyboard"));
+    renderText(5 , cameraSize + 100, QString("( ) Keyboard"));
 
 
     glPopMatrix();
 
-
+    cout << " / "<<(double)(clock() - tStart)/CLOCKS_PER_SEC << endl;
 }
 
 
@@ -367,6 +417,11 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
            }
            break;
         case Qt::Key::Key_Y:
+           if (camera){
+               webcam.~Camera();
+           }else{
+               webcam = Camera();
+           }
            camera ^= true;
            break;
         case Qt::Key::Key_F:
@@ -387,6 +442,12 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             }
             Zbuf ^= true;
         break;
+        case Qt::Key::Key_Space:
+            if (camera){
+                webcam.~Camera();
+                webcam = Camera();
+            }
+        break;
         case Qt::Key::Key_Escape:
         if (QMessageBox::question( this, "Mindmaze",
                                    tr("Etes vous certain de vouloir quitter le jeu ?\n"),
@@ -397,6 +458,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             event->ignore();
         } else {
             event->accept();
+            webcam.~Camera();
             exit(0);
         };
 

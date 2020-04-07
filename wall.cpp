@@ -1,6 +1,6 @@
 #include "wall.h"
 
-Wall::Wall(Point p1, Point p2, bool edge)
+Wall::Wall(myPoint p1, myPoint p2, bool edge)
 {
     end_1 = p1;
     end_2 = p2;
@@ -26,8 +26,8 @@ Wall::Wall(Point p1, Point p2, bool edge)
     glDisable(GL_TEXTURE_2D);
 }
 
-vector<Point> Wall::createBase(Point p1, Point p2, float width){
-    vector<Point> result;
+vector<myPoint> Wall::createBase(myPoint p1, myPoint p2, float width){
+    vector<myPoint> result;
     float wX, wZ;
 
     if (p1.z == p2.z){ //mur selon l'axe X
@@ -37,10 +37,10 @@ vector<Point> Wall::createBase(Point p1, Point p2, float width){
             wX = + width;
         }
         wZ = width;
-        result.push_back(Point(p2.x+wX,0,p2.z+wZ));
-        result.push_back(Point(p1.x-wX,0,p1.z+wZ));
-        result.push_back(Point(p1.x-wX,0,p1.z-wZ));
-        result.push_back(Point(p2.x+wX,0,p2.z-wZ));
+        result.push_back(myPoint(p2.x+wX,0,p2.z+wZ));
+        result.push_back(myPoint(p1.x-wX,0,p1.z+wZ));
+        result.push_back(myPoint(p1.x-wX,0,p1.z-wZ));
+        result.push_back(myPoint(p2.x+wX,0,p2.z-wZ));
     } else if (p1.x == p2.x){// mur selon l'axe Z
         if (p1.z > p2.z){
             wZ = - width;
@@ -48,10 +48,10 @@ vector<Point> Wall::createBase(Point p1, Point p2, float width){
             wZ = + width;
         }
         wX = width;
-        result.push_back(Point(p2.x-wX,0,p2.z+wZ));
-        result.push_back(Point(p1.x-wX,0,p1.z-wZ));
-        result.push_back(Point(p1.x+wX,0,p1.z-wZ));
-        result.push_back(Point(p2.x+wX,0,p2.z+wZ));
+        result.push_back(myPoint(p2.x-wX,0,p2.z+wZ));
+        result.push_back(myPoint(p1.x-wX,0,p1.z-wZ));
+        result.push_back(myPoint(p1.x+wX,0,p1.z-wZ));
+        result.push_back(myPoint(p2.x+wX,0,p2.z+wZ));
     }
     return result;
 }
@@ -59,8 +59,8 @@ void Wall::draw(){
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D,texMap);
 
-    vector<Point> base = createBase(end_1, end_2, width);
-    Point p1,p2,p3,p4;
+    vector<myPoint> base = createBase(end_1, end_2, width);
+    myPoint p1,p2,p3,p4;
     p1 = base[0];
     p2 = base[1];
     p3 = base[2];

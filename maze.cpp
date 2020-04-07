@@ -158,26 +158,26 @@ vector<Wall *> Maze::get()
         {  
             if(grid_[x][y].isFrontier(Cell::S))
             {
-                Wall * w =new Wall(Point(2*y    ,0  ,2*(x+1)),
-                                   Point(2*(y+1),0  ,2*(x+1)), x>=height_-1);
+                Wall * w =new Wall(myPoint(2*y    ,0  ,2*(x+1)),
+                                   myPoint(2*(y+1),0  ,2*(x+1)), x>=height_-1);
                 result.push_back(w);
             }
             if(grid_[x][y].isFrontier(Cell::E))
             {
-                Wall * w =new Wall(Point(2*(y+1),0  ,2*x),
-                                   Point(2*(y+1),0  ,2*(x+1)), y>=width_-1);
+                Wall * w =new Wall(myPoint(2*(y+1),0  ,2*x),
+                                   myPoint(2*(y+1),0  ,2*(x+1)), y>=width_-1);
                 result.push_back(w);
             }
             if(x == 0)//bordure
             {
-                Wall * w =new Wall(Point(2*y    ,0  ,2*(x)),
-                                   Point(2*(y+1),0  ,2*(x)),true);
+                Wall * w =new Wall(myPoint(2*y    ,0  ,2*(x)),
+                                   myPoint(2*(y+1),0  ,2*(x)),true);
                 result.push_back(w);
             }
             if(y == 0)//bordure
             {
-                Wall * w =new Wall(Point(2*y,0  ,2*x),
-                                   Point(2*y,0  ,2*(x+1)),true);
+                Wall * w =new Wall(myPoint(2*y,0  ,2*x),
+                                   myPoint(2*y,0  ,2*(x+1)),true);
                 result.push_back(w);
             }
         }

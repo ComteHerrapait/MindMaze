@@ -82,10 +82,11 @@ void Menu::on_pushButton_clicked()
     freeMovement = ! ui->CheckSnapping->isChecked();
     mouse = ui->CheckMouse->isChecked();
     keyboard = ui->CheckKeyboard->isChecked();
+    camera = ui ->CheckCamera->isChecked();
 
     //ferme la fenêtre pour lancer le jeu
     Menu menu;
-    MyGLWidget* game = new MyGLWidget(width, height, nbSpheres, winWidth, winHeight, FOV, volume, fullscreen, freeMovement, mouse, keyboard);//menu en argument pour récuperer les paramètres du jeu
+    MyGLWidget* game = new MyGLWidget(width, height, nbSpheres, winWidth, winHeight, FOV, volume, fullscreen, freeMovement, mouse, keyboard, camera);//menu en argument pour récuperer les paramètres du jeu
     game->show();
     this->hide();//cache le menu
 }

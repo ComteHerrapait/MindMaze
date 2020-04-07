@@ -11,7 +11,7 @@
 #include <vector>
 #include <list>
 #include <utility>
-#include "point.h"
+#include "mypoint.h"
 #include "wall.h"
 
 

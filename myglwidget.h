@@ -16,6 +16,7 @@
 #include "dj.h"
 #include "skybox.h"
 #include "victory.h"
+#include "camera.h"
 #include <QMessageBox>
 
 #include <QtMultimedia/QMediaPlayer>
@@ -31,7 +32,7 @@ class MyGLWidget : public QGLWidget
 public:
 
     // Constructeur
-    MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_,
+    MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_, bool camera_,
                QWidget * parent = nullptr);
     int winTime;
 
@@ -50,18 +51,19 @@ private :
     time_t sinceMoveTime;
     QPoint lastPosMouse;
 
-    Player player = Player(Point(1,1,1), Point(2,1,1));
+    Player player = Player(myPoint(1,1,1), myPoint(2,1,1));
     Skybox * skybox;
     vector<Wall *> V_walls;
     vector<Sphere *> V_spheres;
     vector<Surface *> V_surfaces;
     DJ dj;
+    Camera webcam;
 
+    //PARAMETRES DE JEU
     bool mouse = false;
     bool camera = false;
     bool freeMovement = false;
     bool keyboard = true;
-
     unsigned int WIN_WIDTH  = 1600;
     unsigned int WIN_HEIGHT = 900;
     int nbSpheres = 1;
