@@ -14,9 +14,9 @@ Surface::Surface(bool isFloor,int length, int width)
     glEnable(GL_TEXTURE_2D);
     QImage texture;
     if (height == 0){
-        texture = QGLWidget::convertToGLFormat(QImage(QString(":/floor2.jpg")));
+        texture = QGLWidget::convertToGLFormat(QImage(QString(":/floor.jpg")));
     }else {
-        texture = QGLWidget::convertToGLFormat(QImage(QString(":/ceiling1.jpg")));
+        texture = QGLWidget::convertToGLFormat(QImage(QString(":/ceiling.jpg")));
     }
     glGenTextures(1, &texMap);
     glBindTexture(GL_TEXTURE_2D, texMap );

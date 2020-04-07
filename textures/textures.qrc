@@ -1,13 +1,11 @@
 <RCC>
     <qresource prefix="/">
-        <file>tse3.jpg</file>
-        <file>ceiling1.jpg</file>
-        <file>floor2.jpg</file>
-        <file>wall1.jpg</file>
-        <file>skybox.jpg</file>
-        <file>skyboxDEBUG.jpg</file>
-        <file>skybox2.png</file>
-        <file>skybox3.jpg</file>
+        <file>ceiling.jpg</file>
+        <file>floor.jpg</file>
         <file>maze.ico</file>
+        <file>skybox.png</file>
+        <file>skyboxDEBUG.jpg</file>
+        <file>wall.jpg</file>
+        <file>sphere.jpg</file>
     </qresource>
 </RCC>

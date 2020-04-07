@@ -86,6 +86,7 @@ vector<Point> Camera::detect(bool hold, bool display)
     rectangle(frame2,workingRect,Scalar( 0, 255, 0),2);
     Point p(workingCenter.x+vect.x,workingCenter.y+vect.y);
     arrowedLine(frame2,workingCenter,p,Scalar(255,255,255),2);
+
     vecteur.push_back(workingCenter);
     vecteur.push_back(p);
 

@@ -9,7 +9,7 @@ Wall::Wall(myPoint p1, myPoint p2, bool edge)
     // ---- Texture ----
     glEnable(GL_TEXTURE_2D);
     QImage texture;
-    texture = QGLWidget::convertToGLFormat(QImage(QString(":/wall1.jpg")));
+    texture = QGLWidget::convertToGLFormat(QImage(QString(":/wall.jpg")));
 
     glGenTextures(1, &texMap);
     glBindTexture(GL_TEXTURE_2D, texMap );

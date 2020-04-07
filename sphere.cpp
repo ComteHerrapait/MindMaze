@@ -10,7 +10,7 @@ Sphere::Sphere(myPoint p, float r){
 
      // Texture
 
-     QImage texture = QGLWidget::convertToGLFormat(QImage(QString(":/tse3.jpg")));
+     QImage texture = QGLWidget::convertToGLFormat(QImage(QString(":/sphere.jpg")));
 
      glGenTextures(1, &texMap);
      glBindTexture(GL_TEXTURE_2D, texMap );
