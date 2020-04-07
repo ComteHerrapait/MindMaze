@@ -16,7 +16,7 @@ const float SKYBOX_SIZE       = 50.0f;
 const bool AUTOHIDE_MAP       = true;
 const float HIDE_MAP_TIME     = 3.0;
 const float CAMERA_SENSITIVITY= 30.0;
-const int ANIMATION_COUNT     = 10;
+const int ANIMATION_COUNT     = 30;
 
 // Constructeur
 MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_,bool camera_,
