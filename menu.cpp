@@ -64,13 +64,16 @@ void Menu::getSettings(){
     QSettings settings("resources/settings.ini",QSettings::IniFormat);
     //Maze
     ui->TextWidth->setText(QString::number(settings.value("Maze/width").toInt()));
-    ui->SliderWidth->setSliderPosition(settings.value("Maze/width").toInt());
+        ui->SliderWidth->setSliderPosition(settings.value("Maze/width").toInt());
     ui->TextHeight->setText(QString::number(settings.value("Maze/height").toInt()));
+        ui->SliderHeight->setSliderPosition(settings.value("Maze/height").toInt());
     ui->TextnbSphere->setText(QString::number(settings.value("Maze/nbSpheres").toInt()));
+        ui->SlidernbSphere->setSliderPosition(settings.value("Maze/nbSpheres").toInt());
     //Display
     ui->TextWinWidth->setText(QString::number(settings.value("Display/winWidth").toInt()));
     ui->TextWinHeight->setText(QString::number(settings.value("Display/winHeight").toInt()));
     ui->TextFOV->setText(QString::number(settings.value("Display/FOV").toInt()));
+        ui->SliderFOV->setSliderPosition(settings.value("Display/FOV").toInt());
     ui->CheckFullscreen->setChecked(settings.value("Display/fullscreen").toBool());
     //Features
     ui->CheckSnapping->setChecked(settings.value("Features/snapping").toBool());
@@ -78,6 +81,7 @@ void Menu::getSettings(){
     ui->CheckKeyboard->setChecked(settings.value("Features/keyboard").toBool());
     ui->CheckCamera->setChecked(settings.value("Features/camera").toBool());
     ui->TextVolume->setText(QString::number(settings.value("Features/volume").toInt()));
+        ui->SliderVolume->setSliderPosition(settings.value("Features/volume").toInt());
 
 }
 
