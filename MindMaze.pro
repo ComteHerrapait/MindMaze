@@ -35,6 +35,7 @@ HEADERS += \
     dj.h \
     maze.h \
     menu.h \
+    mySettings.h \
     myglwidget.h \
     mypoint.h \
     player.h \
@@ -44,7 +45,8 @@ HEADERS += \
     victory.h \
     wall.h
 
-DISTFILES +=
+DISTFILES += \
+    resources/settings.ini
 
 INCLUDEPATH += $$(OPENCV_DIR)\..\..\include
 
@@ -59,9 +61,7 @@ LIBS += -L$$(OPENCV_DIR)\lib \
     -lopencv_objdetect420
 
 RESOURCES += \
-    resources/resources.qrc \
-    sounds/sounds.qrc \
-    textures/textures.qrc
+    resources/textures/textures.qrc
 
 FORMS += \
     menu.ui \

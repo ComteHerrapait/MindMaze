@@ -16,7 +16,9 @@ Camera::Camera()
         cerr<<"Error loading haarcascade"<<endl;
         return;
     }
+}
 
+void Camera::init(){
     faces = {};
     while (faces.size()==0){
         cout << "tried getting face " << endl;
@@ -101,6 +103,8 @@ vector<Point> Camera::detect(bool hold, bool display)
     // the camera will be deinitialized automatically in VideoCapture destructor
     return vecteur;
 }
+
+
 
 GLuint Camera::getTexture() {
     // Generate a number for our textureID's unique handle

@@ -6,7 +6,7 @@ Skybox::Skybox(int distance)
     // ---- Texture ----
     glEnable(GL_TEXTURE_2D);
     QImage texture;
-    texture = QGLWidget::convertToGLFormat(QImage(QString(":/skybox2.png")));
+    texture = QGLWidget::convertToGLFormat(QImage(QString(":/skybox.png")));
 
     glGenTextures(1, &texMap);
     glBindTexture(GL_TEXTURE_2D, texMap );

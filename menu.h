@@ -20,18 +20,6 @@ class Menu : public QMainWindow
 public:
     explicit Menu(QWidget *parent = nullptr);
     ~Menu();
-    unsigned int width;
-    unsigned int height;
-    unsigned int nbSpheres;
-    unsigned int winWidth;
-    unsigned int winHeight;
-    unsigned int FOV;
-    unsigned int volume;
-    bool fullscreen;
-    bool freeMovement;
-    bool mouse;
-    bool keyboard;
-    bool camera;
 
 private slots:
     //largeur
@@ -63,6 +51,8 @@ private slots:
 
 private:
     Ui::Menu *ui;
+    void saveSettings();
+    void getSettings();
 };
 
 #endif // MENU_H

@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>background.mp3</file>
-        <file>sphereFound.mp3</file>
-        <file>sphereSound.mp3</file>
-    </qresource>
-</RCC>

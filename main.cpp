@@ -19,6 +19,8 @@ int main(int argc, char *argv[])
 
     // Creation de l'application QT
     QApplication app(argc, argv);
+    QCoreApplication::setOrganizationName("TSE");
+    QCoreApplication::setApplicationName("MindMaze");
 
     //créé en dehors de la boucle, le menu n'est pas recréé à chaque partie
     Menu* menu = new Menu();

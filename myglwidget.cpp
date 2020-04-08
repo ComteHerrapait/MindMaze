@@ -6,7 +6,7 @@
 #include <QDesktopWidget>
 
 #define DEBUG true //flag
-
+#define LOADSETTINGS QSettings settings("resources/settings.ini",QSettings::IniFormat)
 using namespace std;
 
 // Declarations des constantes
@@ -19,22 +19,22 @@ const float CAMERA_SENSITIVITY= 30.0;
 const int ANIMATION_COUNT     = 30;
 
 // Constructeur
-MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_,bool camera_,
-                       QWidget * parent) : QGLWidget(parent)
+MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 {
     // attribution des paramètres
-    LENGTH = width_;
-    WIDTH = height_;
-    nbSpheres = nbSpheres_;
-    WIN_WIDTH = winWidth_;
-    WIN_HEIGHT = winHeight_;
-    FOV = FOV_;
-    musicVolume = volume_;
-    fullScreen = fullscreen_;
-    freeMovement = freeMovement_;
-    mouse = mouse_;
-    keyboard = keyboard_;
-    camera = camera_;
+    LOADSETTINGS;
+    mouse = settings.value("Features/mouse").toBool();
+    camera = settings.value("Features/camera").toBool();
+    freeMovement = !settings.value("Features/snapping").toBool();
+    keyboard = settings.value("Features/keyboard").toBool();
+    WIN_WIDTH  = settings.value("Display/winWidth").toInt();
+    WIN_HEIGHT = settings.value("Display/winHeight").toInt();
+    nbSpheres = settings.value("Maze/nbSpheres").toInt();
+    fullScreen = settings.value("Display/fullscreen").toBool();
+    LENGTH = settings.value("Maze/width").toInt();
+    WIDTH = settings.value("Maze/height").toInt();
+    FOV = settings.value("Display/FOV").toInt();
+    musicVolume = settings.value("Features/volume").toInt();
 
     //icone de l'application
     QIcon icon = QIcon(":/maze.ico");
@@ -49,11 +49,11 @@ MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int 
     //active le suivi de la souris
     setMouseTracking(true);
 
-    //Reglage de la taille/position
+    //Reglage de la taille/position 
     setFixedSize(WIN_WIDTH, WIN_HEIGHT);
     QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
     move(screenGeometry.width()/2 - WIN_WIDTH/2, screenGeometry.height()/2 - WIN_HEIGHT/2);
-    if(fullScreen) showFullScreen();
+    if(settings.value("Display/fullscreen").toBool()) showFullScreen();
 
     //Connexion du timer
     connect(&timer,  &QTimer::timeout, [&] {
@@ -64,10 +64,14 @@ MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int 
     timer.start();
 
     //création du joueur
-    int x = 2*rand() % (LENGTH *2)+1;
-    int z = 2*rand() % (WIDTH *2) +1;
+    int x = 2*rand() % (settings.value("Maze/height").toInt() *2)+1;
+    int z = 2*rand() % (settings.value("Maze/width").toInt()  *2)+1;
     player = Player(myPoint(x,1,z), myPoint(x+1,1,z));
 
+    //Initialisation Camera
+    if (settings.value("Features/camera").toBool()){
+        webcam.init();
+    }
 }
 
 
@@ -75,7 +79,7 @@ MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int 
 void MyGLWidget::initializeGL()
 {
     //creation des murs
-    Maze mazegen = Maze(LENGTH,WIDTH);
+    Maze mazegen = Maze(LENGTH, WIDTH);
     mazegen.generate();
     V_walls = mazegen.get();
 
@@ -421,6 +425,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
                webcam.~Camera();
            }else{
                webcam = Camera();
+               webcam.init();
            }
            camera ^= true;
            break;
@@ -435,10 +440,8 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
         case Qt::Key::Key_Tab:
             if (Zbuf){
                 glDisable(GL_DEPTH_TEST);
-                glDisable(GL_TEXTURE_2D);
             } else {
                 glEnable(GL_DEPTH_TEST);
-                glEnable(GL_TEXTURE_2D);
             }
             Zbuf ^= true;
         break;
@@ -446,6 +449,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             if (camera){
                 webcam.~Camera();
                 webcam = Camera();
+                webcam.init();
             }
         break;
         case Qt::Key::Key_Escape:
