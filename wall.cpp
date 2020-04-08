@@ -57,6 +57,7 @@ vector<myPoint> Wall::createBase(myPoint p1, myPoint p2, float width){
 }
 void Wall::draw(){ 
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
     glBindTexture(GL_TEXTURE_2D,texMap);
 
     vector<myPoint> base = createBase(end_1, end_2, width);
@@ -70,36 +71,26 @@ void Wall::draw(){
     glBegin(GL_QUADS);
     glColor3ub(255, 255, 255);//couleur
 
-    /*    //Bottom
-    glVertex3f(p1.x, 0, p1.z);
-    glVertex3f(p2.x, 0, p2.z);
-    glVertex3f(p3.x, 0, p3.z);
-    glVertex3f(p4.x, 0, p4.z);
-        //Top
-    glVertex3f(p1.x, height, p1.z);
-    glVertex3f(p2.x, height, p2.z);
-    glVertex3f(p3.x, height, p3.z);
-    glVertex3f(p4.x, height, p4.z);
-
-    On ne voit pas le dessus et le dessous des murs
-    */
-
         //Walls
+    glNormal3i(1,0,0);
     glTexCoord2f(0,0);  glVertex3f(p1.x, 0, p1.z);
     glTexCoord2f(1,0);  glVertex3f(p2.x, 0, p2.z);
     glTexCoord2f(1,1);  glVertex3f(p2.x, height, p2.z);
     glTexCoord2f(0,1);  glVertex3f(p1.x, height, p1.z);
 
+    glNormal3i(1,0,0);
     glTexCoord2f(0,0);  glVertex3f(p2.x, 0, p2.z);
     glTexCoord2f(1,0);  glVertex3f(p3.x, 0, p3.z);
     glTexCoord2f(1,1);  glVertex3f(p3.x, height, p3.z);
     glTexCoord2f(0,1);  glVertex3f(p2.x, height, p2.z);
 
+    glNormal3i(0,1,0);
     glTexCoord2f(0,0);  glVertex3f(p3.x, 0, p3.z);
     glTexCoord2f(1,0);  glVertex3f(p4.x, 0, p4.z);
     glTexCoord2f(1,1);  glVertex3f(p4.x, height, p4.z);
     glTexCoord2f(0,1);  glVertex3f(p3.x, height, p3.z);
 
+    glNormal3i(0,1,0);
     glTexCoord2f(0,0);  glVertex3f(p4.x, 0, p4.z);
     glTexCoord2f(1,0);  glVertex3f(p1.x, 0, p1.z);
     glTexCoord2f(1,1);  glVertex3f(p1.x, height, p1.z);
@@ -109,6 +100,7 @@ void Wall::draw(){
 
     glPopMatrix();
     glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
 }
 
 void Wall::draw2D(float offX, float offY, float scale)

@@ -40,14 +40,14 @@ void Sphere::draw(float time_){
 
     // plaquage de textures
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
     glBindTexture(GL_TEXTURE_2D, texMap );
 
-    //placement de la lampe
-    GLfloat tab_sphere[] = {pos.x,pos.y,pos.z,1.0};
-    //glLightfv(GL_LIGHT1,GL_POSITION, tab_sphere);
-
-    // Couleur de l'objet
-    glColor3f(color[0], color[1], color[2]);
+    //eclairage
+    GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};//Diffusion
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+    GLfloat emission[] = {1.0, 1.0, 1.0, 1.0};//Emission
+    glMaterialfv(GL_FRONT, GL_EMISSION, emission);
 
     // Affichage de la quadrique
     gluQuadricDrawStyle(quadric, drawMode);
@@ -56,6 +56,8 @@ void Sphere::draw(float time_){
     glRotatef(time_/5,0.0,0.0,1.0); //on tourne avec le temps
     gluSphere(quadric, radius, stacks, stacks);//tracé de la sphere
 
+
+    glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 }

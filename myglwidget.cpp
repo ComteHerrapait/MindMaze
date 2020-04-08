@@ -64,9 +64,10 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
     timer.start();
 
     //création du joueur
-    int x = 2*rand() % (settings.value("Maze/height").toInt() *2)+1;
-    int z = 2*rand() % (settings.value("Maze/width").toInt()  *2)+1;
-    player = Player(myPoint(x,1,z), myPoint(x+1,1,z));
+    int x = 2*rand() % (settings.value("Maze/width").toInt() *2)+1;
+    int z = 2*rand() % (settings.value("Maze/height").toInt()  *2)+1;
+    //player = Player(myPoint(x,1,z), myPoint(x+1,1,z));
+    player = Player(myPoint(5,1,5), myPoint(5+1,1,5));
 
     //Initialisation Camera
     if (settings.value("Features/camera").toBool()){
@@ -81,7 +82,7 @@ void MyGLWidget::initializeGL()
     //creation des murs
     Maze mazegen = Maze(LENGTH, WIDTH);
     mazegen.generate();
-    V_walls = mazegen.get();
+    //V_walls = mazegen.get();
 
     //création de la skybox
     skybox = new Skybox(SKYBOX_SIZE);
@@ -166,6 +167,26 @@ void MyGLWidget::paintGL()
         }
     }
     cout << "image/total :  "<<(double)(clock() - tStart)/CLOCKS_PER_SEC;
+    // ---- ECLAIRAGE ----
+
+    glEnable(GL_LIGHTING);
+
+        // Definition éclairage ambient
+    glEnable(GL_LIGHT0);
+    GLfloat colorAmbiante_tab[] = {0.1, 0.05, 0.1, 0.0}; // Eclairage Général
+    glLightfv(GL_LIGHT0, GL_AMBIENT, colorAmbiante_tab);
+
+        // Definition éclairage positionnel
+    /*
+    glEnable(GL_LIGHT1); //lampe positionnelle
+    GLfloat light_tab2[] = {pos.x,0.1,pos.z, 1.0};//1.0->positionnel
+    glLightfv(GL_LIGHT1, GL_POSITION, light_tab2);
+    GLfloat couleur2[] ={1.0, 1.0, 1.0, 1.0};
+    glLightfv(GL_LIGHT1, GL_AMBIENT_AND_DIFFUSE, couleur2);
+    */
+
+    glDisable(GL_LIGHTING);
+
     // ---- CAS VICTOIRE ----
     if (victory){
         dj.stop("BACKGROUND");
@@ -192,7 +213,6 @@ void MyGLWidget::paintGL()
 
     //Reinitialisation des tampons
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //glEnable(GL_LIGHTING);
 
     //Definition de la matrice projection
     glMatrixMode(GL_PROJECTION);

@@ -37,16 +37,25 @@ Surface::Surface(bool isFloor,int length, int width)
 
 void Surface::draw(){
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
 
     glBindTexture(GL_TEXTURE_2D,texMap);
 
     glBegin(GL_QUADS);
+    glNormal3i(0,1,0);
     glColor3ub(255, 255, 255);
     glTexCoord2f(0, 0);                 glVertex3f(0, height, 0);
     glTexCoord2f(LENGTH*2, 0);          glVertex3f(LENGTH*2, height, 0);
     glTexCoord2f(LENGTH*2, WIDTH*2);    glVertex3f(LENGTH*2, height, WIDTH*2);
-    glTexCoord2f(0, WIDTH*2);                glVertex3f(0, height, WIDTH*2);
+    glTexCoord2f(0, WIDTH*2);           glVertex3f(0, height, WIDTH*2);
     glEnd();
 
+    GLfloat colorMatAmbiante_tab[] = {1.0, 1.0, 1.0, 0.0}; // Objets réfléchissent toute la lumière
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, colorMatAmbiante_tab);
+
+    GLfloat matDiff[] = {0.0, 0.0, 0.0, 0.0}; // Permet d'éviter un problème que je ne comprends pas (Empêche la lumière de changer en fonction de l'orientation de la caméra)
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, matDiff);
+
+    glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
 }
