@@ -60,20 +60,20 @@ private :
     Camera webcam;
 
     //PARAMETRES DE JEU
-    bool mouse = false;
-    bool camera = false;
-    bool freeMovement = false;
-    bool keyboard = true;
-    unsigned int WIN_WIDTH  = 1600;
-    unsigned int WIN_HEIGHT = 900;
-    int nbSpheres = 1;
-    bool fullScreen = false;
+    bool mouse;
+    bool camera;
+    bool freeMovement;
+    bool keyboard;
+    unsigned int WIN_WIDTH;
+    unsigned int WIN_HEIGHT;
+    int nbSpheres;
+    bool fullScreen;
     bool Zbuf = true;
     bool victory = false;
-    int LENGTH = 10;
-    int WIDTH = 10;
-    float FOV = 80.0f;
-    int musicVolume = 10;
+    int LENGTH;
+    int WIDTH;
+    float FOV;
+    int musicVolume;
 };
 
 #endif // MYGLWIDGET_H

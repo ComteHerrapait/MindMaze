@@ -46,7 +46,6 @@ void Menu::saveSettings(){
         settings.setValue("winWidth", ui->TextWinWidth->text().toInt());
         settings.setValue("winHeight", ui->TextWinHeight->text().toInt());
         settings.setValue("FOV", ui->TextFOV->text().toInt());
-        settings.setValue("volume", ui->TextVolume->text().toInt());
         settings.setValue("fullscreen", ui->CheckFullscreen->isChecked());
     settings.endGroup();
 
@@ -55,6 +54,8 @@ void Menu::saveSettings(){
         settings.setValue("mouse", ui->CheckMouse->isChecked());
         settings.setValue("keyboard", ui->CheckKeyboard->isChecked());
         settings.setValue("camera", ui->CheckCamera->isChecked());
+        settings.setValue("volume", ui->TextVolume->text().toInt());
+
     settings.endGroup();
 }
 
@@ -70,13 +71,14 @@ void Menu::getSettings(){
     ui->TextWinWidth->setText(QString::number(settings.value("Display/winWidth").toInt()));
     ui->TextWinHeight->setText(QString::number(settings.value("Display/winHeight").toInt()));
     ui->TextFOV->setText(QString::number(settings.value("Display/FOV").toInt()));
-    ui->TextVolume->setText(QString::number(settings.value("Display/volume").toInt()));
     ui->CheckFullscreen->setChecked(settings.value("Display/fullscreen").toBool());
     //Features
     ui->CheckSnapping->setChecked(settings.value("Features/snapping").toBool());
     ui->CheckMouse->setChecked(settings.value("Features/mouse").toBool());
     ui->CheckKeyboard->setChecked(settings.value("Features/keyboard").toBool());
     ui->CheckCamera->setChecked(settings.value("Features/camera").toBool());
+    ui->TextVolume->setText(QString::number(settings.value("Features/volume").toInt()));
+
 }
 
 //largeur

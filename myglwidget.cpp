@@ -23,11 +23,18 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 {
     // attribution des paramètres
     LOADSETTINGS;
-    freeMovement = settings.value("freemovement").toBool();
-    mouse = settings.value("mouse").toBool();
-    keyboard = settings.value("keyboard").toBool();
-    camera = settings.value("camera").toBool();
-    musicVolume = settings.value("volume").toInt();
+    mouse = settings.value("Features/mouse").toBool();
+    camera = settings.value("Features/camera").toBool();
+    freeMovement = !settings.value("Features/snapping").toBool();
+    keyboard = settings.value("Features/keyboard").toBool();
+    WIN_WIDTH  = settings.value("Display/winWidth").toInt();
+    WIN_HEIGHT = settings.value("Display/winHeight").toInt();
+    nbSpheres = settings.value("Maze/nbSpheres").toInt();
+    fullScreen = settings.value("Display/fullscreen").toBool();
+    LENGTH = settings.value("Maze/width").toInt();
+    WIDTH = settings.value("Maze/height").toInt();
+    FOV = settings.value("Display/FOV").toInt();
+    musicVolume = settings.value("Features/volume").toInt();
 
     //icone de l'application
     QIcon icon = QIcon(":/maze.ico");
@@ -42,13 +49,11 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
     //active le suivi de la souris
     setMouseTracking(true);
 
-    //Reglage de la taille/position
-    WIN_WIDTH = settings.value("winWidth").toInt();
-    WIN_HEIGHT = settings.value("winHeight").toInt();
+    //Reglage de la taille/position 
     setFixedSize(WIN_WIDTH, WIN_HEIGHT);
     QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
     move(screenGeometry.width()/2 - WIN_WIDTH/2, screenGeometry.height()/2 - WIN_HEIGHT/2);
-    if(settings.value("fullscreen").toBool()) showFullScreen();
+    if(settings.value("Display/fullscreen").toBool()) showFullScreen();
 
     //Connexion du timer
     connect(&timer,  &QTimer::timeout, [&] {
@@ -59,8 +64,8 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
     timer.start();
 
     //création du joueur
-    int x = 2*rand() % (settings.value("height").toInt() *2)+1;
-    int z = 2*rand() % (settings.value("width").toInt()  *2)+1;
+    int x = 2*rand() % (settings.value("Maze/height").toInt() *2)+1;
+    int z = 2*rand() % (settings.value("Maze/width").toInt()  *2)+1;
     player = Player(myPoint(x,1,z), myPoint(x+1,1,z));
 
     //Initialisation Camera
@@ -73,9 +78,8 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 // Fonction d'initialisation
 void MyGLWidget::initializeGL()
 {
-    LOADSETTINGS;
     //creation des murs
-    Maze mazegen = Maze(settings.value("width").toInt(),settings.value("height").toInt());
+    Maze mazegen = Maze(LENGTH, WIDTH);
     mazegen.generate();
     V_walls = mazegen.get();
 
@@ -436,10 +440,8 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
         case Qt::Key::Key_Tab:
             if (Zbuf){
                 glDisable(GL_DEPTH_TEST);
-                glDisable(GL_TEXTURE_2D);
             } else {
                 glEnable(GL_DEPTH_TEST);
-                glEnable(GL_TEXTURE_2D);
             }
             Zbuf ^= true;
         break;
