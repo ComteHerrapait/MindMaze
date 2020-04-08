@@ -23,11 +23,60 @@ Menu::Menu(QWidget *parent) :
     ui->TextFOV->setValidator( new QIntValidator(30, 180, this) );
     //Volume
     ui->TextVolume->setValidator( new QIntValidator(0, 100, this) );
+
+    getSettings();
+
 }
 
 Menu::~Menu()
 {
     delete ui;
+}
+
+void Menu::saveSettings(){
+    //gestion des paramètres avec un fichier.ini
+    QSettings settings("resources/settings.ini",QSettings::IniFormat);
+    settings.beginGroup("Maze");
+        settings.setValue("width", ui->TextWidth->text().toInt());
+        settings.setValue("height", ui->TextHeight->text().toInt());
+        settings.setValue("nbSpheres", ui->TextnbSphere->text().toInt());
+    settings.endGroup();
+
+    settings.beginGroup("Display");
+        settings.setValue("winWidth", ui->TextWinWidth->text().toInt());
+        settings.setValue("winHeight", ui->TextWinHeight->text().toInt());
+        settings.setValue("FOV", ui->TextFOV->text().toInt());
+        settings.setValue("volume", ui->TextVolume->text().toInt());
+        settings.setValue("fullscreen", ui->CheckFullscreen->isChecked());
+    settings.endGroup();
+
+    settings.beginGroup("Features");
+        settings.setValue("snapping", ui->CheckSnapping->isChecked());
+        settings.setValue("mouse", ui->CheckMouse->isChecked());
+        settings.setValue("keyboard", ui->CheckKeyboard->isChecked());
+        settings.setValue("camera", ui->CheckCamera->isChecked());
+    settings.endGroup();
+}
+
+void Menu::getSettings(){
+    //recupère les paramètres dans le fichier .ini puis les applique à l'interface
+    QSettings settings("resources/settings.ini",QSettings::IniFormat);
+    //Maze
+    ui->TextWidth->setText(QString::number(settings.value("Maze/width").toInt()));
+    ui->SliderWidth->setSliderPosition(settings.value("Maze/width").toInt());
+    ui->TextHeight->setText(QString::number(settings.value("Maze/height").toInt()));
+    ui->TextnbSphere->setText(QString::number(settings.value("Maze/nbSpheres").toInt()));
+    //Display
+    ui->TextWinWidth->setText(QString::number(settings.value("Display/winWidth").toInt()));
+    ui->TextWinHeight->setText(QString::number(settings.value("Display/winHeight").toInt()));
+    ui->TextFOV->setText(QString::number(settings.value("Display/FOV").toInt()));
+    ui->TextVolume->setText(QString::number(settings.value("Display/volume").toInt()));
+    ui->CheckFullscreen->setChecked(settings.value("Display/fullscreen").toBool());
+    //Features
+    ui->CheckSnapping->setChecked(settings.value("Features/snapping").toBool());
+    ui->CheckMouse->setChecked(settings.value("Features/mouse").toBool());
+    ui->CheckKeyboard->setChecked(settings.value("Features/keyboard").toBool());
+    ui->CheckCamera->setChecked(settings.value("Features/camera").toBool());
 }
 
 //largeur
@@ -66,27 +115,16 @@ void Menu::on_SliderVolume_sliderMoved(int position){
 void Menu::on_TextVolume_textEdited(const QString &arg1){
     ui->SliderVolume->setSliderPosition(arg1.toInt());
 }
+
+
 //Bouton Jouer
 void Menu::on_pushButton_clicked()
 {
-    //affectations
-    width = ui->TextWidth->text().toInt();
-    height = ui->TextHeight->text().toInt();
-    nbSpheres = ui->TextnbSphere->text().toInt();
-    winWidth = ui->TextWinWidth->text().toInt();
-    winHeight= ui->TextWinHeight->text().toInt();
-    FOV= ui->TextFOV->text().toInt();
-    volume= ui->TextVolume->text().toInt();
-
-    fullscreen = ui->CheckFullscreen->isChecked();
-    freeMovement = ! ui->CheckSnapping->isChecked();
-    mouse = ui->CheckMouse->isChecked();
-    keyboard = ui->CheckKeyboard->isChecked();
-    camera = ui ->CheckCamera->isChecked();
+    //sauvegarde des reglages
+    saveSettings();
 
     //ferme la fenêtre pour lancer le jeu
-    Menu menu;
-    MyGLWidget* game = new MyGLWidget(width, height, nbSpheres, winWidth, winHeight, FOV, volume, fullscreen, freeMovement, mouse, keyboard, camera);//menu en argument pour récuperer les paramètres du jeu
+    MyGLWidget* game = new MyGLWidget();//menu en argument pour récuperer les paramètres du jeu
     game->show();
     this->hide();//cache le menu
 }
@@ -98,6 +136,7 @@ void Menu::on_actionQuit_changed()
                                                                 QMessageBox::No | QMessageBox::Yes,
                                                                 QMessageBox::Yes);
     if (resBtn == QMessageBox::Yes) {
+        saveSettings();
         exit(0);
     }
 }
@@ -111,6 +150,7 @@ void Menu::closeEvent (QCloseEvent *event)
     if (resBtn != QMessageBox::Yes) {
         event->ignore();
     } else {
+        saveSettings();
         event->accept();
         exit(0);
     }

@@ -18,6 +18,7 @@
 #include "victory.h"
 #include "camera.h"
 #include <QMessageBox>
+#include <QSettings>
 
 #include <QtMultimedia/QMediaPlayer>
 #define PI 3.14159265
@@ -32,8 +33,7 @@ class MyGLWidget : public QGLWidget
 public:
 
     // Constructeur
-    MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_, bool camera_,
-               QWidget * parent = nullptr);
+    MyGLWidget(QWidget * parent = nullptr);
     int winTime;
 
 protected: 

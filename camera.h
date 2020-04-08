@@ -17,6 +17,7 @@ class Camera
 {
 public:
     Camera();
+    void init();
     vector<Point> detect(bool hold, bool display);
     GLuint getTexture();
     ~Camera();

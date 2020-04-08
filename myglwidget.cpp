@@ -6,7 +6,7 @@
 #include <QDesktopWidget>
 
 #define DEBUG true //flag
-
+#define LOADSETTINGS QSettings settings("resources/settings.ini",QSettings::IniFormat)
 using namespace std;
 
 // Declarations des constantes
@@ -19,22 +19,15 @@ const float CAMERA_SENSITIVITY= 30.0;
 const int ANIMATION_COUNT     = 30;
 
 // Constructeur
-MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int winHeight_,int FOV_,int volume_,bool fullscreen_, bool freeMovement_,bool mouse_, bool keyboard_,bool camera_,
-                       QWidget * parent) : QGLWidget(parent)
+MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 {
     // attribution des paramètres
-    LENGTH = width_;
-    WIDTH = height_;
-    nbSpheres = nbSpheres_;
-    WIN_WIDTH = winWidth_;
-    WIN_HEIGHT = winHeight_;
-    FOV = FOV_;
-    musicVolume = volume_;
-    fullScreen = fullscreen_;
-    freeMovement = freeMovement_;
-    mouse = mouse_;
-    keyboard = keyboard_;
-    camera = camera_;
+    LOADSETTINGS;
+    freeMovement = settings.value("freemovement").toBool();
+    mouse = settings.value("mouse").toBool();
+    keyboard = settings.value("keyboard").toBool();
+    camera = settings.value("camera").toBool();
+    musicVolume = settings.value("volume").toInt();
 
     //icone de l'application
     QIcon icon = QIcon(":/maze.ico");
@@ -50,10 +43,12 @@ MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int 
     setMouseTracking(true);
 
     //Reglage de la taille/position
+    WIN_WIDTH = settings.value("winWidth").toInt();
+    WIN_HEIGHT = settings.value("winHeight").toInt();
     setFixedSize(WIN_WIDTH, WIN_HEIGHT);
     QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
     move(screenGeometry.width()/2 - WIN_WIDTH/2, screenGeometry.height()/2 - WIN_HEIGHT/2);
-    if(fullScreen) showFullScreen();
+    if(settings.value("fullscreen").toBool()) showFullScreen();
 
     //Connexion du timer
     connect(&timer,  &QTimer::timeout, [&] {
@@ -64,18 +59,23 @@ MyGLWidget::MyGLWidget(int width_, int height_,int nbSpheres_,int winWidth_,int 
     timer.start();
 
     //création du joueur
-    int x = 2*rand() % (LENGTH *2)+1;
-    int z = 2*rand() % (WIDTH *2) +1;
+    int x = 2*rand() % (settings.value("height").toInt() *2)+1;
+    int z = 2*rand() % (settings.value("width").toInt()  *2)+1;
     player = Player(myPoint(x,1,z), myPoint(x+1,1,z));
 
+    //Initialisation Camera
+    if (settings.value("Features/camera").toBool()){
+        webcam.init();
+    }
 }
 
 
 // Fonction d'initialisation
 void MyGLWidget::initializeGL()
 {
+    LOADSETTINGS;
     //creation des murs
-    Maze mazegen = Maze(LENGTH,WIDTH);
+    Maze mazegen = Maze(settings.value("width").toInt(),settings.value("height").toInt());
     mazegen.generate();
     V_walls = mazegen.get();
 
@@ -421,6 +421,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
                webcam.~Camera();
            }else{
                webcam = Camera();
+               webcam.init();
            }
            camera ^= true;
            break;
@@ -446,6 +447,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             if (camera){
                 webcam.~Camera();
                 webcam = Camera();
+                webcam.init();
             }
         break;
         case Qt::Key::Key_Escape:
