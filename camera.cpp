@@ -11,7 +11,7 @@ Camera::Camera()
         return;
     }
 
-    if( !face_cascade.load( "../MindMaze/resources/haarcascade_frontalface_alt.xml" ) )
+    if( !face_cascade.load( "./resources/haarcascade_frontalface_alt.xml" ) )
     {
         cerr<<"Error loading haarcascade"<<endl;
         return;

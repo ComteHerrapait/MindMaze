@@ -3,9 +3,9 @@
 DJ::DJ()
 {
     // les chemins sont relatifs mais je ne sais pas
-    background.setMedia(QUrl::fromLocalFile("../MindMaze/sounds/background.mp3"));
-    sphereFound.setMedia(QUrl::fromLocalFile("../MindMaze/sounds/sphereFound.mp3"));
-    sphereSound.setMedia(QUrl::fromLocalFile("../MindMaze/sounds/sphereSound.mp3"));
+    background.setMedia(QUrl::fromLocalFile("./resources/sounds/background.mp3"));
+    sphereFound.setMedia(QUrl::fromLocalFile("./resources/sounds/sphereFound.mp3"));
+    sphereSound.setMedia(QUrl::fromLocalFile("./resources/sounds/sphereSound.mp3"));
 }
 
 void DJ::play(const QString& soundName){

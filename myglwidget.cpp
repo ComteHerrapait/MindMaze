@@ -165,7 +165,6 @@ void MyGLWidget::paintGL()
             {player.lookWithAnimations(-1,ANIMATION_COUNT);}
         }
     }
-    cout << "image/total :  "<<(double)(clock() - tStart)/CLOCKS_PER_SEC;
     // ---- CAS VICTOIRE ----
     if (victory){
         dj.stop("BACKGROUND");
@@ -323,10 +322,18 @@ void MyGLWidget::paintGL()
     renderText(cameraSize + 20 , 20, QString("Vous jouez depuis %1 secondes").arg(time(0) - startTime));
     renderText(cameraSize + 20 , 35, QString("FOV : %1 deg").arg(FOV));
     if (player.getAchievement()){
+        qglColor(Qt::green);
         renderText(cameraSize + 20 , 50, QString("Vous avez trouvé toutes les sphères,"));
         renderText(cameraSize + 20 , 65, QString("trouvez la sortie !"));
     }
-    if (DEBUG) renderText(cameraSize + 20 , 80, QString("coord : %1 %2 %3").arg(player.getPos().x).arg(player.getPos().y).arg(player.getPos().z));
+    if (DEBUG) {
+        qglColor(Qt::white);
+        renderText(cameraSize + 20 , 80, QString("coord : %1 %2 %3")
+                          .arg(round(100 * player.getPos().x)/100)
+                          .arg(round(100 * player.getPos().y)/100)
+                          .arg(round(100 * player.getPos().z)/100));
+        renderText(cameraSize + 20 , 95, QString("frame : %1 ms").arg((double)(clock() - tStart)/CLOCKS_PER_SEC*1000.0));
+    }
 
         //modes
     if (mouse)  qglColor(Qt::green);
@@ -355,8 +362,6 @@ void MyGLWidget::paintGL()
 
 
     glPopMatrix();
-
-    cout << " / "<<(double)(clock() - tStart)/CLOCKS_PER_SEC << endl;
 }
 
 
@@ -421,13 +426,11 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
            }
            break;
         case Qt::Key::Key_Y:
+            camera ^= true;
            if (camera){
-               webcam.~Camera();
-           }else{
-               webcam = Camera();
                webcam.init();
            }
-           camera ^= true;
+
            break;
         case Qt::Key::Key_F:
             if (fullScreen){
@@ -447,8 +450,6 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
         break;
         case Qt::Key::Key_Space:
             if (camera){
-                webcam.~Camera();
-                webcam = Camera();
                 webcam.init();
             }
         break;
