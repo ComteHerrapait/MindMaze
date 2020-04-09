@@ -15,6 +15,7 @@ const float MAX_DIMENSION     = 50.0f;
 const float SKYBOX_SIZE       = 50.0f;
 const bool AUTOHIDE_MAP       = true;
 const float HIDE_MAP_TIME     = 3.0;
+const bool SHOW_SPHERE_MAP    = false;
 const float CAMERA_SENSITIVITY= 30.0;
 const int ANIMATION_SLOW      = 25;
 const int ANIMATION_FAST      = 70;
@@ -339,11 +340,14 @@ void MyGLWidget::paintGL()
             w->draw2D(WIN_WIDTH - LENGTH * 2 * scale - 20, 20, scale);
         }
             //Position des spheres
-        for(Sphere * s: V_spheres){
-            s->draw2D(WIN_WIDTH - LENGTH * 2 * scale - 20 , 20, scale);
+        if (SHOW_SPHERE_MAP){
+            for(Sphere * s: V_spheres){
+                s->draw2D(WIN_WIDTH - LENGTH * 2 * scale - 20 , 20, scale);
+            }
         }
             //Position du joueur
         player.draw2D(WIN_WIDTH - LENGTH * 2 * scale - 20 , 20, scale);
+
     }
         //texte
     qglColor(Qt::black);

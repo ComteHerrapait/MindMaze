@@ -52,7 +52,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Vitoire !</string>
+    <string>Victoire !</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
