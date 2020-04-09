@@ -133,7 +133,6 @@ void MyGLWidget::initializeGL()
     glMaterialfv(GL_FRONT, GL_AMBIENT, ambientColor);
     GLfloat diffuseAddition[] = { 0.2, 0.2, 0.2, 1.0 };
     glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseAddition);
-    glDisable(GL_LIGHTING);
 
     glDisable(GL_LIGHTING);
 
@@ -554,14 +553,14 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event){
 
 void MyGLWidget::closeEvent (QCloseEvent *event)
 {
-    if (QMessageBox::question( this, "Mindmaze",
+    if (!victory && QMessageBox::question( this, "Mindmaze",
                                tr("Etes vous certain de vouloir quitter le jeu ?\n"),
                                QMessageBox::No | QMessageBox::Yes,
                                QMessageBox::No)
             != QMessageBox::Yes)
     {
         event->ignore();
-    } else {
+    } else if (!victory) {
         event->accept();
         webcam.~Camera();
         exit(0);
