@@ -79,9 +79,14 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 void MyGLWidget::initializeGL()
 {
     //creation des murs
+        //création d'un mur de test, écrasé à la génération
+    V_walls = {new Wall(myPoint(1,0,0),myPoint(1,0,1))};
+
     Maze mazegen = Maze(LENGTH, WIDTH);
     mazegen.generate();
     V_walls = mazegen.get();
+
+
 
     //création de la skybox
     skybox = new Skybox(SKYBOX_SIZE);

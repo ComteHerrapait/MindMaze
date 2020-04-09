@@ -56,9 +56,8 @@ vector<myPoint> Wall::createBase(myPoint p1, myPoint p2, float width){
     return result;
 }
 void Wall::draw(){ 
-    glEnable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
-    glBindTexture(GL_TEXTURE_2D,texMap);
+    glEnable(GL_TEXTURE_2D);
 
     vector<myPoint> base = createBase(end_1, end_2, width);
     myPoint p1,p2,p3,p4;
@@ -67,6 +66,7 @@ void Wall::draw(){
     p3 = base[2];
     p4 = base[3];
 
+    glBindTexture(GL_TEXTURE_2D,texMap);
     glPushMatrix();
     glBegin(GL_QUADS);
     glColor3ub(255, 255, 255);//couleur
