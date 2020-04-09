@@ -64,8 +64,8 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
     timer.start();
 
     //création du joueur
-    int x = 2*rand() % (settings.value("Maze/height").toInt() *2)+1;
-    int z = 2*rand() % (settings.value("Maze/width").toInt()  *2)+1;
+    int x = 2*rand() % (settings.value("Maze/width").toInt() *2)+1;
+    int z = 2*rand() % (settings.value("Maze/height").toInt()  *2)+1;
     player = Player(myPoint(x,1,z), myPoint(x+1,1,z));
 
     //Initialisation Camera
@@ -264,6 +264,7 @@ void MyGLWidget::paintGL()
     GLfloat matDiff[] = {0.0, 0.0, 0.0, 0.0}; // Permet d'éviter un problème que je ne comprends pas (Empêche la lumière de changer en fonction de l'orientation de la caméra)
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, matDiff);
 
+    glDisable(GL_LIGHTING);
     // ---- HUD 2D ----
         //paramétrage
     glMatrixMode(GL_PROJECTION);

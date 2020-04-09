@@ -57,6 +57,7 @@ vector<myPoint> Wall::createBase(myPoint p1, myPoint p2, float width){
 }
 void Wall::draw(){ 
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
     glBindTexture(GL_TEXTURE_2D,texMap);
 
     vector<myPoint> base = createBase(end_1, end_2, width);
@@ -109,6 +110,7 @@ void Wall::draw(){
 
     glPopMatrix();
     glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
 }
 
 void Wall::draw2D(float offX, float offY, float scale)

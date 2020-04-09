@@ -37,6 +37,7 @@ Surface::Surface(bool isFloor,int length, int width)
 
 void Surface::draw(){
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
 
     glBindTexture(GL_TEXTURE_2D,texMap);
 
@@ -49,4 +50,5 @@ void Surface::draw(){
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
 }

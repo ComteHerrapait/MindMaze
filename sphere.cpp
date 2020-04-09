@@ -41,6 +41,7 @@ void Sphere::draw(float time_){
     // plaquage de textures
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texMap );
+    glEnable(GL_LIGHTING);
 
     //placement de la lampe
     GLfloat tab_sphere[] = {pos.x,pos.y,pos.z,1.0};
@@ -77,6 +78,7 @@ void Sphere::draw(float time_){
     gluSphere(quadric, radius, stacks, stacks);//tracé de la sphere
 
     glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
     glPopMatrix();
 }
 
