@@ -96,8 +96,6 @@ void MyGLWidget::initializeGL()
     mazegen.generate();
     V_walls = mazegen.get();
 
-
-
     //création de la skybox
     skybox = new Skybox(SKYBOX_SIZE);
 
@@ -121,6 +119,23 @@ void MyGLWidget::initializeGL()
     //Activation du zbuffer
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
+
+    // ECLAIRAGE
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    GLfloat black[] = {0.0, 0.0, 0.0, 1.0};
+    GLfloat white[] = {1.0, 1.0, 1.0, 1.0};
+    glLightfv(GL_LIGHT0, GL_AMBIENT, white);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, black);
+
+    GLfloat ambientColor[] = { 0.5, 0.5, 0.5, 1.0 };
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambientColor);
+    GLfloat diffuseAddition[] = { 0.2, 0.2, 0.2, 1.0 };
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseAddition);
+    glDisable(GL_LIGHTING);
+
+    glDisable(GL_LIGHTING);
 
     //horaire de départ
     startTime = time(0);
@@ -180,6 +195,7 @@ void MyGLWidget::paintGL()
             {player.lookWithAnimations(-1,ANIMATION_COUNT);}
         }
     }
+
     // ---- CAS VICTOIRE ----
     if (victory){
         dj.stop("BACKGROUND");
@@ -206,7 +222,6 @@ void MyGLWidget::paintGL()
 
     //Reinitialisation des tampons
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //glEnable(GL_LIGHTING);
 
     //Definition de la matrice projection
     glMatrixMode(GL_PROJECTION);
@@ -266,20 +281,6 @@ void MyGLWidget::paintGL()
     // ---- MUSIQUE ----
     dj.play("BACKGROUND"); // relance la musique en permanence, pour faire une boucle
 
-    // ---- ECLAIRAGE ----
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-
-    GLfloat colorAmbiante_tab[] = {0.3, 0.3, 0.3, 0.0}; // Eclairage Général
-    glLightfv(GL_LIGHT0, GL_AMBIENT, colorAmbiante_tab);
-
-    GLfloat colorMatAmbiante_tab[] = {1.0, 1.0, 1.0, 0.0}; // Objets réfléchissent toute la lumière
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, colorMatAmbiante_tab);
-
-    GLfloat matDiff[] = {0.0, 0.0, 0.0, 0.0}; // Permet d'éviter un problème que je ne comprends pas (Empêche la lumière de changer en fonction de l'orientation de la caméra)
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, matDiff);
-
-    glDisable(GL_LIGHTING);
     // ---- HUD 2D ----
         //paramétrage
     glMatrixMode(GL_PROJECTION);

@@ -68,6 +68,12 @@ void Wall::draw(){
 
     glBindTexture(GL_TEXTURE_2D,texMap);
     glPushMatrix();
+
+    // ECLAIRAGE
+    GLfloat wall[] = {0.6, 0.6, 0.6, 1.0};
+    glMaterialfv(GL_FRONT, GL_AMBIENT, wall);
+
+
     glBegin(GL_QUADS);
     glColor3ub(255, 255, 255);//couleur
 
@@ -86,21 +92,25 @@ void Wall::draw(){
     */
 
         //Walls
+    glNormal3i(int(p1.z == p2.z), 0, int(p1.x == p2.x));
     glTexCoord2f(0,0);  glVertex3f(p1.x, 0, p1.z);
     glTexCoord2f(1,0);  glVertex3f(p2.x, 0, p2.z);
     glTexCoord2f(1,1);  glVertex3f(p2.x, height, p2.z);
     glTexCoord2f(0,1);  glVertex3f(p1.x, height, p1.z);
 
+    glNormal3i(int(p2.z == p3.z), 0, int(p2.x == p3.x));
     glTexCoord2f(0,0);  glVertex3f(p2.x, 0, p2.z);
     glTexCoord2f(1,0);  glVertex3f(p3.x, 0, p3.z);
     glTexCoord2f(1,1);  glVertex3f(p3.x, height, p3.z);
     glTexCoord2f(0,1);  glVertex3f(p2.x, height, p2.z);
 
+    glNormal3i(int(p3.z == p4.z), 0, int(p3.x == p4.x));
     glTexCoord2f(0,0);  glVertex3f(p3.x, 0, p3.z);
     glTexCoord2f(1,0);  glVertex3f(p4.x, 0, p4.z);
     glTexCoord2f(1,1);  glVertex3f(p4.x, height, p4.z);
     glTexCoord2f(0,1);  glVertex3f(p3.x, height, p3.z);
 
+    glNormal3i(int(p4.z == p1.z), 0, int(p4.x == p1.x));
     glTexCoord2f(0,0);  glVertex3f(p4.x, 0, p4.z);
     glTexCoord2f(1,0);  glVertex3f(p1.x, 0, p1.z);
     glTexCoord2f(1,1);  glVertex3f(p1.x, height, p1.z);

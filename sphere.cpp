@@ -49,21 +49,11 @@ void Sphere::draw(float time_){
     glEnable(GL_LIGHT1);     // Je vois pas ce que change ce bloc ni le suivant
     glLightfv(GL_LIGHT1, GL_POSITION, tab_sphere);
 
-//    GLfloat lamp_sphere[] = {1.0, 1.0, 1.0, 1.0};
-//    glLightfv(GL_LIGHT1, GL_DIFFUSE, lamp_sphere);
-//    glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 5.0);
-
-//    GLfloat colorTab_sphere[] = {1.0, 1.0, 1.0, 1.0};              // Fait un bug visuel en fonction de l'angle de la caméra (comme si une source de lumière blanche éclaire le plafond)
-//    glLightfv(GL_LIGHT1, GL_AMBIENT_AND_DIFFUSE, colorTab_sphere);
-
-//    GLfloat colorMatTab_sphere[] = {1.0, 1.0, 1.0, 1.0};          // Aucun effet?
-//    glMaterialfv(GL_LIGHT1, GL_EMISSION, colorMatTab_sphere);
-
     GLfloat param1[] = {1.0, 1.0, 1.0};                     // Fait briller la sphère
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, param1);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, param1);
 
-//    GLfloat param2[] = {1.0, 1.0, 1.0};                   // Crée un éclairage blanc qui éclaire toute la scène, je ne sais pas pourquoi.
-//    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, param2);
+    //GLfloat param2[] = {1.0, 1.0, 1.0};                   // Crée un éclairage blanc qui éclaire toute la scène, je ne sais pas pourquoi.
+    //glMaterialfv(GL_FRONT, GL_EMISSION, param2);
 
 
 

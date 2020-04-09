@@ -40,7 +40,15 @@ void Surface::draw(){
     glEnable(GL_LIGHTING);
 
     glBindTexture(GL_TEXTURE_2D,texMap);
-
+    if (height == 0){ //sol
+        GLfloat floor[] = {0.6, 0.6, 0.6, 1.0};
+        glMaterialfv(GL_FRONT, GL_AMBIENT, floor);
+        glNormal3d(0.0, 1.0, 0.0);
+    } else {//plafond
+        GLfloat ceiling[] = {0.5, 0.4, 0.4, 1.0};
+        glMaterialfv(GL_FRONT, GL_AMBIENT, ceiling);
+        glNormal3d(0.0, -1.0, 0.0);
+    }
     glBegin(GL_QUADS);
     glColor3ub(255, 255, 255);
     glTexCoord2f(0, 0);                 glVertex3f(0, height, 0);
