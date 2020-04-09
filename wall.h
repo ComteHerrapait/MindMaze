@@ -6,7 +6,9 @@
 #include <GL/glu.h>
 #include <QImage>
 #include <QtOpenGL>
+#include "decorator.h"
 #include <iostream>
+#include <random>
 
 using namespace std;
 
@@ -27,6 +29,7 @@ private:
     float height = 2.0;
     GLuint texMap;
     bool onTheEdge = false;
+    vector<Decorator *> V_decorators;
 };
 
 #endif // WALL_H
