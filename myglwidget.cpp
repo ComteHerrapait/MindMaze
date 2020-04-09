@@ -252,6 +252,19 @@ void MyGLWidget::paintGL()
     // ---- MUSIQUE ----
     dj.play("BACKGROUND"); // relance la musique en permanence, pour faire une boucle
 
+    // ---- ECLAIRAGE ----
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+    GLfloat colorAmbiante_tab[] = {0.3, 0.3, 0.3, 0.0}; // Eclairage Général
+    glLightfv(GL_LIGHT0, GL_AMBIENT, colorAmbiante_tab);
+
+    GLfloat colorMatAmbiante_tab[] = {1.0, 1.0, 1.0, 0.0}; // Objets réfléchissent toute la lumière
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, colorMatAmbiante_tab);
+
+    GLfloat matDiff[] = {0.0, 0.0, 0.0, 0.0}; // Permet d'éviter un problème que je ne comprends pas (Empêche la lumière de changer en fonction de l'orientation de la caméra)
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, matDiff);
+
     // ---- HUD 2D ----
         //paramétrage
     glMatrixMode(GL_PROJECTION);
