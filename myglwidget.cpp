@@ -16,7 +16,8 @@ const float SKYBOX_SIZE       = 50.0f;
 const bool AUTOHIDE_MAP       = true;
 const float HIDE_MAP_TIME     = 3.0;
 const float CAMERA_SENSITIVITY= 30.0;
-const int ANIMATION_COUNT     = 30;
+const int ANIMATION_SLOW      = 25;
+const int ANIMATION_FAST      = 70;
 
 // Constructeur
 MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
@@ -48,6 +49,7 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 
     //active le suivi de la souris
     setMouseTracking(true);
+    if (mouse) setCursor(Qt::CrossCursor);
 
     //Reglage de la taille/position 
     setFixedSize(WIN_WIDTH, WIN_HEIGHT);
@@ -72,6 +74,13 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
     if (settings.value("Features/camera").toBool()){
         webcam.init();
     }
+
+    //nombre d'animation
+    if(camera){
+        ANIMATION_COUNT = ANIMATION_SLOW;
+    } else {
+        ANIMATION_COUNT = ANIMATION_FAST;
+    }
 }
 
 
@@ -80,7 +89,7 @@ void MyGLWidget::initializeGL()
 {
     //creation des murs
         //création d'un mur de test, écrasé à la génération
-    V_walls = {new Wall(myPoint(1,0,0),myPoint(1,0,1))};
+    V_walls = {new Wall(myPoint(1,0,0),myPoint(1,0,1),true)};
 
     Maze mazegen = Maze(LENGTH, WIDTH);
     mazegen.generate();
@@ -448,6 +457,9 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             camera ^= true;
            if (camera){
                webcam.init();
+               ANIMATION_COUNT = ANIMATION_SLOW;
+           } else {
+               ANIMATION_COUNT = ANIMATION_FAST;
            }
 
            break;
@@ -535,3 +547,18 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event){
     }
 }
 
+void MyGLWidget::closeEvent (QCloseEvent *event)
+{
+    if (QMessageBox::question( this, "Mindmaze",
+                               tr("Etes vous certain de vouloir quitter le jeu ?\n"),
+                               QMessageBox::No | QMessageBox::Yes,
+                               QMessageBox::No)
+            != QMessageBox::Yes)
+    {
+        event->ignore();
+    } else {
+        event->accept();
+        webcam.~Camera();
+        exit(0);
+    };
+}

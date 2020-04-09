@@ -60,6 +60,7 @@ private :
     Camera webcam;
 
     //PARAMETRES DE JEU
+    int ANIMATION_COUNT = 30;
     bool mouse;
     bool camera;
     bool freeMovement;
@@ -74,6 +75,9 @@ private :
     int WIDTH;
     float FOV;
     int musicVolume;
+
+private slots:
+    void closeEvent (QCloseEvent *event);
 };
 
 #endif // MYGLWIDGET_H
