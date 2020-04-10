@@ -1,6 +1,6 @@
 #include "wall.h"
 
-const float PROBA_DECO = 100; //en pourcents
+const float PROBA_DECO = 15; //probabilité d'avoir un décorateur sur une face de mur, en pourcents
 
 Wall::Wall(myPoint p1, myPoint p2, bool edge)
 {
