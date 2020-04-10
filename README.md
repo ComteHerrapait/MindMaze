@@ -4,7 +4,7 @@ Un labyrinthe en openGL, développé avec QtCreator, il inclut une interface en 
 ## Prérequis 
 * OpenCV
 * Qt
-il est impératif que ces deux bibliotèques soient installées pour un fonctionnement normal de l'application
+#### __Il est impératif que ces deux bibliotèques soient installées pour un fonctionnement normal de l'application__
 
 ## Fonctionnalitées implémentées 
 ### Fonctionnalitées demandées par le sujet du projet :
