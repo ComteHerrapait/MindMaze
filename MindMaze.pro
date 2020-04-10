@@ -19,6 +19,7 @@ TARGET 	  = MindMaze
 # fichiers sources/headers
 SOURCES	+= main.cpp myglwidget.cpp \
     camera.cpp \
+    decorator.cpp \
     dj.cpp \
     maze.cpp \
     menu.cpp \
@@ -32,6 +33,7 @@ SOURCES	+= main.cpp myglwidget.cpp \
 HEADERS += \
     camera.h \
     cell.h \
+    decorator.h \
     dj.h \
     maze.h \
     menu.h \

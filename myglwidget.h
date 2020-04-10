@@ -19,6 +19,7 @@
 #include "camera.h"
 #include <QMessageBox>
 #include <QSettings>
+#include <decorator.h>
 
 #include <QtMultimedia/QMediaPlayer>
 #define PI 3.14159265
@@ -58,6 +59,7 @@ private :
     vector<Surface *> V_surfaces;
     DJ dj;
     Camera webcam;
+
 
     //PARAMETRES DE JEU
     int ANIMATION_COUNT = 30;

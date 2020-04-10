@@ -1,5 +1,7 @@
 #include "wall.h"
 
+const float PROBA_DECO = 15; //probabilité d'avoir un décorateur sur une face de mur, en pourcents
+
 Wall::Wall(myPoint p1, myPoint p2, bool edge)
 {
     end_1 = p1;
@@ -24,6 +26,39 @@ Wall::Wall(myPoint p1, myPoint p2, bool edge)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glDisable(GL_TEXTURE_2D);
+
+    //---- Decoration ----
+    float offset = width + 0.01; //legerement plus grand que l'épaisseur pour le mettre par dessus le mur
+    myPoint corner1, corner2;
+
+    //on génère les coins du decorateur aléatoirement suivant l'orientation du mur
+    if ((rand() % 100) < PROBA_DECO) { //face 1
+        double rH = (rand()%100 - 50)/100.0;//decalage horizontal
+        double rV = (rand()%100 - 50)/100.0;//decalage vertical
+        if (p1.z == p2.z){ //mur selon z
+            corner1 = myPoint(p1.x+0.5+rH, 0.5+rV, p1.z+offset);
+            corner2 = myPoint(p2.x-0.5+rH, 1.5+rV, p2.z+offset);
+        } else if (p1.x == p2.x) { //mur selon x
+            corner1 = myPoint(p1.x+offset, 0.5+rV, p1.z+0.5+rH);
+            corner2 = myPoint(p2.x+offset, 1.5+rV, p2.z-0.5+rH);
+
+        }
+        V_decorators.push_back(new Decorator(corner1, corner2));
+    }
+    if ((rand() % 100) < PROBA_DECO) { //face 2
+        double rH = (rand()%100 - 50)/100.0;//decalage horizontal
+        double rV = (rand()%100 - 50)/100.0;//decalage vertical
+        if (p1.z == p2.z){ //mur selon z
+            corner1 = myPoint(p1.x+0.5+rH, 0.5+rV, p1.z-offset);
+            corner2 = myPoint(p2.x-0.5+rH, 1.5+rV, p2.z-offset);
+        } else if (p1.x == p2.x) { //mur selon x
+            corner1 = myPoint(p1.x-offset, 0.5+rV, p1.z+0.5+rH);
+            corner2 = myPoint(p2.x-offset, 1.5+rV, p2.z-0.5+rH);
+        }
+        V_decorators.push_back(new Decorator(corner1, corner2));
+    }
+
+
 }
 
 vector<myPoint> Wall::createBase(myPoint p1, myPoint p2, float width){
@@ -121,6 +156,11 @@ void Wall::draw(){
     glPopMatrix();
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
+
+    // affichage des decorateurs
+    for(Decorator * d:V_decorators){
+        d->draw();
+    }
 }
 
 void Wall::draw2D(float offX, float offY, float scale)
