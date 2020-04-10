@@ -1,6 +1,6 @@
 #include "wall.h"
 
-const float PROBA_DECO = 35; //en pourcents
+const float PROBA_DECO = 100; //en pourcents
 
 Wall::Wall(myPoint p1, myPoint p2, bool edge)
 {
@@ -29,14 +29,34 @@ Wall::Wall(myPoint p1, myPoint p2, bool edge)
 
     //---- Decoration ----
     float offset = width + 0.01; //legerement plus grand que l'épaisseur pour le mettre par dessus le mur
-    if (p1.z == p2.z){
-        if ((rand() % 100) < PROBA_DECO) V_decorators.push_back(new Decorator(myPoint(p1.x+0.5, 0.5, p1.z+offset),myPoint(p2.x-0.5, 1.5, p2.z+offset)));
-        if ((rand() % 100) < PROBA_DECO) V_decorators.push_back(new Decorator(myPoint(p1.x+0.5, 0.5, p1.z-offset),myPoint(p2.x-0.5, 1.5, p2.z-offset)));
-    } else if (p1.x == p2.x){
-        if ((rand() % 100) < PROBA_DECO) V_decorators.push_back(new Decorator(myPoint(p1.x+offset, 0.5, p1.z+0.5),myPoint(p2.x+offset, 1.5, p2.z-0.5)));
-        if ((rand() % 100) < PROBA_DECO) V_decorators.push_back(new Decorator(myPoint(p1.x-offset, 0.5, p1.z+0.5),myPoint(p2.x-offset, 1.5, p2.z-0.5)));
-    }
+    myPoint corner1, corner2;
 
+    //on génère les coins du decorateur aléatoirement suivant l'orientation du mur
+    if ((rand() % 100) < PROBA_DECO) { //face 1
+        double rH = (rand()%100 - 50)/100.0;//decalage horizontal
+        double rV = (rand()%100 - 50)/100.0;//decalage vertical
+        if (p1.z == p2.z){ //mur selon z
+            corner1 = myPoint(p1.x+0.5+rH, 0.5+rV, p1.z+offset);
+            corner2 = myPoint(p2.x-0.5+rH, 1.5+rV, p2.z+offset);
+        } else if (p1.x == p2.x) { //mur selon x
+            corner1 = myPoint(p1.x+offset, 0.5+rV, p1.z+0.5+rH);
+            corner2 = myPoint(p2.x+offset, 1.5+rV, p2.z-0.5+rH);
+
+        }
+        V_decorators.push_back(new Decorator(corner1, corner2));
+    }
+    if ((rand() % 100) < PROBA_DECO) { //face 2
+        double rH = (rand()%100 - 50)/100.0;//decalage horizontal
+        double rV = (rand()%100 - 50)/100.0;//decalage vertical
+        if (p1.z == p2.z){ //mur selon z
+            corner1 = myPoint(p1.x+0.5+rH, 0.5+rV, p1.z-offset);
+            corner2 = myPoint(p2.x-0.5+rH, 1.5+rV, p2.z-offset);
+        } else if (p1.x == p2.x) { //mur selon x
+            corner1 = myPoint(p1.x-offset, 0.5+rV, p1.z+0.5+rH);
+            corner2 = myPoint(p2.x-offset, 1.5+rV, p2.z-0.5+rH);
+        }
+        V_decorators.push_back(new Decorator(corner1, corner2));
+    }
 
 
 }
