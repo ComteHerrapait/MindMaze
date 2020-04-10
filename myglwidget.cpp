@@ -417,6 +417,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             resetMinimapTimer();
             break;
         case Qt::Key::Key_Z://avant
+        case Qt::Key::Key_Up:
             if(!keyboard) break;
             if (freeMovement) {player.moveWithCollisions(0.1,0,V_walls);}
             else if (! player.isMoving())
@@ -424,6 +425,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             resetMinimapTimer();
             break;
         case Qt::Key::Key_S://arriere
+        case Qt::Key::Key_Down:
             if(!keyboard) break;
             if (freeMovement){player.moveWithCollisions(-0.1,0,V_walls);}
             else if (! player.isMoving())
@@ -431,12 +433,14 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             resetMinimapTimer();
             break;
         case Qt::Key::Key_E:
+        case Qt::Key::Key_Right:
             if(!keyboard) break;
             if (freeMovement){player.look(3);}
             else if (! player.isMoving())
             {player.lookWithAnimations(1,ANIMATION_COUNT);}
             break;
         case Qt::Key::Key_A:
+        case Qt::Key::Key_Left:
             if(!keyboard) break;
             if (freeMovement){player.look(-3);}
             else if (! player.isMoving())
