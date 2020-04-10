@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     //créé en dehors de la boucle, le menu n'est pas recréé à chaque partie
     Menu* menu = new Menu();
 
-    //Boucle infinie car l'application est close() par nimporte quelle la fenêtre
+    //Boucle infinie, on attend qu'une interface ferme l'application avec exit(0)
     while (true)
     {
         //on affiche ou ré-affiche le menu de configuration

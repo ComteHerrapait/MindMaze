@@ -2,6 +2,7 @@
 
 Decorator::Decorator(myPoint corner1_, myPoint corner2_)
 {
+    //génère les 4 coins de la texture à partir des 2 en arguments
     p1 = corner1_;
     p3 = corner2_;
     if (corner1_.x == corner2_.x){
@@ -18,12 +19,14 @@ Decorator::Decorator(myPoint corner1_, myPoint corner2_)
         p4 = myPoint(corner1_.x,corner2_.y,corner1_.z);
     }
 
+    //récupère une texture aléatoire dans le dossier prévu à cet effet
     glEnable(GL_TEXTURE_2D);
     QDir directory("resources/textures/decorators");
     QStringList images = directory.entryList(QStringList() << "*.png" << "*.PNG",QDir::Files);
     QString selected = "resources/textures/decorators/" + images[rand() % images.size()];
     QImage texture = QGLWidget::convertToGLFormat(QImage(selected));
 
+    //bind et règle la texture choisie
     glGenTextures(1, &texMap);
     glBindTexture(GL_TEXTURE_2D, texMap );
     glTexImage2D( GL_TEXTURE_2D, // GL_TEXTURE_1D,GL_TEXTURE_2D,GL_TEXTURE_3D
@@ -41,7 +44,7 @@ Decorator::Decorator(myPoint corner1_, myPoint corner2_)
 }
 
 void Decorator::draw(){
-
+    //affiche le decorateur, avec texture et eclairage
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
     glEnable(GL_BLEND);

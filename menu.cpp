@@ -9,6 +9,11 @@ Menu::Menu(QWidget *parent) :
     ui(new Ui::Menu)
 {
     ui->setupUi(this);
+    /* Le validateur sert à restreindre les informations qui sont possibles à rentrer dans le champ de texte
+     * ainsi l'utilisateur ne peut pas casser le programme en rentrant des lettres là où l'on attend des
+     * nombres
+     */
+
     //Largeur
     ui->TextWidth->setValidator( new QIntValidator(3, 25, this) );
     //hauteur
@@ -24,6 +29,7 @@ Menu::Menu(QWidget *parent) :
     //Volume
     ui->TextVolume->setValidator( new QIntValidator(0, 100, this) );
 
+    //récupère et charge les paramètres depuis un fichier .ini
     getSettings();
 
 }
@@ -34,7 +40,7 @@ Menu::~Menu()
 }
 
 void Menu::saveSettings(){
-    //gestion des paramètres avec un fichier.ini
+    //enregistre les paramètres avec un fichier.ini, à partir des entrées dans le menu
     QSettings settings("resources/settings.ini",QSettings::IniFormat);
     settings.beginGroup("Maze");
         settings.setValue("width", ui->TextWidth->text().toInt());
@@ -85,6 +91,11 @@ void Menu::getSettings(){
 
 }
 
+/* Ces slots permettent de rendre l'interface dynamique,
+ * les champs de textes et les sliders sont modifiés
+ * lorsque l'autre change
+ */
+
 //largeur
 void Menu::on_SliderWidth_sliderMoved(int position){
     ui->TextWidth->setText(QString::number(position));
@@ -114,7 +125,6 @@ void Menu::on_TextFOV_textEdited(const QString &arg1){
     ui->SliderFOV->setSliderPosition(arg1.toInt());
 }
 //Volume
-//hauteur
 void Menu::on_SliderVolume_sliderMoved(int position){
     ui->TextVolume->setText(QString::number(position));
 }
@@ -135,6 +145,7 @@ void Menu::on_pushButton_clicked()
     this->hide();//cache le menu
 }
 
+//bouton quitter dans la barre d'action de la fenêtre
 void Menu::on_actionQuit_changed()
 {
     QMessageBox::StandardButton resBtn = QMessageBox::question( this, "Mindmaze",
@@ -147,6 +158,7 @@ void Menu::on_actionQuit_changed()
     }
 }
 
+//surcharge l'action de quitter la fenêtre, est ausi déclenché lorsqu'on appuie sur la coirx rouge
 void Menu::closeEvent (QCloseEvent *event)
 {
     QMessageBox::StandardButton resBtn = QMessageBox::question( this, "Mindmaze",

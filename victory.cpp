@@ -6,6 +6,7 @@ Victory::Victory(int winTime, QWidget *parent) :
     ui(new Ui::Victory)
 {
     ui->setupUi(this);
+    //écran de victoire, on affiche le temps mit pour sortir du labyrinthe
     ui->label_3->setText(QString::number(winTime));
 }
 

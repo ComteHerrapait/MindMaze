@@ -62,6 +62,7 @@ Wall::Wall(myPoint p1, myPoint p2, bool edge)
 }
 
 vector<myPoint> Wall::createBase(myPoint p1, myPoint p2, float width){
+    // créé une base de points correspondant au quatres coins au sol du mur, à partir de 2 extremités
     vector<myPoint> result;
     float wX, wZ;
 
@@ -112,19 +113,9 @@ void Wall::draw(){
     glBegin(GL_QUADS);
     glColor3ub(255, 255, 255);//couleur
 
-    /*    //Bottom
-    glVertex3f(p1.x, 0, p1.z);
-    glVertex3f(p2.x, 0, p2.z);
-    glVertex3f(p3.x, 0, p3.z);
-    glVertex3f(p4.x, 0, p4.z);
-        //Top
-    glVertex3f(p1.x, height, p1.z);
-    glVertex3f(p2.x, height, p2.z);
-    glVertex3f(p3.x, height, p3.z);
-    glVertex3f(p4.x, height, p4.z);
-
-    On ne voit pas le dessus et le dessous des murs
-    */
+    /* On ne voit pas le dessus et le dessous des murs
+     * on ne les affiche donc pas dans une but d'optimisation
+     */
 
         //Walls
     glNormal3i(int(p1.z == p2.z), 0, int(p1.x == p2.x));
@@ -165,7 +156,7 @@ void Wall::draw(){
 
 void Wall::draw2D(float offX, float offY, float scale)
 {
-
+    //affiche un mur en 2D sur l'interface en jeu (minimap)
     float wX = 0;
     float wY = 0;
     float width2D = 3 * scale * width;

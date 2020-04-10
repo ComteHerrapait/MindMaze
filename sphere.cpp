@@ -8,8 +8,7 @@ Sphere::Sphere(myPoint p, float r){
      color[1] = 1.0f; //blue
      color[2] = 1.0f; //green
 
-     // Texture
-
+     // ---- Texture ----
      QImage texture = QGLWidget::convertToGLFormat(QImage(QString(":/sphere.jpg")));
 
      glGenTextures(1, &texMap);
@@ -51,11 +50,6 @@ void Sphere::draw(float time_){
 
     GLfloat param1[] = {1.0, 1.0, 1.0};                     // Fait briller la sphère
     glMaterialfv(GL_FRONT, GL_DIFFUSE, param1);
-
-    //GLfloat param2[] = {1.0, 1.0, 1.0};                   // Crée un éclairage blanc qui éclaire toute la scène, je ne sais pas pourquoi.
-    //glMaterialfv(GL_FRONT, GL_EMISSION, param2);
-
-
 
     // Couleur de l'objet
     glColor3f(color[0], color[1], color[2]);

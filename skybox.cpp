@@ -26,6 +26,7 @@ Skybox::Skybox(int distance)
 }
 
 void Skybox::draw(){
+    //affiche la skybox, pour donner un décor une fois sorti du labyrinthe
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D,texMap);
     int t = skyDistance;

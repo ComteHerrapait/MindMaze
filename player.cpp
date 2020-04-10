@@ -26,6 +26,7 @@ void Player::move(float forward, float rightward)
     target.z += rightward * vectX /norm;
 }
 void Player::look(float horizontal){
+    //tourne le joueur sur lui même, d'un angle horizontal
     float ch=cos(horizontal* PI / 180.0), sh=sin(horizontal* PI / 180.0);
 
     float dx = target.x - pos.x;
@@ -43,6 +44,7 @@ void Player::foundSpheres(){
 }
 
 bool Player::CheckCollision(Wall w){
+    //vérifie si le joueur est dans un mur en argument
     float HitBoxWidth = 0.2;
     myPoint end_1 = w.getEnd1();
     myPoint end_2 = w.getEnd2();
@@ -67,6 +69,11 @@ bool Player::CheckCollision(Wall w){
 }
 
 void Player::moveWithCollisions(float forward, float rightward, vector<Wall *> walls){
+    /* déplace le joueur en prennant en compte les collisions
+     * si le joueur se trouve dans un mur à l'issue du déplacement
+     * le mouvement inverse est executé,
+     * puisqu'il n'y a pas d'affichage entre les mouvement, l'utilisateur ne le  voit pas
+     */
     move(forward,rightward);
     for(Wall * w: walls){
         if (CheckCollision(*w)){
@@ -76,7 +83,8 @@ void Player::moveWithCollisions(float forward, float rightward, vector<Wall *> w
     }
 }
 void Player::moveWithAnimations(int forward, int rightward, int animCount, vector<Wall *> walls){
-    // Check
+    //déplace le joueur avec une animation, pour le mode snapping
+
     move(forward*1.0,rightward*1.0);
     for(Wall * w: walls){
         if (CheckCollision(*w)){
@@ -84,6 +92,8 @@ void Player::moveWithAnimations(int forward, int rightward, int animCount, vecto
             return;// if collision with a wall, cancel movement
         }
     }
+    //vérifie la collision pendant le mouvement
+    //puisqu'on est au milieu d'une case le mur est forcément à 1 unité devant
     move(-forward*1.0,-rightward*1.0);
 
     // Initialization
@@ -104,6 +114,7 @@ void Player::lookWithAnimations(int angle, int animCount){
 }
 
 void Player::continueMove(){
+    //continue l'animation du mouvement si elle est en cours
     if (animationsLeft>0){
         //mouvement
         move(stepSize[0],stepSize[1]);
@@ -123,6 +134,7 @@ void Player::continueMove(){
 }
 
 void Player::roundPosition(){
+    //arrondi la position du joueur au centre de la case la plus proche et l'y déplace
     float offsetX = target.x - pos.x;
     float offsetZ = target.z - pos.z;
 
@@ -146,6 +158,7 @@ void Player::roundPosition(){
 }
 
 void Player::draw2D(float offX, float offY, float scale){
+    //affiche le joueur en 2D pour la minimap
     float r = 0.6 * scale;
     float x = offX + pos.x*scale;
     float y = offY + pos.z*scale; //on prend pos.z car en 3D le y est la verticale

@@ -6,7 +6,7 @@
 #include <QDesktopWidget>
 
 #define DEBUG true //flag
-#define LOADSETTINGS QSettings settings("resources/settings.ini",QSettings::IniFormat)
+#define LOADSETTINGS QSettings settings("resources/settings.ini",QSettings::IniFormat);
 using namespace std;
 
 // Declarations des constantes
@@ -23,8 +23,8 @@ const int ANIMATION_FAST      = 70;
 // Constructeur
 MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 {
-    // attribution des paramètres
-    LOADSETTINGS;
+    // attribution des paramètres, depuis un fichier .ini
+    LOADSETTINGS
     mouse = settings.value("Features/mouse").toBool();
     camera = settings.value("Features/camera").toBool();
     freeMovement = !settings.value("Features/snapping").toBool();
@@ -52,7 +52,7 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
     setMouseTracking(true);
     if (mouse) setCursor(Qt::CrossCursor);
 
-    //Reglage de la taille/position 
+    //Reglage de la taille/position de le fenêtre
     setFixedSize(WIN_WIDTH, WIN_HEIGHT);
     QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
     move(screenGeometry.width()/2 - WIN_WIDTH/2, screenGeometry.height()/2 - WIN_HEIGHT/2);
@@ -88,10 +88,8 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 // Fonction d'initialisation
 void MyGLWidget::initializeGL()
 {
-    //creation des murs
-        //création d'un mur de test, écrasé à la génération
-    V_walls = {new Wall(myPoint(1,0,0),myPoint(1,0,1),true)};
-
+    //creation des murs   
+    V_walls = {new Wall(myPoint(1,0,0),myPoint(1,0,1),true)};//création d'un mur de test, écrasé à la génération
     Maze mazegen = Maze(LENGTH, WIDTH);
     mazegen.generate();
     V_walls = mazegen.get();
@@ -115,7 +113,6 @@ void MyGLWidget::initializeGL()
     dj.play("BACKGROUND");
     dj.volume("BACKGROUND",musicVolume);
 
-
     //Activation du zbuffer
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
@@ -136,10 +133,10 @@ void MyGLWidget::initializeGL()
 
     glDisable(GL_LIGHTING);
 
-    //horaire de départ
+    //horaire de départ, chrono
     startTime = time(0);
     sinceMoveTime = time(0) - 5;
-    if (DEBUG) cout << "fin de la génération du jeu" << endl;
+    if (DEBUG) cout << "fin de l'initialisation du jeu" << endl;
 }
 
 
@@ -195,20 +192,12 @@ void MyGLWidget::paintGL()
         }
     }
 
-    // ---- CAS VICTOIRE ----
-    if (victory){
-        dj.stop("BACKGROUND");
-        Victory* victoryWindow = new Victory(time(0) - startTime);
-        webcam.~Camera();
-        victoryWindow->show();
-        this->close();
-        return;
-    }
 
-    // Continue movement animation
+
+    // Continue l'animation de mouvement du joueur (déplacement et bobbing)
     if (player.isMoving()) { player.continueMove(); }
 
-    //Verification victoire
+    // ---- VICTOIRE ----
     if (player.getPos().x < 0
             || player.getPos().x > LENGTH * 2
             || player.getPos().z < 0
@@ -217,8 +206,14 @@ void MyGLWidget::paintGL()
         showNormal();
         setMouseTracking(false);
         setCursor(Qt::ArrowCursor);
-    }
 
+        dj.stop("BACKGROUND");
+        Victory* victoryWindow = new Victory(time(0) - startTime);
+        webcam.~Camera();
+        victoryWindow->show();
+        this->close();
+        return;
+    }
     //Reinitialisation des tampons
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -240,12 +235,11 @@ void MyGLWidget::paintGL()
     for(Surface * s: V_surfaces){
         s->draw();
     }
-
     // ---- Affichage des Murs ----
     for(Wall * w: V_walls){
         w->draw();
     }
-    // ---- Affichage des Boules ----
+    // ---- Affichage des Spheres ----
     bool AllSpheresFound = true;
     for(Sphere * s: V_spheres){
         s->draw(animTime);
@@ -294,7 +288,7 @@ void MyGLWidget::paintGL()
     float cameraSize = 175.0f; //taille de la camera
     float textBackgroudSize = 250.0f; //taille du fond du texte
 
-        //carré
+        //carré haut gauche
 
     GLuint image_tex;
     if (camera) {
@@ -367,22 +361,26 @@ void MyGLWidget::paintGL()
         renderText(cameraSize + 20 , 95, QString("frame : %1 ms").arg((double)(clock() - tStart)/CLOCKS_PER_SEC*1000.0));
     }
 
-        //modes
+        //modes de jeu
     if (mouse)  qglColor(Qt::green);
     else        qglColor(Qt::red);
-    renderText(5 , cameraSize + 25, QString("(R) Mouse"));
+    renderText(5 , cameraSize + 25, QString("(R) Souris"));
 
     if (freeMovement)   qglColor(Qt::green);
     else                qglColor(Qt::red);
-    renderText(5 , cameraSize + 40, QString("(T) Free movement"));
+    renderText(5 , cameraSize + 40, QString("(T) mouvement libre"));
 
-    if (camera) qglColor(Qt::green);
-    else        qglColor(Qt::red);
-    renderText(5 , cameraSize + 55, QString("(Y) Camera"));
+    if (camera) {
+        qglColor(Qt::green);
+        renderText(5 , cameraSize + 55, QString("(Y) Camera [(]space -> reset]"));
+    }else       {
+        qglColor(Qt::red);
+        renderText(5 , cameraSize + 55, QString("(Y) Camera"));
+    }
 
     if (fullScreen) qglColor(Qt::green);
     else            qglColor(Qt::red);
-    renderText(5 , cameraSize + 70, QString("(F) Fullscreen"));
+    renderText(5 , cameraSize + 70, QString("(F) Plein écran"));
 
     if (Zbuf)   qglColor(Qt::green);
     else        qglColor(Qt::red);
@@ -390,7 +388,7 @@ void MyGLWidget::paintGL()
 
     if (keyboard)   qglColor(Qt::green);
     else            qglColor(Qt::red);
-    renderText(5 , cameraSize + 100, QString("( ) Keyboard"));
+    renderText(5 , cameraSize + 100, QString("( ) clavier"));
 
 
     glPopMatrix();
@@ -432,21 +430,21 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             {player.moveWithAnimations(-1,0,ANIMATION_COUNT,V_walls);}
             resetMinimapTimer();
             break;
-        case Qt::Key::Key_E:
+        case Qt::Key::Key_E: //tourne sur la droite
         case Qt::Key::Key_Right:
             if(!keyboard) break;
             if (freeMovement){player.look(3);}
             else if (! player.isMoving())
             {player.lookWithAnimations(1,ANIMATION_COUNT);}
             break;
-        case Qt::Key::Key_A:
+        case Qt::Key::Key_A: //tourne sur la gauche
         case Qt::Key::Key_Left:
             if(!keyboard) break;
             if (freeMovement){player.look(-3);}
             else if (! player.isMoving())
             {player.lookWithAnimations(-1,ANIMATION_COUNT);}
             break;
-        case Qt::Key::Key_R:
+        case Qt::Key::Key_R: //souris
             mouse ^= true;
             setMouseTracking(mouse);
             if (mouse) {
@@ -455,13 +453,13 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
                 setCursor(Qt::ArrowCursor);
             }
             break;
-        case Qt::Key::Key_T:
+        case Qt::Key::Key_T://snapping, mouvement libre
            freeMovement ^= true;
            if (!freeMovement){
                player.roundPosition();
            }
            break;
-        case Qt::Key::Key_Y:
+        case Qt::Key::Key_Y://camera
             camera ^= true;
            if (camera){
                webcam.init();
@@ -471,7 +469,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
            }
 
            break;
-        case Qt::Key::Key_F:
+        case Qt::Key::Key_F://plein écran
             if (fullScreen){
                 showNormal();
             } else {
@@ -479,7 +477,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             }
             fullScreen ^= true;
             break;
-        case Qt::Key::Key_Tab:
+        case Qt::Key::Key_Tab://Z-Buffer
             if (Zbuf){
                 glDisable(GL_DEPTH_TEST);
             } else {
@@ -487,12 +485,12 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
             }
             Zbuf ^= true;
         break;
-        case Qt::Key::Key_Space:
+        case Qt::Key::Key_Space://réinitialise la caméra
             if (camera){
                 webcam.init();
             }
         break;
-        case Qt::Key::Key_Escape:
+        case Qt::Key::Key_Escape://quitter le jeu
         if (QMessageBox::question( this, "Mindmaze",
                                    tr("Etes vous certain de vouloir quitter le jeu ?\n"),
                                    QMessageBox::No | QMessageBox::Yes,
@@ -522,6 +520,7 @@ void MyGLWidget::keyPressEvent(QKeyEvent * event)
 
 void MyGLWidget::wheelEvent(QWheelEvent *event)
 {
+    //molette pour changer le FOV
     float deg = event->angleDelta().y();
 
     if (deg < 0){
@@ -555,6 +554,7 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *event){
     }
 }
 
+//surchage la fermeture de la fenêtre, marche aussi pour la croix rouge
 void MyGLWidget::closeEvent (QCloseEvent *event)
 {
     if (!victory && QMessageBox::question( this, "Mindmaze",
